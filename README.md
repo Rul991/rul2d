@@ -2,4 +2,4 @@
 
 ## Движок для веб разработчи
 
-![Tux, the Linux mascot](/test.png)
+![RUL2D Mascot](/test.png)
