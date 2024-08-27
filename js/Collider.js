@@ -1,3 +1,4 @@
+import { Body, Box } from "./p2.js"
 import { Rectangle } from "./Rectangle.js"
 
 export class Collider extends Rectangle {
@@ -5,6 +6,19 @@ export class Collider extends Rectangle {
         super(x, y, width, height)
         this.isCollided = false
         this.collidedObjects = []
+        this.body = new Body({
+            mass: 1
+        })
+        this.box = new Box()
+    }
+
+    setBox(options) {
+        this.box = new Box(options)
+    }
+
+    setBody(options) {
+        this.body = new Body(options)
+        this.body.addShape(this.box)
     }
 
     checkCollision(rect = new Rectangle()) {
@@ -28,18 +42,19 @@ export class Collider extends Rectangle {
         })
     }
 
-    draw(ctx, color = '') {
+    draw(ctx, color = 'green') {
         super.draw(ctx, color)
         if(this.isCollided) super.draw(ctx, 'red')
     }
 
-    drawOutline(ctx, color = '') {
+    drawOutline(ctx, color = 'green') {
         super.drawOutline(ctx, color)
         if(this.isCollided) super.drawOutline(ctx, 'red')
     }
 
-    getDepthOfRectangleInside(rect) {
+    getDepthOfRectangleInside(rect = new Rectangle) {
+        return new Rectangle(0)
         
     }
-      
+    
 }
