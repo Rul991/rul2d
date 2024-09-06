@@ -5,6 +5,7 @@ export class GameObject extends Rectangle {
     constructor(x, y) {
         super(x, y, 1)
         this.subObjects = {all: []}
+        this.colliders = []
     }
 
     addSubObjects(...subObjects) {
@@ -17,6 +18,8 @@ export class GameObject extends Rectangle {
 
             if(!this.subObjects[subName]) this.subObjects[subName] = []
             this.subObjects[subName].push(sub)
+
+            if(sub.body) this.colliders.push(sub)
         })
     }
 
@@ -31,8 +34,6 @@ export class GameObject extends Rectangle {
         let x1, x2, y1, y2 = 0
         x1 = x2 = this.x
         y1 = y2 = this.y
-
-
     }
 
     updateSubObjectCoordinates(sub) {

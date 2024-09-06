@@ -13,22 +13,25 @@ export const randomArray = (length, [min, max]) => {
 export const getNumberSign = (num = 0) => Math.abs(num) / num
 export const percents = (value, {min = 0, max = 100} = {}) => (value - min) / (max - min)
 
+export const isDigit = char => !isNaN(parseInt(char))
+const lastIndex = arr => arr.length - 1
+
 export const getNumbersFromString = (string = '') => {
     let numbers = ['']
 
-    for (let symb of string.split('')) {
-        let lastIndex = numbers.length - 1
+    const symbols = string.split('')
 
-        if(!isNaN(+symb)) {
-            numbers[lastIndex] += symb
-        }
+    symbols.forEach(symbol => {
+        if(isDigit(symbol)) numbers[lastIndex(numbers)] += symbol
         else {
-            numbers[lastIndex + 1] = ''
+            if(numbers[lastIndex(numbers)] !== '') {
+                numbers[lastIndex(numbers)] = +numbers[lastIndex(numbers)]
+                numbers[lastIndex(numbers) + 1] = ''
+            }
         }
-    }
-    
-    return numbers.filter(number => {
-        if(number !== '') return +number
-        else return false
-    }).map(value => +value)
+    })
+    if(numbers[lastIndex(numbers)] !== '') numbers[lastIndex(numbers)] = +numbers[lastIndex(numbers)]
+    else numbers.splice(numbers[lastIndex(numbers)] - 1, 1)
+
+    return numbers
 }

@@ -10,10 +10,6 @@ export class Point {
         this.y = y ?? this.x
     }
 
-    get point() {
-        return new Point(this.x, this.y)
-    }
-
     setPosition(x, y) {
         this.point = {x,y}
     }
@@ -24,6 +20,10 @@ export class Point {
 
     drawPoint(ctx, color = 'red') {
         fillArc(ctx, this.x, this.y, 1, color)
+    }
+
+    draw(ctx, color = 'red') {
+        this.drawPoint(ctx, color)
     }
 
     addEventListener(type = '', callback = e => {}) {

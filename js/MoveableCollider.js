@@ -4,8 +4,11 @@ import { Point } from "./Point.js"
 export class MoveableCollider extends Collider {
     constructor(x, y, width, height) {
         super(x, y, width, height)
+        this.body.mass = 1
+        this.body.updateMassProperties()
+
         this.direction = new Point()
-        this.speed = 1
+        this.speed = 100
     }
 
     set speed(value) {
@@ -25,20 +28,6 @@ export class MoveableCollider extends Collider {
     }
 
     move(delta) {
-        this.addPosition(new Point(this.speed * this.direction.x * delta, this.speed * this.direction.y * delta))
-    }
-
-    collide() {
-        this.collidedObjects.forEach(collider => {
-            let depth = this.getDepthOfRectangleInside(collider)
-            
-            if(this.direction.x > 0) {
-                this.x += depth.x
-            }
-
-            else  if(this.direction.x < 0) {
-                this.x -= depth.x
-            }
-        })
-    }
+        [this.x, this.y]
+    }    
 }

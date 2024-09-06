@@ -2,14 +2,14 @@ import { Body, Box } from "./p2.js"
 import { Rectangle } from "./Rectangle.js"
 
 export class Collider extends Rectangle {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, isMainCollider) {
         super(x, y, width, height)
-        this.isCollided = false
-        this.collidedObjects = []
-        this.body = new Body({
-            mass: 1
-        })
-        this.box = new Box()
+
+        this.isMainCollider = isMainCollider ?? false
+        
+        this.setBox({width: this.width, height: this.height})
+        this.setBody({mass: 0, position: [this.x, this.y]})
+        
     }
 
     setBox(options) {
@@ -21,40 +21,11 @@ export class Collider extends Rectangle {
         this.body.addShape(this.box)
     }
 
-    checkCollision(rect = new Rectangle()) {
-        if(rect === this) return false
-
-        return  rect.bottom > this.y &&
-                rect.right > this.x &&
-                rect.y < this.bottom &&
-                rect.x < this.right
+    lockAngle() {
+        this.body.angle = 0
     }
 
-    getCollidedObjects(colliders = []) {
-        this.isCollided = false
-        this.collidedObjects = []
-
-        colliders.forEach(collider => {
-            if(this.checkCollision(collider)) {
-                this.collidedObjects.push(collider)
-                this.isCollided = true
-            }
-        })
+    updateCoordinates() {
+        [this.x, this.y] = this.body.position
     }
-
-    draw(ctx, color = 'green') {
-        super.draw(ctx, color)
-        if(this.isCollided) super.draw(ctx, 'red')
-    }
-
-    drawOutline(ctx, color = 'green') {
-        super.drawOutline(ctx, color)
-        if(this.isCollided) super.drawOutline(ctx, 'red')
-    }
-
-    getDepthOfRectangleInside(rect = new Rectangle) {
-        return new Rectangle(0)
-        
-    }
-    
 }

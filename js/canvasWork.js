@@ -33,10 +33,12 @@ export const fillRect = (ctx, x, y, width, height, color) => _drawRect(ctx, x, y
 export const strokeRect = (ctx, x, y, width, height, color) => _drawRect(ctx, x, y, width, height, color, 'stroke')
 
 const _drawArc = (ctx, x, y, radius, color, startAngle = 0, endAngle = Math.PI*2, type) => {
+    ctx.beginPath()
     ctx[`${type}Style`] = color
     ctx.moveTo(x,y)
     ctx.arc(x, y, radius, startAngle, endAngle)
     ctx[type]()
+    ctx.closePath()
 }
 
 export const fillArc = (ctx, x, y, radius, color, startAngle, endAngle) => _drawArc(ctx, x, y, radius, color, startAngle, endAngle, 'fill')
@@ -72,4 +74,18 @@ export const measureText = (ctx = getContext2d(), text = '') => {
     textMetrics.height = textMetrics.fontBoundingBoxAscent + textMetrics.fontBoundingBoxDescent
 
     return textMetrics
+}
+
+export const createGameLoop = (callback = (delta = 0) => {}) => {
+    let delta = 1 / 60
+    let previousTime = Date.now()
+
+    const update = () => {
+        [delta, previousTime] = [(Date.now() - previousTime) / 1000, Date.now()]
+        callback(delta)
+
+        requestAnimationFrame(update)
+    }
+
+    update()
 }
