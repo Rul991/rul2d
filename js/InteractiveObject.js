@@ -18,7 +18,8 @@ export class InteractiveObject extends Rectangle {
         if(!this.camera) return point
         else {
             let {x, y} = point
-            return new Point(x / this.camera.cameraScale - this.camera.x, y / this.camera.cameraScale - this.camera.y)
+            const getUpdatedCoordinate = (position, cameraPosition) => position / this.camera.cameraScale - cameraPosition
+            return new Point(getUpdatedCoordinate(x, this.camera.x), getUpdatedCoordinate(y, this.camera.y))
         }
     }
 

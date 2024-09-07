@@ -15,6 +15,10 @@ export class Camera extends Point {
         this.cameraScale = scale
     }
 
+    addScale(scale = 0) {
+        this.setScale(this.cameraScale + scale)
+    }
+
     startRender() {
         if(!this.ctx) return
 
@@ -30,8 +34,8 @@ export class Camera extends Point {
     translate() {
         if(!this.ctx) return
 
-        let {x, y} = this
-        this.ctx.translate(x, y)
+        let {x, y, cameraScale} = this
+        this.ctx.translate(x * cameraScale, y * cameraScale)
     }
 
     scale() {

@@ -8,7 +8,7 @@ export class FollowedCamera extends Camera {
 
         if(this.followedObject) {
             let {x, y, width, height} = this.followedObject
-            const getCanvasCenter = (position, objectSize, canvasSize) => canvasSize / 2 - (position + (objectSize ?? 0))
+            const getCanvasCenter = (position, objectSize, canvasSize) => position - canvasSize / 2 + objectSize / 2
 
             let [centerX, centerY] = [
                 getCanvasCenter(x, width, canvas.width),
@@ -18,6 +18,14 @@ export class FollowedCamera extends Camera {
         }
         
         super.translate()
+    }
+
+    setPosition(x, y) {
+        super.setPosition(-x, -y)
+    }
+
+    addPosition(x, y) {
+        this.setPosition(this.x - x, this.y - y)
     }
 
     setFollowedObject(object = {}) {
