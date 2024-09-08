@@ -5,20 +5,29 @@ export class Collider extends Rectangle {
     constructor(x, y, width, height, isMainCollider) {
         super(x, y, width, height)
 
-        this.isMainCollider = isMainCollider ?? false
+        this.setIsMainCollider()
         
-        this.setBox({width: this.width, height: this.height})
-        this.setBody({mass: 0, position: [this.x, this.y]})
+        this.setBox()
+        this.setBody()
         
     }
 
-    setBox(options) {
+    setIsMainCollider(isMainCollider) {
+        this.isMainCollider = isMainCollider ?? false
+    }
+
+    setBox(options = {width: this.width, height: this.height}) {
         this.box = new Box(options)
     }
 
-    setBody(options) {
+    setBody(options = {mass: 0, position: [this.x, this.y]}) {
         this.body = new Body(options)
         this.body.addShape(this.box)
+    }
+
+    setMass(mass = 0) {
+        this.body.mass = mass
+        this.body.updateMassProperties()
     }
 
     lockAngle() {
@@ -27,5 +36,11 @@ export class Collider extends Rectangle {
 
     updateCoordinates() {
         [this.x, this.y] = this.body.position
+    }
+
+    update(ctx) {
+        this.lockAngle()
+        this.updateCoordinates()
+        // this.draw(ctx)
     }
 }

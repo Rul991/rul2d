@@ -10,6 +10,10 @@ export class Point {
         this.y = y ?? this.x
     }
 
+    get point() {
+        return {x: this.x, y: this.y}
+    }
+
     setPosition(x, y) {
         this.point = {x,y}
     }

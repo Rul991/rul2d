@@ -8,14 +8,20 @@ export class InteractiveObject extends Rectangle {
         this.reset()
         this.setCamera()
         this.isReset = true
+        this.isRenderingFromCameraView()
     }
 
     setCamera(camera = new Camera()) {
         this.camera = camera
     }
 
+    isRenderingFromCameraView(value = true) {
+        this.isRenderedFromCameraView = value
+    }
+
     updatePointWithCamera(point) {
         if(!this.camera) return point
+        if(!this.isRenderedFromCameraView) return point
         else {
             let {x, y} = point
             const getUpdatedCoordinate = (position, cameraPosition) => position / this.camera.cameraScale - cameraPosition
@@ -29,20 +35,36 @@ export class InteractiveObject extends Rectangle {
     }
 
     isPointInRect({x, y}) {
-        if(x > this.right && x < this.x) return false
-        if(y > this.bottom ** y < this.y) return false
+        if(x > this.right || x < this.x) return false
+        if(y > this.bottom || y < this.y) return false
 
         return true
     }
 
-    interactive(point = new Point, callback = point => {}) {
-        if(this.isPointInRect(this.updatePointWithCamera(point))) {
-            callback(point)
+    setCallback(callback = point => {}) {
+        this.callback = callback
+    }
+
+    interactive(point = new Point) {
+        let updatedPoint = this.updatePointWithCamera(point)
+        if(this.isPointInRect(updatedPoint)) {
+            this.callback(updatedPoint)
             this.interactives++
+            this.isInteracted = true
         }
     }
 
-    update() {
+    drawOutline(ctx, color) {
+        if(this.isInteracted) super.drawOutline(ctx, 'red')
+        else super.drawOutline(ctx, color)
+    }
+
+    addControls(canvas) {
+        return false
+    }
+
+    update(point) {
         this.reset()
+        this.interactive(point)
     }
 }

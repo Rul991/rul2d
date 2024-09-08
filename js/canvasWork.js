@@ -76,13 +76,13 @@ export const measureText = (ctx = getContext2d(), text = '') => {
     return textMetrics
 }
 
-export const createGameLoop = (callback = (delta = 0) => {}) => {
+export const createGameLoop = (callback = ([delta = 0, prevTime = 0]) => {}) => {
     let delta = 1 / 60
     let previousTime = Date.now()
 
     const update = () => {
         [delta, previousTime] = [(Date.now() - previousTime) / 1000, Date.now()]
-        callback(delta)
+        callback([delta, previousTime])
 
         requestAnimationFrame(update)
     }

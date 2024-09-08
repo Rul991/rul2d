@@ -1,15 +1,19 @@
+import { InteractiveObject } from "./InteractiveObject.js"
 import { Point } from "./Point.js"
-import { Rectangle } from "./Rectangle.js"
 
-export class GameObject extends Rectangle {
+export class GameObject extends Point {
     constructor(x, y) {
         super(x, y, 1)
         this.subObjects = {all: []}
         this.colliders = []
+        this.mainCollider = null
+        this.isRenderingFromCameraView()
     }
 
     addSubObjects(...subObjects) {
         subObjects.forEach(sub => {
+            if(sub.isMainCollider && !this.mainCollider) this.mainCollider = sub
+
             const subName = sub.constructor.name.toLowerCase()
 
             this.setOffsetForSubObject(sub)
@@ -23,20 +27,24 @@ export class GameObject extends Rectangle {
         })
     }
 
+    isRenderingFromCameraView(value = true) {
+        this.isRenderedFromCameraView = value
+        this.forSubObjects(sub => {
+            if(sub instanceof InteractiveObject) sub.isRenderedFromCameraView = value
+        })
+    }
+
+    init() {
+        return false
+    }
+
     setOffsetForSubObject(sub) {
         sub.offset = new Point()
         sub.offset.point = sub
     }
 
-    fitSizeBySubObject(sub) {
-        if(sub.width === undefined) return
-        
-        let x1, x2, y1, y2 = 0
-        x1 = x2 = this.x
-        y1 = y2 = this.y
-    }
-
     updateSubObjectCoordinates(sub) {
+        if(!sub.isMainCollider) return
         [sub.x, sub.y] = [sub.offset.x + this.x, sub.offset.y + this.y]
     }
 
@@ -52,6 +60,10 @@ export class GameObject extends Rectangle {
         else this.subObjects.all.forEach(sub => callback(sub))
     }
 
+    updateCoordinate() {
+        if(this.mainCollider) this.point = this.mainCollider
+    }
+
     draw(ctx) {
         this.forSubObjects(sub => {
             if(sub.draw) sub.draw(ctx)
@@ -59,6 +71,7 @@ export class GameObject extends Rectangle {
     }
 
     update(ctx, delta) {
+        this.updateCoordinate()
         this.updateSubObjectsCoordinates()
         this.draw(ctx)
     }

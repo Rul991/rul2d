@@ -9399,11 +9399,7 @@ const ARRAY_TYPE = (() => {
      * Constructor for a p2-es World
      * @param options options for creating the world
      */
-    constructor(options) {
-      if (options === void 0) {
-        options = {};
-      }
-  
+    constructor({solver, gravity, broadphase, islandSplit} = {}) {
       super();
       this.springs = [];
       this.bodies = [];
@@ -9426,19 +9422,19 @@ const ARRAY_TYPE = (() => {
       this.overlapKeeper = new OverlapKeeper();
       this.disabledBodyCollisionPairs = [];
       this.unionFind = new UnionFind(1);
-      this.solver = options.solver || new GSSolver();
+      this.solver = solver || new GSSolver();
       this.gravity = fromValues(0, -9.78);
   
-      if (options.gravity) {
-        copy(this.gravity, options.gravity);
+      if (gravity) {
+        copy(this.gravity, gravity);
       }
   
       this.frictionGravity = length(this.gravity) || 10;
-      this.broadphase = options.broadphase || new SAPBroadphase();
+      this.broadphase = broadphase || new SAPBroadphase();
       this.broadphase.setWorld(this);
       this.defaultMaterial = new Material();
       this.defaultContactMaterial = new ContactMaterial(this.defaultMaterial, this.defaultMaterial);
-      this.islandSplit = options.islandSplit ?? true;
+      this.islandSplit = islandSplit ?? true;
     }
     /**
      * Add a constraint to the simulation. Note that both bodies connected to the constraint must be added to the world first. Also note that you can't run this method during step.

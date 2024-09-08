@@ -22,6 +22,10 @@ export class Rectangle extends Point {
         this.setSize(width, height)
     }
 
+    get rect() {
+        return {x: this.x, y: this.y, width: this.width, height: this.height}
+    }
+
     get bottom() {
         return this.y + this.height
     }

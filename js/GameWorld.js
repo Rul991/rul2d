@@ -1,36 +1,59 @@
-import { clearCanvas, createCanvas, getContext2d } from "./canvasWork.js"
+import { Camera } from "./Camera.js"
+import { clearCanvas, createCanvas, createGameLoop, getContext2d } from "./canvasWork.js"
 import { Collider } from "./Collider.js"
+import { GameObject } from "./GameObject.js"
 import { World } from "./p2.js"
+import { Point } from "./Point.js"
 
 export class GameWorld {
-    constructor({canvas = null, width = null, height = null, gravity = null}) {
+    constructor({canvas = null, width = null, height = null, gravity = new Point(0, 9.81)}) {
         this.canvas = canvas ?? createCanvas()
         this.ctx = getContext2d(canvas)
         this.canvas.width = width || this.canvas.width
         this.canvas.height = height || this.canvas.height
-        this.world = new World({ gravity: gravity ?? [0, 9.81] })
-        this.gameObjects = []
+        this.world = new World({ gravity: [gravity.x, gravity.y] ?? [0, 9.81] })
+        this.gameObjects = new Set()
+        this.uiObjects = new Set()
+        this.setCamera()
     }
 
-    addGameObject(...gameObjects) {
+    setCamera(camera = new Camera) {
+        this.camera = camera
+    }
+
+    setGravity({x, y}) {
+        this.world.gravity = [x, y]
+    }
+
+    addGameObjects(...gameObjects) {
         gameObjects.forEach(object => {
-            this.gameObjects.push(object)
+            if(object.isRenderedFromCameraView) this.gameObjects.add(object)
+            else this.uiObjects.add(object)
+            // тут должен быть какой то иф, но я не помню какой
             if(object.colliders) object.colliders.forEach(collider => this.world.addBody(collider.body))
         })
     }
-    
-    draw() {
-        this.gameObjects.forEach(object => {
-            object.draw(this.ctx)
-        })
+
+    removeGameObject(object = new GameObject) {
+        this.gameObjects.delete(object)
+        if(object.colliders) object.colliders.forEach(collider => this.world.removeBody(collider.body))
     }
 
-    update(delta, prevTime) {
-        this.world.step(delta, prevTime, 2)
-        clearCanvas(this.ctx)
-        this.gameObjects.forEach(gameObject => {
-            gameObject.update()
-            gameObject.drawOutline(this.ctx)
+    update(maxSubSteps = 2) {
+        createGameLoop(([delta, prevTime]) => {
+            this.world.step(delta, prevTime, maxSubSteps)
+
+            clearCanvas(this.ctx)
+
+            this.camera.update(() => {
+                this.gameObjects.forEach(gameObject => {
+                    gameObject.update(this.ctx, delta)
+                })
+            })
+
+            this.uiObjects.forEach(ui => {
+                ui.update(this.ctx, delta)
+            })
         })
     }
 }

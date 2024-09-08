@@ -20,14 +20,6 @@ export class FollowedCamera extends Camera {
         super.translate()
     }
 
-    setPosition(x, y) {
-        super.setPosition(-x, -y)
-    }
-
-    addPosition(x, y) {
-        this.setPosition(this.x - x, this.y - y)
-    }
-
     setFollowedObject(object = {}) {
         this.followedObject = object ?? null
     }

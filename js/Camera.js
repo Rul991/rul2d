@@ -18,6 +18,14 @@ export class Camera extends Point {
     addScale(scale = 0) {
         this.setScale(this.cameraScale + scale)
     }
+    
+    setPosition(x, y) {
+        super.setPosition(-x, -y)
+    }
+
+    addPosition({x, y}) {
+        this.setPosition(this.x - x, this.y - y)
+    }
 
     startRender() {
         if(!this.ctx) return
