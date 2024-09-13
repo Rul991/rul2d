@@ -23,7 +23,10 @@ export class GameObject extends Point {
             if(!this.subObjects[subName]) this.subObjects[subName] = []
             this.subObjects[subName].push(sub)
 
-            if(sub.body) this.colliders.push(sub)
+            if(sub.body) {
+                this.colliders.push(sub)
+            }
+            
         })
     }
 
@@ -73,6 +76,8 @@ export class GameObject extends Point {
     update(ctx, delta) {
         this.updateCoordinate()
         this.updateSubObjectsCoordinates()
-        this.draw(ctx)
+        this.forSubObjects(sub => {
+            sub.update(ctx, delta)
+        })
     }
 }

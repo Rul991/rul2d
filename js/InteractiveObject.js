@@ -15,15 +15,28 @@ export class InteractiveObject extends Rectangle {
         this.camera = camera
     }
 
+    getPointOnCanvas({x, y}) {
+        let rect = {left: 0, top: 0}
+        if(this.camera)
+            if(this.camera.ctx) 
+                rect = this.camera.ctx.canvas.getBoundingClientRect()
+
+        let {left, top} = rect
+
+        return new Point(x - left, y - top)
+    }
+
     isRenderingFromCameraView(value = true) {
         this.isRenderedFromCameraView = value
     }
 
-    updatePointWithCamera(point) {
+    updatePointWithCamera({x, y}) {
+        let point = this.getPointOnCanvas({x, y})
         if(!this.camera) return point
         if(!this.isRenderedFromCameraView) return point
         else {
             let {x, y} = point
+            console.log(x, y)
             const getUpdatedCoordinate = (position, cameraPosition) => position / this.camera.cameraScale - cameraPosition
             return new Point(getUpdatedCoordinate(x, this.camera.x), getUpdatedCoordinate(y, this.camera.y))
         }
@@ -48,9 +61,9 @@ export class InteractiveObject extends Rectangle {
     interactive(point = new Point) {
         let updatedPoint = this.updatePointWithCamera(point)
         if(this.isPointInRect(updatedPoint)) {
-            this.callback(updatedPoint)
             this.interactives++
             this.isInteracted = true
+            this.callback(updatedPoint)
         }
     }
 

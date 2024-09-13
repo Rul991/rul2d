@@ -6,15 +6,15 @@ import { World } from "./p2.js"
 import { Point } from "./Point.js"
 
 export class GameWorld {
-    constructor({canvas = null, width = null, height = null, gravity = new Point(0, 9.81)}) {
-        this.canvas = canvas ?? createCanvas()
+    constructor({camera = new Camera, canvas = createCanvas(), width = 0, height = 0, gravity = new Point(0, 9.81)}) {
+        this.canvas = canvas
         this.ctx = getContext2d(canvas)
         this.canvas.width = width || this.canvas.width
         this.canvas.height = height || this.canvas.height
-        this.world = new World({ gravity: [gravity.x, gravity.y] ?? [0, 9.81] })
+        this.world = new World({ gravity: [gravity.x, gravity.y] })
         this.gameObjects = new Set()
         this.uiObjects = new Set()
-        this.setCamera()
+        this.setCamera(camera)
     }
 
     setCamera(camera = new Camera) {
@@ -29,8 +29,10 @@ export class GameWorld {
         gameObjects.forEach(object => {
             if(object.isRenderedFromCameraView) this.gameObjects.add(object)
             else this.uiObjects.add(object)
-            // тут должен быть какой то иф, но я не помню какой
-            if(object.colliders) object.colliders.forEach(collider => this.world.addBody(collider.body))
+            // тут должен быть какой то иф, но я не помню какой, либо не должен
+            if(object.colliders) object.colliders.forEach(collider => {
+                this.world.addBody(collider.body)
+            })
         })
     }
 

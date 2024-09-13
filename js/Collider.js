@@ -5,7 +5,7 @@ export class Collider extends Rectangle {
     constructor(x, y, width, height, isMainCollider) {
         super(x, y, width, height)
 
-        this.setIsMainCollider()
+        this.setIsMainCollider(isMainCollider)
         
         this.setBox()
         this.setBody()
@@ -38,9 +38,9 @@ export class Collider extends Rectangle {
         [this.x, this.y] = this.body.position
     }
 
-    update(ctx) {
+    update(ctx, delta) {
         this.lockAngle()
         this.updateCoordinates()
-        // this.draw(ctx)
+        this.draw(ctx)
     }
 }

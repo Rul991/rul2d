@@ -18,16 +18,25 @@ const lastIndex = arr => arr.length - 1
 
 export const getNumbersFromString = (string = '') => {
     let numbers = ['']
+    let prevSymbolIsDigit = false
 
     const symbols = string.split('')
 
     symbols.forEach(symbol => {
-        if(isDigit(symbol)) numbers[lastIndex(numbers)] += symbol
+        if(isDigit(symbol)) {
+            numbers[lastIndex(numbers)] += symbol
+            prevSymbolIsDigit = true
+        }
+        else if(symbol == '.') {
+            if(prevSymbolIsDigit) numbers[lastIndex(numbers)] += symbol
+        }
         else {
             if(numbers[lastIndex(numbers)] !== '') {
                 numbers[lastIndex(numbers)] = +numbers[lastIndex(numbers)]
                 numbers[lastIndex(numbers) + 1] = ''
             }
+
+            prevSymbolIsDigit = false
         }
     })
     if(numbers[lastIndex(numbers)] !== '') numbers[lastIndex(numbers)] = +numbers[lastIndex(numbers)]
