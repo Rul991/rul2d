@@ -1,6 +1,6 @@
 import { fillPath, strokePath } from './canvasWork.js'
 import { deg2rad } from './numberWork.js'
-import {Point} from './Point.js'
+import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 
 export default class CanvasShape extends Rectangle {
