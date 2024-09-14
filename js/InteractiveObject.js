@@ -1,8 +1,8 @@
-import { Point } from "./Point.js"
-import { Rectangle } from "./Rectangle.js"
-import { Camera } from "./Camera.js"
+import Point from "./Point.js"
+import Rectangle from "./Rectangle.js"
+import Camera from "./Camera.js"
 
-export class InteractiveObject extends Rectangle {
+export default class InteractiveObject extends Rectangle {
     constructor(x, y, width, height) {
         super(x, y, width, height)
         this.reset()

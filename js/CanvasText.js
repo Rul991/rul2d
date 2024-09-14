@@ -1,7 +1,7 @@
 import { measureText } from "./canvasWork.js"
-import { Rectangle } from "./Rectangle.js"
+import Rectangle from "./Rectangle.js"
 
-export class CanvasText extends Rectangle {
+export default class CanvasText extends Rectangle {
     constructor(x, y, width, height) {
         super(x, y, width, height)
 

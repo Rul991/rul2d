@@ -1,7 +1,7 @@
 import { Body, Box } from "./p2.js"
-import { Rectangle } from "./Rectangle.js"
+import Rectangle from "./Rectangle.js"
 
-export class Collider extends Rectangle {
+export default class Collider extends Rectangle {
     constructor(x, y, width, height, isMainCollider) {
         super(x, y, width, height)
 

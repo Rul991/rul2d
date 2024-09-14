@@ -1,6 +1,6 @@
-import { Camera } from "./Camera.js"
+import Camera from "./Camera.js"
 
-export class FollowedCamera extends Camera {
+export default class FollowedCamera extends Camera {
     translate() {
         if(!this.ctx) return
 

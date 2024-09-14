@@ -1,7 +1,7 @@
-import { InteractiveObject } from "./InteractiveObject.js"
-import { Point } from "./Point.js"
+import InteractiveObject from "./InteractiveObject.js"
+import Point from "./Point.js"
 
-export class GameObject extends Point {
+export default class GameObject extends Point {
     constructor(x, y) {
         super(x, y, 1)
         this.subObjects = {all: []}
@@ -47,8 +47,8 @@ export class GameObject extends Point {
     }
 
     updateSubObjectCoordinates(sub) {
-        if(!sub.isMainCollider) return
-        [sub.x, sub.y] = [sub.offset.x + this.x, sub.offset.y + this.y]
+        if(sub.isMainCollider) return
+        sub.setPosition(sub.offset.x + this.x, sub.offset.y + this.y)
     }
 
     updateSubObjectsCoordinates() {
@@ -75,9 +75,9 @@ export class GameObject extends Point {
 
     update(ctx, delta) {
         this.updateCoordinate()
-        this.updateSubObjectsCoordinates()
         this.forSubObjects(sub => {
-            sub.update(ctx, delta)
+            if(sub.update) sub.update(ctx, delta)
         })
+        this.updateSubObjectsCoordinates()
     }
 }

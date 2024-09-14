@@ -1,7 +1,7 @@
 import { getContext2d } from "./canvasWork.js"
-import { Point } from "./Point.js"
+import Point from "./Point.js"
 
-export class Camera extends Point {
+export default class Camera extends Point {
     constructor(ctx) {
         super()
         

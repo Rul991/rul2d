@@ -1,6 +1,6 @@
-import { InteractiveObject } from './InteractiveObject.js'
+import InteractiveObject from './InteractiveObject.js'
 
-export class ClickableObject extends InteractiveObject {
+export default class ClickableObject extends InteractiveObject {
     addControls(canvas = new HTMLCanvasElement) {
         canvas.addEventListener('click', e => {
             let {clientX: x, clientY: y} = e

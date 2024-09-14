@@ -1,10 +1,19 @@
 import { fillRect, strokeRect } from "./canvasWork.js"
-import { Point } from "./Point.js"
+import Point from "./Point.js"
 
-export class Rectangle extends Point {
+export default class Rectangle extends Point {
     constructor(x,y,width,height) {
         super(x,y)
         this.setSize(width, height)
+    }
+
+    set size({width, height}) {
+        this.setSize(width, height)
+    }
+
+    get size() {
+        let {width, height} = this
+        return {x: 0, y: 0, width, height}
     }
 
     set scale(value) {

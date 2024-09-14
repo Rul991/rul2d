@@ -45,6 +45,8 @@ export const fillArc = (ctx, x, y, radius, color, startAngle, endAngle) => _draw
 export const strokeArc = (ctx, x, y, radius, color, startAngle, endAngle) => _drawArc(ctx, x, y, radius, color, startAngle, endAngle, 'stroke')
 
 const _drawPath = (ctx, points = [], color, type) => {
+    if(!points.length) return
+    
     ctx[`${type}Style`] = color
 
     let firstPoint = points.shift()
@@ -64,7 +66,7 @@ const _drawPath = (ctx, points = [], color, type) => {
 export const fillPath = (ctx, points, color) => _drawPath(ctx, points, color, 'fill')
 export const strokePath = (ctx, points, color) => _drawPath(ctx, points, color, 'stroke')
 
-export const drawImage = (ctx, image, position, source = undefined) => {
+export const drawImage = (ctx, image, position, source = null) => {
     source = source ?? {x: 0, y: 0, width: image.width, height: image.height}
     ctx.drawImage(image, source.x, source.y, source.width, source.height, position.x, position.y, position.width, position.height)
 }

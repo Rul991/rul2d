@@ -1,11 +1,11 @@
-import { Camera } from "./Camera.js"
+import Camera from "./Camera.js"
 import { clearCanvas, createCanvas, createGameLoop, getContext2d } from "./canvasWork.js"
 import { Collider } from "./Collider.js"
-import { GameObject } from "./GameObject.js"
+import GameObject from "./GameObject.js"
 import { World } from "./p2.js"
 import { Point } from "./Point.js"
 
-export class GameWorld {
+export default class GameWorld {
     constructor({camera = new Camera, canvas = createCanvas(), width = 0, height = 0, gravity = new Point(0, 9.81)}) {
         this.canvas = canvas
         this.ctx = getContext2d(canvas)

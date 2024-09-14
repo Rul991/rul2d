@@ -10,7 +10,7 @@ export const randomArray = (length, [min, max]) => {
     return arr
 }
 
-export const getNumberSign = (num = 0) => Math.abs(num) / num
+export const getNumberSign = (num = 0) => num != 0 ? Math.abs(num) / num : 0
 export const percents = (value, {min = 0, max = 100} = {}) => (value - min) / (max - min)
 
 export const isDigit = char => !isNaN(parseInt(char))
@@ -44,3 +44,6 @@ export const getNumbersFromString = (string = '') => {
 
     return numbers
 }
+
+export const deg2rad = (degrees = 0) => degrees / 180 * Math.PI
+export const rad2deg = (radians = 0) => radians / Math.PI * 180

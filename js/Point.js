@@ -1,6 +1,6 @@
 import { fillArc } from "./canvasWork.js"
 
-export class Point {
+export default class Point {
     constructor(x,y) {
         this.setPosition(x,y)
     }
