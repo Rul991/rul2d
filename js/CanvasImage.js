@@ -7,14 +7,18 @@ export default class CanvasImage extends Rectangle {
         this.image = new Image
     }
 
+    dispatchImageSizeUpdateEvent() {
+        if(this.isUpdateSizeByImage) {
+            let event = new CustomEvent('image-size-update', {detail: {element: this}, bubbles: true})
+            this.image.dispatchEvent(event)
+        }
+    }
+
     setImage(src = '') {
         this.isImageLoaded = false
         this.image.addEventListener('load', e => {
             this.isImageLoaded = true
-            if(this.isUpdateSizeByImage) {
-                let event = new CustomEvent('image-size-update', {detail: {element: this}, bubbles: true})
-                this.image.dispatchEvent(event)
-            }
+            this.dispatchImageSizeUpdateEvent()
         })
         this.image.src = src
     }
@@ -31,6 +35,7 @@ export default class CanvasImage extends Rectangle {
     setSizeByImage() {
         this.isUpdateSizeByImage = true
         this.image.addEventListener('image-size-update', ({detail}) => {
+            if(!this.isUpdateSizeByImage) return
             if(detail.element === this) this.updateSizeByImage()
         })
     }

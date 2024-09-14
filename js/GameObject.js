@@ -7,6 +7,7 @@ export default class GameObject extends Point {
         this.subObjects = {all: []}
         this.colliders = []
         this.mainCollider = null
+        this.camera = null
         this.isRenderingFromCameraView()
     }
 
@@ -75,9 +76,6 @@ export default class GameObject extends Point {
 
     update(ctx, delta) {
         this.updateCoordinate()
-        this.forSubObjects(sub => {
-            if(sub.update) sub.update(ctx, delta)
-        })
         this.updateSubObjectsCoordinates()
     }
 }

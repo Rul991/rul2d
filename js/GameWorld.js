@@ -29,7 +29,6 @@ export default class GameWorld {
         gameObjects.forEach(object => {
             if(object.isRenderedFromCameraView) this.gameObjects.add(object)
             else this.uiObjects.add(object)
-            // тут должен быть какой то иф, но я не помню какой, либо не должен
             if(object.colliders) object.colliders.forEach(collider => {
                 this.world.addBody(collider.body)
             })

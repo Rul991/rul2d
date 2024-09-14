@@ -36,7 +36,6 @@ export default class InteractiveObject extends Rectangle {
         if(!this.isRenderedFromCameraView) return point
         else {
             let {x, y} = point
-            console.log(x, y)
             const getUpdatedCoordinate = (position, cameraPosition) => position / this.camera.cameraScale - cameraPosition
             return new Point(getUpdatedCoordinate(x, this.camera.x), getUpdatedCoordinate(y, this.camera.y))
         }
