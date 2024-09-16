@@ -27,7 +27,10 @@ export default class GameWorld {
 
     addGameObjects(...gameObjects) {
         gameObjects.forEach(object => {
-            if(object.isRenderedFromCameraView) this.gameObjects.add(object)
+            object.world = this
+            if(object.isRenderedFromCameraView) {
+                this.gameObjects.add(object)
+            }
             else this.uiObjects.add(object)
             if(object.colliders) object.colliders.forEach(collider => {
                 this.world.addBody(collider.body)
@@ -35,9 +38,14 @@ export default class GameWorld {
         })
     }
 
-    removeGameObject(object = new GameObject) {
-        this.gameObjects.delete(object)
-        if(object.colliders) object.colliders.forEach(collider => this.world.removeBody(collider.body))
+    removeGameObject(...objects) {
+        objects.forEach(object => {
+            if(object.isRenderedFromCameraView) {
+                this.gameObjects.delete(object)
+            }
+            else this.uiObjects.delete(object)
+            if(object.colliders) object.colliders.forEach(collider => this.world.removeBody(collider.body))
+        })
     }
 
     update(maxSubSteps = 2) {

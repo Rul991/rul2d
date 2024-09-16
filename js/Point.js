@@ -41,7 +41,7 @@ export default class Point {
         window.dispatchEvent(event)
     }
 
-    move({x, y}, delta) {
+    move({x, y}, delta = 1/60) {
         this.addPosition(new Point(x * delta, y * delta))
     }
 }

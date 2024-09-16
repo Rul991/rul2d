@@ -14,29 +14,34 @@ export default class SpriteSheet extends CanvasImage {
         if(this.frames.length) this.size = this.getCurrentFrame()
     }
 
-    setSpriteSheet(rows = 1, columns = 1) {
-        const setSpriteSheet = () => {
-            this.frames = []
-
+    setSpriteSheet(columns = 1, rows = 1) {
+        this.doWhenImageIsLoaded(e => {
             let rowSize = this.image.naturalHeight / rows,
-                columnSize = this.image.naturalWidth / columns
+            columnSize = this.image.naturalWidth / columns
 
-            for(let y = 0; y < rows; y++) {
-                for(let x = 0; x < columns; x++) {
-                    this.frames.push(new Rectangle(x * columnSize, y * rowSize, columnSize, rowSize))
+            this.setSpriteSheetBySize(columnSize, rowSize)
+        })
+    }
+
+    setSpriteSheetBySize(width = 1, height = 1) {
+        const setSpriteSheetBySize = e => {
+           this.frames = []
+
+            for(let y = 0; y < this.image.naturalHeight; y += height) {
+                for(let x = 0; x < this.image.naturalWidth; x += width) {
+                    this.frames.push(new Rectangle(x, y, width, height))
                 }
             }
-
+    
             this.setCurrentFrame()
             this.dispatchImageSizeUpdateEvent()
         }
 
-        if(!this.isImageLoaded) this.image.addEventListener('load', setSpriteSheet)
-        else setSpriteSheet()
+        this.doWhenImageIsLoaded(setSpriteSheetBySize)
     }
 
     setCurrentFrame(id = 0) {
-        this.currentFrame = id
+        this.currentFrame = id >= this.frames.length ? 0 : id < 0 ? this.frames.length - 1 : id
         this.cutImage(this.getCurrentFrame())
     }
 

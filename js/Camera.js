@@ -4,9 +4,20 @@ import Point from "./Point.js"
 export default class Camera extends Point {
     constructor(ctx) {
         super()
-        
         this.setContext(ctx)
         this.setScale()
+        this.setSmoothing()
+    }
+
+    setSmoothing(enabled = false, quality = 'low') {
+        if(!this.ctx) return
+        this.smoothingEnabled = enabled
+        this.smoothingQuality = quality
+    }
+
+    updateSmoothing() {
+        this.ctx.imageSmoothingEnabled = this.smoothingEnabled
+        this.ctx.imageSmoothingQuality = this.smoothingQuality
     }
 
     setContext(ctx) {
@@ -32,6 +43,7 @@ export default class Camera extends Point {
     startRender() {
         if(!this.ctx) return
 
+        this.updateSmoothing()
         this.ctx.save()
     }
 

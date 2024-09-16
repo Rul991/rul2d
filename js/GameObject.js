@@ -4,8 +4,8 @@ import Point from "./Point.js"
 export default class GameObject extends Point {
     constructor(x, y) {
         super(x, y, 1)
-        this.subObjects = {all: []}
-        this.colliders = []
+        this.subObjects = {all: new Set()}
+        this.colliders = new Set()
         this.mainCollider = null
         this.camera = null
         this.isRenderingFromCameraView()
@@ -19,15 +19,31 @@ export default class GameObject extends Point {
 
             this.setOffsetForSubObject(sub)
 
-            this.subObjects.all.push(sub)
+            this.subObjects.all.add(sub)
 
-            if(!this.subObjects[subName]) this.subObjects[subName] = []
-            this.subObjects[subName].push(sub)
+            if(!this.subObjects[subName]) this.subObjects[subName] = new Set()
+            this.subObjects[subName].add(sub)
 
             if(sub.body) {
-                this.colliders.push(sub)
+                this.colliders.add(sub)
             }
             
+        })
+    }
+
+    removeSubObjects(...subObjects) {
+        subObjects.forEach(sub => {
+            if(!this.subObjects.all.delete(sub)) return
+
+            const subName = sub.constructor.name.toLowerCase()
+            this.subObjects[subName].delete(sub)
+
+            if(sub.body) {
+                this.colliders.delete(sub)
+                this.world.world.removeBody(sub.body)
+
+                if(this.mainCollider == sub) this.mainCollider = null
+            }
         })
     }
 

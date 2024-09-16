@@ -14,11 +14,27 @@ export default class CanvasImage extends Rectangle {
         }
     }
 
+    dispatchImageLoadEvent() {
+        let event = new Event('image-load')
+        this.image.dispatchEvent(event)
+    }
+
+    doWhenImageIsLoaded(callback = event => {}) {
+        const doWhenIsLoaded = e => {
+            callback(e)
+            this.image.removeEventListener('image-load', doWhenIsLoaded)
+        }
+
+        if(!this.isImageLoaded) this.image.addEventListener('image-load', doWhenIsLoaded)
+        else callback()
+    }
+
     setImage(src = '') {
         this.isImageLoaded = false
         this.image.addEventListener('load', e => {
             this.isImageLoaded = true
             this.dispatchImageSizeUpdateEvent()
+            this.dispatchImageLoadEvent()
         })
         this.image.src = src
     }
