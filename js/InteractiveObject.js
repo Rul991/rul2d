@@ -38,7 +38,7 @@ export default class InteractiveObject extends Rectangle {
         else {
             let {x, y} = point
             const getUpdatedCoordinate = (position, cameraPosition) => position / this.camera.zoom - cameraPosition
-            console.log(this.camera, x, y)
+            
             return new Point(getUpdatedCoordinate(x, this.camera.x), getUpdatedCoordinate(y, this.camera.y))
         }
     }

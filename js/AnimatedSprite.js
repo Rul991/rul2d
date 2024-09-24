@@ -64,6 +64,5 @@ export default class AnimatedSprite extends SpriteSheet {
         this.updateTime(delta)
         this.updateAnimation()
         this.draw(ctx)
-        // this.drawOutline(ctx)
     }
 }
