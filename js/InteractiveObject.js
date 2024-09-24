@@ -10,6 +10,8 @@ export default class InteractiveObject extends Rectangle {
         this.isReset = true
         this.isRenderingFromCameraView()
         this.setCallback()
+
+        this._isAddInteractives = true
     }
 
     setCamera(camera = new Camera()) {
@@ -45,7 +47,6 @@ export default class InteractiveObject extends Rectangle {
 
     reset() {
         this.isInteracted = false
-        this.interactives = 0
     }
 
     isPointInRect({x, y}) {
@@ -62,7 +63,7 @@ export default class InteractiveObject extends Rectangle {
     interactive(point = new Point) {
         let updatedPoint = this.updatePointWithCamera(point)
         if(this.isPointInRect(updatedPoint)) {
-            this.interactives++
+            if(this._isAddInteractives) this.interactives++
             this.isInteracted = true
             this.callback(updatedPoint)
         }

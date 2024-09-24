@@ -3,6 +3,8 @@ import InteractiveObject from "./InteractiveObject.js"
 export class TouchableObject extends InteractiveObject {
     constructor(x, y, width, height) {
         super(x, y, width, height)
+
+        this._isAddInteractives = false
     }
 
     reset() {
@@ -21,6 +23,8 @@ export class TouchableObject extends InteractiveObject {
     }
 
     interactive() {
+        this.interactives = this.touches.length
+
         this.touches.forEach(point => {
             super.interactive(point)
         })

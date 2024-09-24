@@ -4,4 +4,8 @@ export default class SpriteKeyFrame {
         this.duration = duration
         this.currentTime = -1
     }
+
+    static createGenerator(duration = 1) {
+        return (id = 0) => new SpriteKeyFrame(id, duration)
+    }
 }

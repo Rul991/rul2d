@@ -2,7 +2,7 @@ import Collider from "./Collider.js"
 import GameWorld from "./GameWorld.js"
 import Rectangle from "./Rectangle.js"
 
-export class Area extends Rectangle {
+export default class Area extends Rectangle {
     constructor(x, y, width, height) {
         super(x, y, width, height)
 
