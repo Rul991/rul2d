@@ -1,10 +1,20 @@
 import { fillRect, strokeRect } from "./canvasWork.js"
+import { deg2rad, rad2deg } from "./numberWork.js"
 import Point from "./Point.js"
 
 export default class Rectangle extends Point {
     constructor(x,y,width,height) {
         super(x,y)
         this.setSize(width, height)
+        this.radians = 0
+    }
+
+    set degrees(value) {
+        this.radians = deg2rad(value)
+    }
+
+    get degrees() {
+        return rad2deg(this.radians)
     }
 
     set size({width, height}) {
@@ -43,6 +53,10 @@ export default class Rectangle extends Point {
         return this.x + this.width
     }
 
+    get center() {
+        return new Point(this.x + this.width / 2, this.y + this.height / 2)
+    }
+
     setSize(width, height) {
         this.width = width ?? 1
         this.height = height ?? this.width
@@ -53,6 +67,7 @@ export default class Rectangle extends Point {
     }
 
     draw(ctx, color = 'green') {
+        if(!this.isVisible) return
         fillRect(ctx, this.x, this.y, this.width, this.height, color)
     }
 }

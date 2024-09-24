@@ -62,6 +62,7 @@ export default class CanvasImage extends Rectangle {
     }
 
     draw(ctx) {
+        if(!this.isVisible) return
         if(!this.isImageLoaded) return
         drawImage(ctx, this.image, this.rect, this.cuttedImage)
     }

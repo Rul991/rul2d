@@ -7,6 +7,13 @@ export default class SpriteSheet extends CanvasImage {
 
         this.frames = []
         this.currentFrame = 0
+
+        this.clearRowsAndColumns()
+    }
+
+    clearRowsAndColumns() {
+        this.rows = 0
+        this.columns = 0
     }
 
     updateSizeByImage() {
@@ -24,11 +31,15 @@ export default class SpriteSheet extends CanvasImage {
     }
 
     setSpriteSheetBySize(width = 1, height = 1) {
+        this.clearRowsAndColumns()
+
         const setSpriteSheetBySize = e => {
            this.frames = []
 
             for(let y = 0; y < this.image.naturalHeight; y += height) {
+                this.rows++
                 for(let x = 0; x < this.image.naturalWidth; x += width) {
+                    if(y == 0) this.columns++
                     this.frames.push(new Rectangle(x, y, width, height))
                 }
             }

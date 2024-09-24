@@ -26,6 +26,7 @@ export default class AnimatedSprite extends SpriteSheet {
     }
 
     getCurrentFrame() {
+        if(!this.hasCurrentAnimation()) return
         return this.frames[this.currentAnimationFrame.id]
     }
 
@@ -35,11 +36,11 @@ export default class AnimatedSprite extends SpriteSheet {
     }
 
     hasCurrentAnimation() {
-        return this.currentAnimation ?? null
+        return this.currentAnimation ? true : false
     }
 
     updateTime(delta = 0) {
-        if(!this.hasCurrentAnimation()) return
+        if(!this.hasCurrentAnimation() || !this.isPlaying) return
         this.currentTime += delta
         if(this.currentTime > this.currentAnimation.totalDuration) this.currentTime = 0
     }
@@ -57,13 +58,12 @@ export default class AnimatedSprite extends SpriteSheet {
         
         this.currentAnimationFrame = this.currentAnimation.getFrameByTime(this.currentTime)
         this.cuttedImage = this.getCurrentFrame()
-        console.log(floor(this.currentTime, 2), this.currentAnimationFrame.id)
     }
 
     update(ctx, delta = 0) {
         this.updateTime(delta)
         this.updateAnimation()
         this.draw(ctx)
-        this.drawOutline(ctx)
+        // this.drawOutline(ctx)
     }
 }

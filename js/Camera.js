@@ -5,7 +5,7 @@ export default class Camera extends Point {
     constructor(ctx) {
         super()
         this.setContext(ctx)
-        this.setScale()
+        this.setZoom()
         this.setSmoothing()
     }
 
@@ -24,20 +24,12 @@ export default class Camera extends Point {
         this.ctx = ctx ?? null
     }
 
-    setScale(scale = 1) {
-        this.cameraScale = scale
+    setZoom(zoom = 1) {
+        this.zoom = zoom
     }
 
-    addScale(scale = 0) {
-        this.setScale(this.cameraScale + scale)
-    }
-    
-    setPosition(x, y) {
-        super.setPosition(-x, -y)
-    }
-
-    addPosition({x, y}) {
-        this.setPosition(this.x - x, this.y - y)
+    addZoom(zoom = 0) {
+        this.setZoom(this.zoom + zoom)
     }
 
     startRender() {
@@ -56,14 +48,14 @@ export default class Camera extends Point {
     translate() {
         if(!this.ctx) return
 
-        let {x, y, cameraScale} = this
-        this.ctx.translate(x * cameraScale, y * cameraScale)
+        let {x, y, zoom} = this
+        this.ctx.translate(x * zoom, y * zoom)
     }
 
     scale() {
         if(!this.ctx) return
 
-        this.ctx.scale(this.cameraScale, this.cameraScale)
+        this.ctx.scale(this.zoom, this.zoom)
     }
 
     update(callback = () => {}) {

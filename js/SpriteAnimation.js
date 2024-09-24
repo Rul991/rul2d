@@ -10,12 +10,15 @@ export default class SpriteAnimation {
         this.totalDuration = 0
     }
 
-    removeKeyFrame(frame = new SpriteKeyFrame) {
-        let index = this.keyframes.indexOf(frame)
-        if(index == -1) return
+    removeKeyFrame(...frames) {
+        frames.forEach(frame => {
+            let index = this.keyframes.indexOf(frame)
+            if(index == -1) return
 
-        this.keyframes.splice(index, 1)
-        this.totalDuration -= frame.duration
+            this.keyframes.splice(index, 1)
+            this.totalDuration -= frame.duration
+        })
+        
         this.updateFramesCurrentTime()
     }
 
@@ -27,11 +30,12 @@ export default class SpriteAnimation {
         })
     }
 
-    addKeyFrame(frame = new SpriteKeyFrame) {
-        this.totalDuration += frame.duration
-        frame.currentTime = this.totalDuration
-        this.keyframes.push(frame)
-        
+    addKeyFrames(...frames) {
+        frames.forEach(frame => {
+            this.totalDuration += frame.duration
+            frame.currentTime = this.totalDuration
+            this.keyframes.push(frame)
+        })
     }
 
     getFrameByTime(time = 0) {

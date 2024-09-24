@@ -14,6 +14,7 @@ export default class GameWorld {
         this.world = new World({ gravity: [gravity.x, gravity.y] })
         this.gameObjects = new Set()
         this.uiObjects = new Set()
+        this.colliders = new Set()
         this.setCamera(camera)
     }
 
@@ -34,6 +35,7 @@ export default class GameWorld {
             else this.uiObjects.add(object)
             if(object.colliders) object.colliders.forEach(collider => {
                 this.world.addBody(collider.body)
+                this.colliders.add(collider)
             })
         })
     }
@@ -44,7 +46,10 @@ export default class GameWorld {
                 this.gameObjects.delete(object)
             }
             else this.uiObjects.delete(object)
-            if(object.colliders) object.colliders.forEach(collider => this.world.removeBody(collider.body))
+            if(object.colliders) object.colliders.forEach(collider => {
+                this.world.removeBody(collider.body)
+                this.colliders.remove(collider)
+            })
         })
     }
 

@@ -62,6 +62,7 @@ export default class CanvasShape extends Rectangle {
     }
 
     draw(ctx, color) {
+        if(!this.isVisible) return
         if(!this.drawPoints) return
 
         if(this.drawPoints.length > 2) this.fill(ctx, color)

@@ -3,6 +3,11 @@ import { fillArc } from "./canvasWork.js"
 export default class Point {
     constructor(x,y) {
         this.setPosition(x,y)
+        this.isVisible = true
+    }
+
+    setVisibity(isVisible = true) {
+        this.isVisible = isVisible
     }
 
     set point({x,y}) {
@@ -27,6 +32,7 @@ export default class Point {
     }
 
     draw(ctx, color = 'red') {
+        if(!this.isVisible) return
         this.drawPoint(ctx, color)
     }
 
