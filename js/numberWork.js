@@ -10,6 +10,8 @@ export const randomArray = (length, [min, max]) => {
     return arr
 }
 
+export const randomChance = (chance, maxChance) => randomRange(0, maxChance) < chance
+
 export const getNumberSign = (num = 0) => num != 0 ? Math.abs(num) / num : 0
 export const percents = (value, {min = 0, max = 100} = {}) => (value - min) / (max - min)
 
