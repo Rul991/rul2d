@@ -1,5 +1,4 @@
 import SpriteKeyFrame from "./SpriteKeyFrame.js"
-import { floor } from "./numberWork.js"
 import SpriteAnimation from "./SpriteAnimation.js"
 import SpriteSheet from "./SpriteSheet.js"
 

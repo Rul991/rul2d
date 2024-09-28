@@ -1,4 +1,3 @@
-import { getContext2d } from "./canvasWork.js"
 import Point from "./Point.js"
 
 export default class Camera extends Point {

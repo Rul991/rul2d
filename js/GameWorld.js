@@ -1,7 +1,5 @@
 import Camera from "./Camera.js"
 import { clearCanvas, createCanvas, createGameLoop, getContext2d } from "./canvasWork.js"
-import Collider from "./Collider.js"
-import GameObject from "./GameObject.js"
 import { World } from "./p2.js"
 import Point from "./Point.js"
 

@@ -1,5 +1,3 @@
-import SpriteKeyFrame from "./SpriteKeyFrame.js"
-
 export default class SpriteAnimation {
     constructor() {
         this.deleteKeyFrames()

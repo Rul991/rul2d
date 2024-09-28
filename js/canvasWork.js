@@ -1,4 +1,4 @@
-import { $, all$ } from "./documentWork.js"
+import { all$ } from "./documentWork.js"
 
 export const resizeCanvas = (canvas = new HTMLCanvasElement, {width = innerWidth, height = innerHeight}) => {
     [canvas.width, canvas.height] = [width, height]
