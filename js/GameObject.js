@@ -12,7 +12,7 @@ export default class GameObject extends Point {
     }
 
     doIfExist(object, callback = () => {}) {
-        if(object !== udnefined) callback()
+        if(object !== undefined) callback()
     }
 
     addSubObjects(...subObjects) {
