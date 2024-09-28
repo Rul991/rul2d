@@ -11,6 +11,10 @@ export default class GameObject extends Point {
         this.isRenderingFromCameraView()
     }
 
+    doIfExist(object, callback = () => {}) {
+        if(object) callback()
+    }
+
     addSubObjects(...subObjects) {
         subObjects.forEach(sub => {
             if(sub.isMainCollider && !this.mainCollider) this.mainCollider = sub
