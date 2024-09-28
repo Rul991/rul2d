@@ -6,6 +6,7 @@ export default class CanvasText extends Rectangle {
         super(x, y, width, height)
 
         this.text = ''
+        this.fittedText = ['']
 
         this._font = {
             family: `'Courier New'`, 
@@ -20,11 +21,13 @@ export default class CanvasText extends Rectangle {
 
     setText(text) {
         this.text = text ?? ''
+        this.isNeedUpdateFittedText = true
     }
 
     setSize(width, height) {
         super.setSize(width, height)
 
+        this.isNeedUpdateFittedText = true
         this.isResizeableByText = false
     }
 
@@ -54,6 +57,7 @@ export default class CanvasText extends Rectangle {
             if(this._font[key] !== undefined)
                 this._font[key] = value
         })
+        this.isNeedUpdateFittedText = true
     }
 
     get font() {
@@ -75,10 +79,19 @@ export default class CanvasText extends Rectangle {
         return fittedText
     }
 
+    updateFittedText(ctx) {
+        if(this.isNeedUpdateFittedText) {
+            this.isNeedUpdateFittedText = false
+            this.fittedText = this.fitText(ctx)
+        }
+    }
+
     draw(ctx) {
         this.updateFont(ctx)
+        this.updateFittedText(ctx)
+
         let y = this.y
-        this.fitText(ctx).forEach(text => {
+        this.fittedText.forEach(text => {
             ctx.fillText(text, this.x, y)
             y += measureText(ctx, text).height
         })
