@@ -1,6 +1,5 @@
 import Camera from "./Camera.js"
 import { clearCanvas, createCanvas, createGameLoop, getContext2d } from "./canvasWork.js"
-import { World } from "./p2.js"
 import Point from "./Point.js"
 
 export default class GameWorld {
@@ -9,7 +8,7 @@ export default class GameWorld {
         this.ctx = getContext2d(canvas)
         this.canvas.width = width || this.canvas.width
         this.canvas.height = height || this.canvas.height
-        this.world = new World({ gravity: [gravity.x, gravity.y] })
+        this.setGravity(gravity)
         this.gameObjects = new Set()
         this.uiObjects = new Set()
         this.colliders = new Set()
@@ -20,8 +19,8 @@ export default class GameWorld {
         this.camera = camera
     }
 
-    setGravity({x, y}) {
-        this.world.gravity = [x, y]
+    setGravity(gravity = new Point) {
+        this.gravity = gravity
     }
 
     addGameObjects(...gameObjects) {
@@ -32,7 +31,6 @@ export default class GameWorld {
             }
             else this.uiObjects.add(object)
             if(object.colliders) object.colliders.forEach(collider => {
-                this.world.addBody(collider.body)
                 this.colliders.add(collider)
             })
         })
@@ -45,7 +43,6 @@ export default class GameWorld {
             }
             else this.uiObjects.delete(object)
             if(object.colliders) object.colliders.forEach(collider => {
-                this.world.removeBody(collider.body)
                 this.colliders.remove(collider)
             })
         })
@@ -53,8 +50,6 @@ export default class GameWorld {
 
     update(maxSubSteps = 2) {
         createGameLoop(([delta, prevTime]) => {
-            this.world.step(delta, prevTime, maxSubSteps)
-
             clearCanvas(this.ctx)
 
             this.camera.update(() => {

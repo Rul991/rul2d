@@ -11,6 +11,11 @@ export default class GameObject extends Point {
         this.isRenderingFromCameraView()
     }
 
+    setPosition(x, y) {
+        if(this.mainCollider) this.mainCollider.setPosition(x, y)
+        else super.setPosition(x, y)
+    }
+
     doIfExist(object, callback = () => {}) {
         if(object !== undefined) callback()
     }
@@ -28,7 +33,7 @@ export default class GameObject extends Point {
             if(!this.subObjects[subName]) this.subObjects[subName] = new Set()
             this.subObjects[subName].add(sub)
 
-            if(sub.body) {
+            if(sub.isCollider) {
                 this.colliders.add(sub)
             }
             
@@ -42,9 +47,8 @@ export default class GameObject extends Point {
             const subName = sub.constructor.name.toLowerCase()
             this.subObjects[subName].delete(sub)
 
-            if(sub.body) {
+            if(sub.isCollider) {
                 this.colliders.delete(sub)
-                this.world.world.removeBody(sub.body)
 
                 if(this.mainCollider == sub) this.mainCollider = null
             }
@@ -63,12 +67,13 @@ export default class GameObject extends Point {
     }
 
     setOffsetForSubObject(sub) {
+        if(this.mainCollider == sub) return
         sub.offset = new Point()
         sub.offset.point = sub
     }
 
     updateSubObjectCoordinates(sub) {
-        if(sub.isMainCollider) return
+        if(this.mainCollider == sub) return
         sub.setPosition(sub.offset.x + this.x, sub.offset.y + this.y)
     }
 

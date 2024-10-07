@@ -17,10 +17,18 @@ export default class CanvasText extends Rectangle {
             color: '#000',
             letterSpacing: '0px'
         }
+
+        this.setMaxSymbols()
+    }
+
+    setMaxSymbols(max = -1) {
+        this.maxSymbols = max
     }
 
     setText(text) {
         this.text = text ?? ''
+        if(this.maxSymbols != -1) this.text = this.text.substring(0, this.maxSymbols)
+
         this.isNeedUpdateFittedText = true
     }
 
@@ -60,21 +68,43 @@ export default class CanvasText extends Rectangle {
         this.isNeedUpdateFittedText = true
     }
 
+    ignoreHeight(ignore = false) {
+        this.isIgnoreHeight = ignore
+    }
+
     get font() {
         return this._font
     }
 
     fitText(ctx) {
         let fittedText = ['']
-        this.text.split('').forEach(symb => {
+        let textHeight = 0
+        let symbols = this.text.split('')
+        let symbolsCount = 0
+
+        this.isTextFull = false
+        
+        for(let symb of symbols) {
             let lastIndex = fittedText.length - 1
             
-            let {width} = measureText(ctx, fittedText[lastIndex] + symb)
+            let {width, height} = measureText(ctx, fittedText[lastIndex] + symb)
 
             if(width <= this.width) fittedText[lastIndex] += symb
-            else 
+            else {
+                if(!this.isIgnoreHeight) {
+                    if(textHeight + height > this.height) {
+                        this.isTextFull = true
+                        this.text = this.text.substring(0, symbolsCount)
+                        break
+                    }
+                    else textHeight += height
+                }
+
                 fittedText.push(symb)
-        })
+            }
+            
+            symbolsCount++
+        }
         
         return fittedText
     }

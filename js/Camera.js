@@ -1,3 +1,4 @@
+import { getNumberSign } from "./numberWork.js"
 import Point from "./Point.js"
 
 export default class Camera extends Point {
@@ -6,12 +7,29 @@ export default class Camera extends Point {
         this.setContext(ctx)
         this.setZoom()
         this.setSmoothing()
+        this.limit = null
+    }
+
+    setPosition(x, y) {
+        super.setPosition(x, y)
+        this.updateLimit()
     }
 
     setSmoothing(enabled = false, quality = 'low') {
         if(!this.ctx) return
         this.smoothingEnabled = enabled
         this.smoothingQuality = quality
+    }
+
+    setLimit(x, y) {
+        this.limit = new Point(x, y)
+    }
+
+    updateLimit() {
+        if(!this.limit) return
+
+        if(Math.abs(this.x) > this.limit.x) this.x = this.limit.x * getNumberSign(this.x)
+        if(Math.abs(this.y) > this.limit.y) this.y = this.limit.y * getNumberSign(this.y)
     }
 
     updateSmoothing() {

@@ -6,7 +6,15 @@ export default class Rectangle extends Point {
     constructor(x,y,width,height) {
         super(x,y)
         this.setSize(width, height)
-        this.radians = 0
+        this._radians = 0
+    }
+
+    set radians(value) {
+        this._radians = value % deg2rad(360)
+    }
+
+    get radians() {
+        return this._radians
     }
 
     set degrees(value) {

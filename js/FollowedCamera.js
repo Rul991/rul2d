@@ -14,7 +14,7 @@ export default class FollowedCamera extends Camera {
                 getCanvasCenter(x, width, canvas.width),
                 getCanvasCenter(y, height, canvas.height)
             ]
-            this.setPosition(centerX, centerY)
+            this.setPosition(-centerX, -centerY)
         }
         
         super.translate()

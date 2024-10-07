@@ -10,7 +10,7 @@ export default class Area extends Rectangle {
 
         this.doWhenBeganContact()
         this.doWhenContinuedContact()
-        this.doWhenContinuedContact()
+        this.doWhenEndedContact()
     }
 
     setWorld(world = new GameWorld) {
@@ -32,9 +32,9 @@ export default class Area extends Rectangle {
 
     checkContacts(delta) {
         this.colliders.forEach(collider => {
-            if(this.hasCollision(collider)) {
-                if(!collider.prevAreasContacted) collider.prevAreasContacted = new Set()
-                
+            if(!collider.prevAreasContacted) collider.prevAreasContacted = new Set()
+            
+            if(this.hasCollision(collider)) {                
                 if(collider.prevAreasContacted.has(this)) 
                     this.continueContactCallback(collider, delta)
                 else {
@@ -55,5 +55,9 @@ export default class Area extends Rectangle {
     hasCollision(rect = new Rectangle()) {
         let {x, y, bottom, right} = rect
         return this.right > x && this.x < right && this.bottom > y && this.y < bottom
+    }
+
+    update(ctx, delta) {
+        this.checkContacts(delta)
     }
 }

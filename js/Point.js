@@ -6,6 +6,18 @@ export default class Point {
         this.isVisible = true
     }
 
+    static clamp({x, y} = new Point, min = new Point, max = new Point) {
+        let point = new Point(x, y)
+
+        if(point.x > max.x) point.x = max.x
+        else if(point.x < min.x) point.x = min.x
+
+        if(point.y > max.y) point.y = max.y
+        else if(point.y < min.y) point.y = min.y
+
+        return point
+    }
+
     setVisibity(isVisible = true) {
         this.isVisible = isVisible
     }
