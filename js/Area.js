@@ -1,5 +1,6 @@
 import Collider from "./Collider.js"
 import GameWorld from "./GameWorld.js"
+import Point from "./Point.js"
 import Rectangle from "./Rectangle.js"
 
 export default class Area extends Rectangle {
@@ -31,10 +32,12 @@ export default class Area extends Rectangle {
     }
 
     checkContacts(delta) {
-        this.colliders.forEach(collider => {
+        for(const collider of this.colliders) {
             if(!collider.prevAreasContacted) collider.prevAreasContacted = new Set()
-            
-            if(this.hasCollision(collider)) {                
+
+            let isCollide = this.hasCollision(collider)
+
+            if(isCollide) {           
                 if(collider.prevAreasContacted.has(this)) 
                     this.continueContactCallback(collider, delta)
                 else {
@@ -49,12 +52,42 @@ export default class Area extends Rectangle {
                     collider.prevAreasContacted.delete(this)
                 }
             }
-        })
+        }   
+    }
+
+    isLinesIntersect(p1 = new Point, p2 = new Point, p3 = new Point, p4 = new Point) {
+        let x1 = p1.x, y1 = p1.y,
+            x2 = p2.x, y2 = p2.y,
+            x3 = p3.x, y3 = p3.y,
+            x4 = p4.x, y4 = p4.y
+
+        let denominator = ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1))
+
+        let uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / denominator
+        let uB = ((x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)) / denominator
+
+        return (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1)
     }
 
     hasCollision(rect = new Rectangle()) {
-        let {x, y, bottom, right} = rect
-        return this.right > x && this.x < right && this.bottom > y && this.y < bottom
+        if(rect == this) return false
+
+        let len = this.cornersArray.length
+
+        for (let i = 0; i < len; i++) {
+            const p1 = this.cornersArray[i]
+            const p2 = this.cornersArray[(i + 1) % len]
+
+            for (let j = 0; j < len; j++) {
+                
+                const p3 = rect.cornersArray[j]
+                const p4 = rect.cornersArray[(j + 1) % len]
+
+                if(this.isLinesIntersect(p1, p2, p3, p4)) return true
+            }
+        }
+
+        return false
     }
 
     update(ctx, delta) {

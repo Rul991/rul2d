@@ -26,7 +26,7 @@ export default class InteractiveObject extends Rectangle {
 
         let {left, top} = rect
 
-        return new Point(x - left, y - top)
+        return new Point(x , y)
     }
 
     isRenderingFromCameraView(value = true) {
@@ -49,14 +49,7 @@ export default class InteractiveObject extends Rectangle {
         this.isInteracted = false
     }
 
-    isPointInRect({x, y}) {
-        if(x > this.right || x < this.x) return false
-        if(y > this.bottom || y < this.y) return false
-
-        return true
-    }
-
-    setCallback(callback = point => {}) {
+    setCallback(callback = (point = new Point) => {}) {
         this.callback = callback
     }
 

@@ -19,7 +19,7 @@ export default class CanvasShape extends Rectangle {
     setDegreesPath({callback = (rad = new Number) => new Point(i), minDegree = 0, maxDegree = 360, step = 1}) {
         let points = []
 
-        for (let i = minDegree; i < maxDegree; i += step) {
+        for (let i = minDegree; i <= maxDegree; i += step) {
             points.push(callback(deg2rad(i)))           
         }
 
@@ -40,8 +40,8 @@ export default class CanvasShape extends Rectangle {
             yMax = max(yMax, point.y)
         }
 
-        const xRange = xMax - xMin
-        const yRange = yMax - yMin
+        let xRange = xMax - xMin
+        let yRange = yMax - yMin
 
         this.setPath(this.shapePoints.map(point => new Point((point.x - xMin) / xRange, (point.y - yMin) / yRange)))
     }
@@ -56,9 +56,23 @@ export default class CanvasShape extends Rectangle {
         this.updatePath()
     }
 
+    get point() {
+        return super.point
+    }
+
     updatePath() {
-        if(this.shapePoints) if(this.shapePoints.length)
-            this.drawPoints = this.shapePoints.map(({x, y}) => new Point(x * this.width + this.x, this.height * y + this.y))
+        if(this.shapePoints) if(this.shapePoints.length) {
+            this.drawPoints = this.shapePoints.map(({x, y}) => {
+                let newX = x * this.width + this.x - this.center.x
+                let newY = this.height * y + this.y - this.center.y
+
+                return new Point(newX, newY)
+            })
+        }
+    }
+
+    rotatePath(x, y) {
+        return this.drawPoints.map(p => new Point(p.x + x, p.y + y))
     }
 
     draw(ctx, color) {
@@ -71,11 +85,18 @@ export default class CanvasShape extends Rectangle {
 
     fill(ctx, color) {
         if(!this.drawPoints) return
-        fillPath(ctx, this.drawPoints, color)
+
+        this.drawRotated(ctx, (x, y) => {
+            fillPath(ctx, this.drawPoints, color)
+        }, this.center)
     }
 
     stroke(ctx, color) {
         if(!this.drawPoints) return
-        strokePath(ctx, this.drawPoints, color)
+        ctx.lineWidth = this.lineWidth
+
+        this.drawRotated(ctx, (x, y) => {
+            strokePath(ctx, this.drawPoints, color)
+        }, this.center)
     }
 }

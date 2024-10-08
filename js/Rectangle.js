@@ -7,6 +7,18 @@ export default class Rectangle extends Point {
         super(x,y)
         this.setSize(width, height)
         this._radians = 0
+        this.lineWidth = 3
+    }
+
+    isPointInRect(point = new Point) {
+        let sin = Math.sin(this.radians)
+        let cos = Math.cos(this.radians)
+        
+        let newPoint = new Point(point.x - this.center.x, point.y - this.center.y)
+        newPoint = new Point(newPoint.x * cos - newPoint.y * sin, newPoint.x * sin + newPoint.y * cos)
+        newPoint = new Point(newPoint.x + this.center.x, newPoint.y + this.center.y)
+    
+        return newPoint.x >= this.x && newPoint.x <= this.right && newPoint.y >= this.y && newPoint.y <= this.bottom
     }
 
     set radians(value) {
@@ -50,7 +62,7 @@ export default class Rectangle extends Point {
     }
 
     get rect() {
-        return {x: this.x, y: this.y, width: this.width, height: this.height}
+        return new Rectangle(this.x, this.y, this.width, this.height)
     }
 
     get bottom() {
@@ -61,8 +73,44 @@ export default class Rectangle extends Point {
         return this.x + this.width
     }
 
+    set center({x, y}) {
+        this.setPosition(x - (this.width / 2), y - (this.height / 2))
+    }
+
     get center() {
         return new Point(this.x + this.width / 2, this.y + this.height / 2)
+    }
+
+    get corners() {
+        let cos = Math.cos(this.radians)
+        let sin = Math.sin(this.radians)
+
+        return {
+            leftTop: new Point(
+                (-this.width / 2) * cos - (this.height / 2) * sin + this.center.x,
+                (-this.width / 2) * sin + (this.height / 2) * cos + this.center.y
+            ),
+            rightTop: new Point(
+                (this.width / 2) * cos - (this.height / 2) * sin + this.center.x,
+                (this.width / 2) * sin + (this.height / 2) * cos + this.center.y
+            ),
+            leftBottom: new Point(
+                (this.width / 2) * cos - (-this.height / 2) * sin + this.center.x,
+                (this.width / 2) * sin + (-this.height / 2) * cos + this.center.y
+            ),
+            rightBottom: new Point(
+                (-this.width / 2) * cos - (-this.height / 2) * sin + this.center.x,
+                (-this.width / 2) * sin + (-this.height / 2) * cos + this.center.y
+            )
+        }
+    }
+
+    get cornersArray() {
+        return Object.entries(this.corners).map(([key, point]) => point)
+    }
+
+    get diagonal() {
+        return Math.sqrt(this.width ** 2 + this.height ** 2)
     }
 
     setSize(width, height) {
@@ -70,12 +118,39 @@ export default class Rectangle extends Point {
         this.height = height ?? this.width
     }
 
-    drawOutline(ctx, color = 'green') {
-        strokeRect(ctx, this.x, this.y, this.width, this.height, color)
+    drawRotated(ctx, callback = (x = 0, y = 0, width = 0, height = 0) => {}, {x, y} = this.center) {
+        const width = this.width
+        const height = this.height
+
+        ctx.save()
+        ctx.translate(x, y)
+        ctx.rotate(this.radians)
+
+        callback(-width / 2, -height / 2, width, height)
+
+        ctx.restore()
     }
 
-    draw(ctx, color = 'green') {
+    drawOutline(ctx, color = null) {
+        ctx.lineWidth = this.lineWidth
+        this.drawRotated(ctx, (x, y, width, height) => {
+            strokeRect(ctx, x, y, width, height, color ?? this.color)
+        })
+    }
+
+    drawCenter(ctx, color = null) {
+        this.center.drawPoint(ctx, color ?? this.color)
+    }
+
+    getAngle(rect = new Rectangle) {
+        
+    }
+
+    draw(ctx, color = null) {
         if(!this.isVisible) return
-        fillRect(ctx, this.x, this.y, this.width, this.height, color)
+
+        this.drawRotated(ctx, (x, y, width, height) => {
+            fillRect(ctx, x, y, width, height, color ?? this.color)
+        })
     }
 }

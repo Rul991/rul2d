@@ -1,3 +1,5 @@
+import Camera from "./Camera.js"
+import GameWorld from "./GameWorld.js"
 import InteractiveObject from "./InteractiveObject.js"
 import Point from "./Point.js"
 
@@ -7,7 +9,6 @@ export default class GameObject extends Point {
         this.subObjects = {all: new Set()}
         this.colliders = new Set()
         this.mainCollider = null
-        this.camera = null
         this.isRenderingFromCameraView()
     }
 
@@ -62,8 +63,8 @@ export default class GameObject extends Point {
         })
     }
 
-    init() {
-        return false
+    init(canvas = new HTMLCanvasElement, camera = new Camera, world = new GameWorld) {
+        return null
     }
 
     setOffsetForSubObject(sub) {
@@ -83,7 +84,7 @@ export default class GameObject extends Point {
         })
     }
 
-    forSubObjects(callback = sub => {}, type = '') {
+    forSubObjects(callback = (sub = new Point) => {}, type = '') {
         if(type) this.subObjects[type.toLowerCase()].forEach(sub => callback(sub))
         
         else this.subObjects.all.forEach(sub => callback(sub))

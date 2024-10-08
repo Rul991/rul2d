@@ -39,12 +39,16 @@ export default class CanvasText extends Rectangle {
         this.isResizeableByText = false
     }
 
-    setSizeByText(ctx) {
+    updateSizeByText(ctx) {
         let {width, height} = measureText(ctx, this.text)
         if(this.width == width && this.height == height) return
 
         this.setSize(width, height)
         this.isResizeableByText = true
+    }
+
+    setSizeByText(value = true) {
+        this.isResizeableByText = value
     }
 
     updateFont(ctx) {
@@ -57,7 +61,7 @@ export default class CanvasText extends Rectangle {
         ctx.textAlign = 'left'
         ctx.textBaseline = 'top'
 
-        if(this.isResizeableByText) this.setSizeByText(ctx)
+        if(this.isResizeableByText) this.updateSizeByText(ctx)
     }
 
     set font(font) {
@@ -68,8 +72,8 @@ export default class CanvasText extends Rectangle {
         this.isNeedUpdateFittedText = true
     }
 
-    ignoreHeight(ignore = false) {
-        this.isIgnoreHeight = ignore
+    isCutTextBySize(isCut = false) {
+        this.isIgnoreHeight = !isCut
     }
 
     get font() {
@@ -120,10 +124,12 @@ export default class CanvasText extends Rectangle {
         this.updateFont(ctx)
         this.updateFittedText(ctx)
 
-        let y = this.y
-        this.fittedText.forEach(text => {
-            ctx.fillText(text, this.x, y)
-            y += measureText(ctx, text).height
+        this.drawRotated(ctx, (x, newY, width, height) => {
+            let y = newY
+            this.fittedText.forEach(text => {
+                ctx.fillText(text, x, y)
+                y += measureText(ctx, text).height
+            })
         })
     }
 }

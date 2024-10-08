@@ -25,14 +25,17 @@ export default class GameWorld {
 
     addGameObjects(...gameObjects) {
         gameObjects.forEach(object => {
-            object.world = this
             if(object.isRenderedFromCameraView) {
                 this.gameObjects.add(object)
             }
             else this.uiObjects.add(object)
+
             if(object.colliders) object.colliders.forEach(collider => {
                 this.colliders.add(collider)
+                collider.setWorld(this)
             })
+
+            object.init(this.canvas, this.camera, this)
         })
     }
 

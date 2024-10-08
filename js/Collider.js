@@ -18,9 +18,17 @@ export default class Collider extends Area {
         this.doWhenContinuedContact((collider, delta) => this.handleCollision(collider))
         this.endContactCallback(collider => this.onGround = false)
 
-        this.setIsMainCollider(isMainCollider)
+        this.isMakeMainCollider(isMainCollider)
         this.setSpeed(50)
         this.setMass()
+    }
+
+    set friction(value) {
+        this._friction = value
+    }
+
+    get friction() {
+        return this._friction ?? this.speed
     }
 
     handleCollision(collider) {
@@ -76,10 +84,10 @@ export default class Collider extends Area {
         let {x: vx, y: vy} = this.velocity
         let {abs} = Math
 
-        if(abs(vx) > this.speed / 10) this.velocity.x -= this.speed * 0.9 * delta * getNumberSign(vx)
+        if(abs(vx) > this.friction / 20) this.velocity.x -= this.friction * delta * getNumberSign(vx)
         else this.velocity.x = 0
         
-        if(abs(vy) > this.speed / 10) this.velocity.y -= this.speed * 0.9 * delta * getNumberSign(vy)
+        if(abs(vy) > this.friction / 20) this.velocity.y -= this.friction * delta * getNumberSign(vy)
         else this.velocity.y = 0
     }
 
@@ -87,13 +95,7 @@ export default class Collider extends Area {
         super.move(this.velocity, delta * this.speed)
     }
 
-    hasCollision(rect = new Rectangle) {
-        if(rect == this) return false
-
-        return super.hasCollision(rect)
-    }
-
-    setIsMainCollider(isMainCollider) {
+    isMakeMainCollider(isMainCollider) {
         this.isMainCollider = isMainCollider ?? false
     }
 

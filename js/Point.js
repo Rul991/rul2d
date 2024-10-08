@@ -3,7 +3,12 @@ import { fillArc } from "./canvasWork.js"
 export default class Point {
     constructor(x,y) {
         this.setPosition(x,y)
-        this.isVisible = true
+        this.setColor()
+        this.setVisibity(true)
+    }
+
+    setColor(color) {
+        this.color = color ?? 'red'
     }
 
     static clamp({x, y} = new Point, min = new Point, max = new Point) {
@@ -28,22 +33,74 @@ export default class Point {
     }
 
     get point() {
-        return {x: this.x, y: this.y}
+        return new Point(this.x, this.y)
+    }
+
+    multiplyOnNumber(number = 0) {
+        return this.multiplyOnPoint(new Point(number))
+    }
+
+    multiplyOnPoint({x, y} = new Point) {
+        this.x *= x
+        this.y *= y
+
+        return this.point
+    }
+
+    multiply(value = 0 || new Point) {
+        if(typeof value == 'number') return this.multiplyOnNumber(value)
+        else if(value.x !== undefined) return this.multiplyOnPoint(value)
+
+        return null
+    }
+
+    summarizeOnPoint({x, y} = new Point) {
+        this.x += x
+        this.y += y
+
+        return this.point
+    }
+
+    summarizeOnNumber(number = 0) {
+        return this.summarizeOnPoint(new Point(number))
+    }
+
+    summarize(value = 0 || new Point) {
+        if(typeof value == 'number') return this.summarizeOnNumber(value)
+        else if(value.x !== undefined) return this.summarizeOnPoint(value)
+
+        return null
     }
 
     setPosition(x, y) {
         this.point = {x,y}
     }
 
+    smoothSetPosition(x, y, step = 60, time = 1000) {
+        let stepX = (x - this.x) / step
+        let stepY = (y - this.y) / step
+
+        let interval = setInterval(() => {
+            this.addPosition(new Point(stepX, stepY))
+        }, time / step)
+
+        setTimeout(() => {
+            clearInterval(interval)
+            this.setPosition(x, y)
+        }, time)
+    }
+
     addPosition({x, y}) {
         this.setPosition(this.x + x, this.y + y)
     }
 
-    drawPoint(ctx, color = 'red') {
-        fillArc(ctx, this.x, this.y, 1, color)
+    drawPoint(ctx, color = null) {
+        fillArc(ctx, this.x, this.y, 3, color ?? this.color)
+        fillArc(ctx, this.x, this.y, 2, 'white')
+        fillArc(ctx, this.x, this.y, 1, color ?? this.color)
     }
 
-    draw(ctx, color = 'red') {
+    draw(ctx, color = null) {
         if(!this.isVisible) return
         this.drawPoint(ctx, color)
     }
