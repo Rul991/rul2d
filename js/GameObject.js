@@ -2,6 +2,7 @@ import Camera from "./Camera.js"
 import GameWorld from "./GameWorld.js"
 import InteractiveObject from "./InteractiveObject.js"
 import Point from "./Point.js"
+import Rectangle from "./Rectangle.js"
 
 export default class GameObject extends Point {
     constructor(x, y) {
@@ -10,6 +11,50 @@ export default class GameObject extends Point {
         this.colliders = new Set()
         this.mainCollider = null
         this.isRenderingFromCameraView()
+    }
+
+    get factRect() {
+        let rect = new Rectangle(Infinity)
+        
+        let right = 0
+        let bottom = 0
+
+        this.forSubObjects(sub => {
+            let temp = new Rectangle()
+
+            if(sub.offset) temp.point = sub.offset
+
+            if(sub.cornersArray) {
+                let corners = new Point(
+                    sub.cornersArray.map(({x}) => x),
+                    sub.cornersArray.map(({y}) => y)
+                )
+
+                temp._right = Math.max(...corners.x)
+                temp._bottom = Math.max(...corners.y)
+                
+                temp.x = Math.min(...corners.x)
+                temp.y = Math.min(...corners.y)
+            }
+            else if(sub.width) {
+                temp._right = sub.width + temp.x
+                temp._bottom = sub.height + temp.y
+            }
+
+            rect.x = Math.min(rect.x, temp.x)
+            rect.y = Math.min(rect.y, temp.y)
+
+            right = Math.max(right, temp._right)
+            bottom = Math.max(bottom, temp._bottom)
+        })
+
+        rect.setSize(right - rect.x, bottom - rect.y)
+
+        return rect
+    }
+
+    get center() {
+        return this.factRect.center
     }
 
     setPosition(x, y) {
@@ -68,7 +113,6 @@ export default class GameObject extends Point {
     }
 
     setOffsetForSubObject(sub) {
-        if(this.mainCollider == sub) return
         sub.offset = new Point()
         sub.offset.point = sub
     }
@@ -94,10 +138,12 @@ export default class GameObject extends Point {
         if(this.mainCollider) this.point = this.mainCollider
     }
 
-    draw(ctx) {
-        this.forSubObjects(sub => {
-            if(sub.draw) sub.draw(ctx)
-        })
+    drawOutline(ctx, color) {
+        this.factRect.drawOutline(ctx, color)
+    }
+
+    drawCenter(ctx, color) {
+        this.factRect.center.drawPoint(ctx, color)
     }
 
     update(ctx, delta) {

@@ -1,5 +1,5 @@
 import Camera from "./Camera.js"
-import { clearCanvas, createCanvas, createGameLoop, getContext2d } from "./canvasWork.js"
+import { clearCanvas, createCanvas, createGameLoop, getContext2d } from "./utils/canvasWork.js"
 import Point from "./Point.js"
 
 export default class GameWorld {

@@ -10,6 +10,7 @@ export default class InteractiveObject extends Rectangle {
         this.isReset = true
         this.isRenderingFromCameraView()
         this.setCallback()
+        this.doIfNotInteracted()
 
         this._isAddInteractives = true
     }
@@ -18,15 +19,22 @@ export default class InteractiveObject extends Rectangle {
         this.camera = camera
     }
 
+    getCanvasFromCamera() {
+        if(this.camera) if(this.camera.ctx) 
+                return this.camera.ctx.canvas
+
+        return null
+    }
+
     getPointOnCanvas({x, y}) {
         let rect = {left: 0, top: 0}
-        if(this.camera)
-            if(this.camera.ctx) 
-                rect = this.camera.ctx.canvas.getBoundingClientRect()
+
+        let canvas = this.getCanvasFromCamera()
+        if(canvas) rect = canvas.getBoundingClientRect()
 
         let {left, top} = rect
 
-        return new Point(x , y)
+        return new Point(x - left, y - top)
     }
 
     isRenderingFromCameraView(value = true) {
@@ -53,6 +61,10 @@ export default class InteractiveObject extends Rectangle {
         this.callback = callback
     }
 
+    doIfNotInteracted(callback = (point = new Point) => {}) {
+        this.notInteractedCallback = callback
+    }
+
     interactive(point = new Point) {
         let updatedPoint = this.updatePointWithCamera(point)
         if(this.isPointInRect(updatedPoint)) {
@@ -60,6 +72,7 @@ export default class InteractiveObject extends Rectangle {
             this.isInteracted = true
             this.callback(updatedPoint)
         }
+        else this.notInteractedCallback(updatedPoint)
     }
 
     drawOutline(ctx, color) {

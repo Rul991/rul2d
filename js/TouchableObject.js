@@ -1,10 +1,10 @@
 import InteractiveObject from "./InteractiveObject.js"
 
-export class TouchableObject extends InteractiveObject {
+export default class TouchableObject extends InteractiveObject {
     constructor(x, y, width, height) {
         super(x, y, width, height)
 
-        this._isAddInteractives = false
+        this.previousTouches = []
     }
 
     reset() {
@@ -12,7 +12,17 @@ export class TouchableObject extends InteractiveObject {
         this.touches = []
     }
 
+    getPreviousTouches() {
+        this.previousTouches = []
+        this.touches.forEach(touch => {
+            this.previousTouches.push(touch)
+        })
+
+        return this.previousTouches
+    }
+
     getAllTouches({touches} = new TouchEvent) {
+        this.getPreviousTouches()
         this.reset()
 
         for (const {clientX: x, clientY: y} of touches) {
@@ -23,14 +33,14 @@ export class TouchableObject extends InteractiveObject {
     }
 
     interactive() {
-        this.interactives = this.touches.length
+        this.interactives = 0
 
         this.touches.forEach(point => {
             super.interactive(point)
         })
     }
 
-    update(point) {
+    update() {
         this.interactive()
     }
 

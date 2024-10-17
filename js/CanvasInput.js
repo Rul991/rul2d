@@ -1,6 +1,6 @@
 import CanvasText from "./CanvasText.js"
 import ClickableObject from "./ClickableObject.js"
-import { rgba } from "./colorWork.js"
+import { rgba } from "./utils/colorWork.js"
 import GameObject from "./GameObject.js"
 import KeyboardEventManager from "./KeyboardEventManager.js"
 import Rectangle from "./Rectangle.js"

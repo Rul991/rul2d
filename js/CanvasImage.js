@@ -1,4 +1,4 @@
-import { drawImage } from "./canvasWork.js"
+import { drawImage } from "./utils/canvasWork.js"
 import Rectangle from "./Rectangle.js"
 
 export default class CanvasImage extends Rectangle {

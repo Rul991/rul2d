@@ -1,5 +1,5 @@
-import { fillPath, strokePath } from './canvasWork.js'
-import { deg2rad } from './numberWork.js'
+import { fillPath, strokePath } from './utils/canvasWork.js'
+import { deg2rad } from './utils/numberWork.js'
 import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 

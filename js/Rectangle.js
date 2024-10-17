@@ -1,5 +1,5 @@
-import { fillRect, strokeRect } from "./canvasWork.js"
-import { deg2rad, rad2deg } from "./numberWork.js"
+import { fillRect, strokeRect } from "./utils/canvasWork.js"
+import { deg2rad, rad2deg } from "./utils/numberWork.js"
 import Point from "./Point.js"
 
 export default class Rectangle extends Point {
@@ -11,13 +11,13 @@ export default class Rectangle extends Point {
     }
 
     isPointInRect(point = new Point) {
-        let sin = Math.sin(this.radians)
-        let cos = Math.cos(this.radians)
+        let sin = Math.sin(-this.radians)
+        let cos = Math.cos(-this.radians)
         
         let newPoint = new Point(point.x - this.center.x, point.y - this.center.y)
         newPoint = new Point(newPoint.x * cos - newPoint.y * sin, newPoint.x * sin + newPoint.y * cos)
         newPoint = new Point(newPoint.x + this.center.x, newPoint.y + this.center.y)
-    
+        
         return newPoint.x >= this.x && newPoint.x <= this.right && newPoint.y >= this.y && newPoint.y <= this.bottom
     }
 
@@ -43,7 +43,7 @@ export default class Rectangle extends Point {
 
     get size() {
         let {width, height} = this
-        return {x: 0, y: 0, width, height}
+        return new Rectangle(0, 0, width, height)
     }
 
     set scale(value) {
@@ -86,19 +86,19 @@ export default class Rectangle extends Point {
         let sin = Math.sin(this.radians)
 
         return {
-            leftTop: new Point(
+            leftBottom: new Point(
                 (-this.width / 2) * cos - (this.height / 2) * sin + this.center.x,
                 (-this.width / 2) * sin + (this.height / 2) * cos + this.center.y
             ),
-            rightTop: new Point(
+            rightBottom: new Point(
                 (this.width / 2) * cos - (this.height / 2) * sin + this.center.x,
                 (this.width / 2) * sin + (this.height / 2) * cos + this.center.y
             ),
-            leftBottom: new Point(
+            rightTop: new Point(
                 (this.width / 2) * cos - (-this.height / 2) * sin + this.center.x,
                 (this.width / 2) * sin + (-this.height / 2) * cos + this.center.y
             ),
-            rightBottom: new Point(
+            leftTop: new Point(
                 (-this.width / 2) * cos - (-this.height / 2) * sin + this.center.x,
                 (-this.width / 2) * sin + (-this.height / 2) * cos + this.center.y
             )
@@ -140,10 +140,6 @@ export default class Rectangle extends Point {
 
     drawCenter(ctx, color = null) {
         this.center.drawPoint(ctx, color ?? this.color)
-    }
-
-    getAngle(rect = new Rectangle) {
-        
     }
 
     draw(ctx, color = null) {

@@ -1,5 +1,5 @@
-import { deg2rad } from './numberWork.js';
-import { fillRect } from "./canvasWork.js"
+import { deg2rad } from './utils/numberWork.js';
+import { fillRect } from "./utils/canvasWork.js"
 import Rectangle from "./Rectangle.js"
 
 export default class LinearGradient extends Rectangle {

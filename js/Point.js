@@ -1,4 +1,4 @@
-import { fillArc } from "./canvasWork.js"
+import { fillArc } from "./utils/canvasWork.js"
 
 export default class Point {
     constructor(x,y) {
@@ -9,6 +9,31 @@ export default class Point {
 
     setColor(color) {
         this.color = color ?? 'red'
+    }
+
+    getAngle(point = new Point) {
+        return Math.atan2(this.y - point.y, this.x - point.x)
+    }
+
+    rotateAboutPoint({x, y} = new Point, radians = 0) {
+        this.x = x + (this.x - x) * Math.cos(radians) - (this.y - y) * Math.sin(radians)
+        this.y = y + (this.x - x) * Math.sin(radians) + (this.y - y) * Math.cos(radians)
+
+        return this.point
+    }
+
+    rotateAboutPointOrbitally({x, y} = new Point, radius = 0, angleSpeed = 0) {
+        if(!this.orbitRadians) {
+            this.orbitRadians = this.getAngle({x, y})
+            console.log(this.orbitRadians)
+        }
+
+        this.x = x + Math.cos(this.orbitRadians) * radius
+        this.y = y + Math.sin(this.orbitRadians) * radius
+
+        this.orbitRadians += angleSpeed
+
+        return this.point
     }
 
     static clamp({x, y} = new Point, min = new Point, max = new Point) {

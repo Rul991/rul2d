@@ -1,18 +1,15 @@
 export const floor = (number, numbersAfterDot = 0) => Math.floor(number * (10 ** numbersAfterDot)) / (10 ** numbersAfterDot)
 
 export const randomRange = (min, max, numbersAfterDot = 0) =>  floor(Math.random() * (max - min) + min, numbersAfterDot)
-export const randomArray = (length, [min, max]) => {
-    let arr = []
-    for (let i = 0; i < length; i++) {
-        arr[i] = randomRange(min, max)
-    }
-    
-    return arr
-}
 
 export const randomChance = (chance, maxChance) => randomRange(0, maxChance) < chance
 
-export const getNumberSign = (num = 0) => num != 0 ? Math.abs(num) / num : 0
+export const getNumberSign = (num = 0) => {
+    if(num < 0) return -1
+    else if(num > 0) return 1
+
+    return 0
+}
 export const percents = (value, {min = 0, max = 100} = {}) => (value - min) / (max - min)
 
 export const isDigit = char => !isNaN(parseInt(char))

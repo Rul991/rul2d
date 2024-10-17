@@ -1,6 +1,6 @@
 import Area from "./Area.js"
 import GameWorld from "./GameWorld.js"
-import { getNumberSign } from "./numberWork.js"
+import { getNumberSign } from "./utils/numberWork.js"
 import Point from "./Point.js"
 import Rectangle from "./Rectangle.js"
 

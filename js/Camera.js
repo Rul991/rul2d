@@ -1,4 +1,4 @@
-import { getNumberSign } from "./numberWork.js"
+import { getNumberSign } from "./utils/numberWork.js"
 import Point from "./Point.js"
 
 export default class Camera extends Point {

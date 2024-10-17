@@ -1,4 +1,4 @@
-import { measureText } from "./canvasWork.js"
+import { measureText } from "./utils/canvasWork.js"
 import Rectangle from "./Rectangle.js"
 
 export default class CanvasText extends Rectangle {
