@@ -16,7 +16,7 @@ export default class CanvasShape extends Rectangle {
         this.updatePath()
     }
 
-    setDegreesPath({callback = (rad = new Number) => new Point(i), minDegree = 0, maxDegree = 360, step = 1}) {
+    setDegreesPath({callback = (rad = 0) => new Point(rad), minDegree = 0, maxDegree = 360, step = 1}) {
         let points = []
 
         for (let i = minDegree; i <= maxDegree; i += step) {

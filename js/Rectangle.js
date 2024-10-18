@@ -21,6 +21,17 @@ export default class Rectangle extends Point {
         return newPoint.x >= this.x && newPoint.x <= this.right && newPoint.y >= this.y && newPoint.y <= this.bottom
     }
 
+    set rotatedRect(rect) {
+        let {radians} = rect
+
+        this.rect = rect
+        this.radians = radians
+    }
+
+    get rotatedRect() {
+        return this.rect
+    }
+
     set radians(value) {
         this._radians = value % deg2rad(360)
     }
