@@ -84,7 +84,7 @@ export default class InteractiveObject extends Rectangle {
         return false
     }
 
-    initInteractiveObject(canvas, camera) {
+    init(canvas, camera) {
         this.addControls(canvas)
         this.setCamera(camera)
     }

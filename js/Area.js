@@ -90,7 +90,7 @@ export default class Area extends Rectangle {
         return false
     }
 
-    update(ctx, delta) {
+    update(delta) {
         this.checkContacts(delta)
     }
 }

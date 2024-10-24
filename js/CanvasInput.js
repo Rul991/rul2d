@@ -217,10 +217,8 @@ export default class CanvasInput extends GameObject {
         if(this.isSelected) this.selectedRectangle.draw(ctx, this.style.selectedRectangleColor)
     }
 
-    update(ctx, delta) {
-        super.update(ctx, delta)
+    update(delta) {
+        super.update(delta)
         this.checkFocus()
-
-        this.draw(ctx)
     }
 }

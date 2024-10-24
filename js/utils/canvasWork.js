@@ -86,8 +86,8 @@ export const createGameLoop = (callback = ([delta = 0, prevTime = 0]) => {}) => 
         [delta, previousTime] = [(Date.now() - previousTime) / 1000, Date.now()]
         callback([delta, previousTime])
 
-        requestAnimationFrame(update)
+        return requestAnimationFrame(update)
     }
 
-    update()
+    return update()
 }

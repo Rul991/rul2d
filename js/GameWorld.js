@@ -51,18 +51,20 @@ export default class GameWorld {
         })
     }
 
-    update(maxSubSteps = 2) {
+    update() {
         createGameLoop(([delta, prevTime]) => {
             clearCanvas(this.ctx)
 
             this.camera.update(() => {
                 this.gameObjects.forEach(gameObject => {
-                    gameObject.update(this.ctx, delta)
+                    gameObject.update(delta)
+                    gameObject.draw(this.ctx)
                 })
             })
 
             this.uiObjects.forEach(ui => {
-                ui.update(this.ctx, delta)
+                ui.update(delta)
+                ui.draw(this.ctx)
             })
         })
     }

@@ -59,9 +59,8 @@ export default class AnimatedSprite extends SpriteSheet {
         this.cuttedImage = this.getCurrentFrame()
     }
 
-    update(ctx, delta = 0) {
+    update(delta = 0) {
         this.updateTime(delta)
         this.updateAnimation()
-        this.draw(ctx)
     }
 }

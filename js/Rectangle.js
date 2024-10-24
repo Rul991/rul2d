@@ -7,16 +7,21 @@ export default class Rectangle extends Point {
         super(x,y)
         this.setSize(width, height)
         this._radians = 0
-        this.lineWidth = 3
+        this.isFlip = new Point(1, 1)
     }
 
-    isPointInRect(point = new Point) {
-        let sin = Math.sin(-this.radians)
-        let cos = Math.cos(-this.radians)
+    isPointInRect(point = new Point) {        
+        let newPoint = new Point()
         
-        let newPoint = new Point(point.x - this.center.x, point.y - this.center.y)
-        newPoint = new Point(newPoint.x * cos - newPoint.y * sin, newPoint.x * sin + newPoint.y * cos)
-        newPoint = new Point(newPoint.x + this.center.x, newPoint.y + this.center.y)
+        if(this.radians) {
+            let sin = Math.sin(-this.radians)
+            let cos = Math.cos(-this.radians)
+
+            newPoint = new Point(point.x - this.center.x, point.y - this.center.y)
+            newPoint = new Point(newPoint.x * cos - newPoint.y * sin, newPoint.x * sin + newPoint.y * cos)
+            newPoint = new Point(newPoint.x + this.center.x, newPoint.y + this.center.y)
+        }
+        else newPoint = point
         
         return newPoint.x >= this.x && newPoint.x <= this.right && newPoint.y >= this.y && newPoint.y <= this.bottom
     }
@@ -29,7 +34,11 @@ export default class Rectangle extends Point {
     }
 
     get rotatedRect() {
-        return this.rect
+        let rect = new Rectangle()
+        rect.rect = this.rect
+        rect.radians = this.radians
+
+        return rect
     }
 
     set radians(value) {
@@ -129,6 +138,19 @@ export default class Rectangle extends Point {
         this.height = height ?? this.width
     }
 
+    flip(x = false, y = false) {
+        this.flipHorizontally(x)
+        this.flipVertically(y)
+    }
+
+    flipVertically(isFlip = false) {
+        this.isFlip.y = isFlip ? -1 : 1
+    }
+
+    flipHorizontally(isFlip = false) {
+        this.isFlip.x = isFlip ? -1 : 1
+    }
+
     drawRotated(ctx, callback = (x = 0, y = 0, width = 0, height = 0) => {}, {x, y} = this.center) {
         const width = this.width
         const height = this.height
@@ -136,6 +158,7 @@ export default class Rectangle extends Point {
         ctx.save()
         ctx.translate(x, y)
         ctx.rotate(this.radians)
+        ctx.scale(this.isFlip.x, this.isFlip.y)
 
         callback(-width / 2, -height / 2, width, height)
 

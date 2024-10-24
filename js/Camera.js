@@ -1,5 +1,6 @@
 import { getNumberSign } from "./utils/numberWork.js"
 import Point from "./Point.js"
+import Rectangle from "./Rectangle.js"
 
 export default class Camera extends Point {
     constructor(ctx) {
@@ -73,6 +74,29 @@ export default class Camera extends Point {
         if(!this.ctx) return
 
         this.ctx.scale(this.zoom, this.zoom)
+    }
+
+    get viewport() {
+        let viewport = new Rectangle()
+        viewport.setPosition(-this.x, -this.y)
+
+        if(!this.ctx) return viewport
+
+        viewport.setSize(this.ctx.canvas.width / this.zoom, this.ctx.canvas.height / this.zoom)
+
+        return viewport
+    }
+
+    isInViewport(object = new Point) {
+        let {x, y, right, bottom} = this.viewport
+        if(object.width) return object.right > x && object.x < right && object.bottom > y && object.y < bottom
+        else if(object.x !== undefined) return this.viewport.isPointInRect(object)
+        
+        return false
+    }
+
+    culling(object = new Point, callback = (object = new Point) => {}) {
+        if(this.isInViewport(object)) callback(object)
     }
 
     update(callback = () => {}) {

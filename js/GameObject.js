@@ -13,6 +13,10 @@ export default class GameObject extends Point {
         this.isRenderingFromCameraView()
     }
 
+    setCamera(camera = new Camera) {
+        this.camera = camera ?? new Camera
+    }
+
     get factRect() {
         let rect = new Rectangle(Infinity)
         
@@ -146,7 +150,11 @@ export default class GameObject extends Point {
         this.factRect.center.drawPoint(ctx, color)
     }
 
-    update(ctx, delta) {
+    draw(ctx) {
+        super.draw(ctx, this.color)
+    }
+
+    update(delta) {
         this.updateCoordinate()
         this.updateSubObjectsCoordinates()
     }

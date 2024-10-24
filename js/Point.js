@@ -5,6 +5,7 @@ export default class Point {
         this.setPosition(x,y)
         this.setColor()
         this.setVisibity(true)
+        this.lineWidth = 3
     }
 
     setColor(color) {
@@ -13,6 +14,10 @@ export default class Point {
 
     getAngle(point = new Point) {
         return Math.atan2(this.y - point.y, this.x - point.x)
+    }
+
+    getDistance({x, y} = new Point) {
+        return Math.sqrt((this.x - x) ** 2 + (this.y - y) ** 2)
     }
 
     rotateAboutPoint({x, y} = new Point, radians = 0) {
@@ -36,18 +41,6 @@ export default class Point {
         return this.point
     }
 
-    static clamp({x, y} = new Point, min = new Point, max = new Point) {
-        let point = new Point(x, y)
-
-        if(point.x > max.x) point.x = max.x
-        else if(point.x < min.x) point.x = min.x
-
-        if(point.y > max.y) point.y = max.y
-        else if(point.y < min.y) point.y = min.y
-
-        return point
-    }
-
     setVisibity(isVisible = true) {
         this.isVisible = isVisible
     }
@@ -59,42 +52,6 @@ export default class Point {
 
     get point() {
         return new Point(this.x, this.y)
-    }
-
-    multiplyOnNumber(number = 0) {
-        return this.multiplyOnPoint(new Point(number))
-    }
-
-    multiplyOnPoint({x, y} = new Point) {
-        this.x *= x
-        this.y *= y
-
-        return this.point
-    }
-
-    multiply(value = 0 || new Point) {
-        if(typeof value == 'number') return this.multiplyOnNumber(value)
-        else if(value.x !== undefined) return this.multiplyOnPoint(value)
-
-        return null
-    }
-
-    summarizeOnPoint({x, y} = new Point) {
-        this.x += x
-        this.y += y
-
-        return this.point
-    }
-
-    summarizeOnNumber(number = 0) {
-        return this.summarizeOnPoint(new Point(number))
-    }
-
-    summarize(value = 0 || new Point) {
-        if(typeof value == 'number') return this.summarizeOnNumber(value)
-        else if(value.x !== undefined) return this.summarizeOnPoint(value)
-
-        return null
     }
 
     setPosition(x, y) {
@@ -130,18 +87,15 @@ export default class Point {
         this.drawPoint(ctx, color)
     }
 
-    addEventListener(type = '', callback = e => {}) {
-        window.addEventListener(type, callback)
-    }
-
-    dispatchEvent(event) {
-        if(!event.detail) event.detail = {}
-        if(!event.detail.object) event.detail.object = this
-        
-        window.dispatchEvent(event)
+    toJSON() {
+        return JSON.stringify(this)
     }
 
     move({x, y}, delta = 1/60) {
         this.addPosition(new Point(x * delta, y * delta))
+    }
+
+    drawWithCulling(ctx, camera, color = null) {
+        camera.culling(this, obj => this.draw(ctx, color))
     }
 }

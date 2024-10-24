@@ -1,6 +1,3 @@
-import CanvasShape from "./CanvasShape.js"
-import { deg2rad, rad2deg, randomRange } from "./utils/numberWork.js"
-import Point from "./Point.js"
 import Rectangle from "./Rectangle.js"
 
 export default class RoundedRectangle extends Rectangle {
