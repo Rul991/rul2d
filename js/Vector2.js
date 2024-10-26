@@ -5,6 +5,10 @@ export default class Vector2 extends Point {
         super(x, y)
     }
 
+    getNegative() {
+        return new Vector2(-this.x, -this.y)
+    }
+
     multiplyOnNumber(number = 0) {
         return this.multiplyOnPoint(new Point(number))
     }
@@ -54,12 +58,20 @@ export default class Vector2 extends Point {
     }
 
     normalize() {
-        const length = Math.sqrt(this.x ** 2 + this.y ** 2)
+        const length = this.magnitude()
         return new Vector2(this.x / length, this.y / length)
     }
 
     calcNormal({x, y} = new Point) {
         return new Vector2(x - this.x, y - this.y)
+    }
+
+    magnitude() {
+        return Math.sqrt(this.x ** 2 + this.y ** 2)
+    }
+
+    getScalarMultiplier({x, y} = new Point) {
+        return this.x * x + this.y * y
     }
 
     static toVectors(...objects) {

@@ -75,7 +75,7 @@ export default class InteractiveObject extends Rectangle {
         else this.notInteractedCallback(updatedPoint)
     }
 
-    drawOutline(ctx, color) {
+    drawOutline(ctx, color = null) {
         if(this.isInteracted) super.drawOutline(ctx, 'red')
         else super.drawOutline(ctx, color)
     }

@@ -61,18 +61,16 @@ export default class GameObject extends Point {
         return this.factRect.center
     }
 
-    setPosition(x, y) {
-        if(this.mainCollider) this.mainCollider.setPosition(x, y)
-        else super.setPosition(x, y)
-    }
-
     doIfExist(object, callback = () => {}) {
         if(object !== undefined) callback()
     }
 
     addSubObjects(...subObjects) {
         subObjects.forEach(sub => {
-            if(sub.isMainCollider && !this.mainCollider) this.mainCollider = sub
+            if(sub.isMainCollider && !this.mainCollider) {
+                this.mainCollider = sub
+                this.setPosition = this.mainCollider.setPosition
+            }
 
             const subName = sub.constructor.name.toLowerCase()
 

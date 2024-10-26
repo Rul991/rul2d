@@ -9,7 +9,7 @@ export default class Point {
     }
 
     setColor(color) {
-        this.color = color ?? 'red'
+        this.color = color ?? 'green'
     }
 
     getAngle(point = new Point) {

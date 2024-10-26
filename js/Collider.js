@@ -10,6 +10,7 @@ export default class Collider extends Area {
         super(x, y, width, height)
 
         this.velocity = new Vector2()
+        this.maxVelocity = new Vector2(10, 50)
         
         this.isCollider = true
         this.onGround = false
@@ -17,20 +18,33 @@ export default class Collider extends Area {
         
         this.doWhenBeganContact(collider => {
             this.handleCollision(collider)
-            // console.log('begin', collider.mass)
         })
         this.doWhenContinuedContact((collider, delta) => {
             this.handleCollision(collider)
-            // console.log('continue', collider.mass)
         })
         this.doWhenEndedContact(collider => {
-            // console.log('end', collider.mass)
+            this.onGround = false
         })
 
         this.isMakeMainCollider(isMainCollider)
         this.setSpeed(50)
         this.setMass()
         this.setRestitution()
+        this.setJumpPower()
+    }
+
+    setJumpPower(jump = 90) {
+        this.jumpPower = jump
+        if(this.maxVelocity.y < this.jumpPower) this.maxVelocity.y = this.jumpPower
+    }
+
+    set point(value) {
+        this.prevPosition = new Point(this.x ?? 0, this.y ?? 0)
+        super.point = value
+    }
+
+    get point() {
+        return super.point
     }
 
     set friction(value) {
@@ -38,42 +52,61 @@ export default class Collider extends Area {
     }
 
     get friction() {
-        return this._friction ?? this.speed / 50
-    }
-
-    calculateRelativeVelocity({velocity} = new Collider) {
-        return new Vector2(this.velocity.x - velocity.x, this.velocity.y - velocity.y)
-    }
-
-    calculateImpulse(collider = new Collider, normal = new Vector2, relativeVelocity = new Vector2) {
-        return (-(1 + this.restitution) * (relativeVelocity.x * normal.x + relativeVelocity.y * normal.y)) / (1 / this.mass + 1 / collider.mass)
-    }
-
-    updateVelocity(impulse = 0, normal = new Vector2) {
-        this.velocity.x -= impulse / this.mass * normal.x
-        this.velocity.y -= impulse / this.mass * normal.y
-    }
-
-    updateAngle() {
-        this.radians = Math.atan2(this.velocity.y, this.velocity.x)
+        return this._friction ?? this.speed / 10
     }
 
     handleCollision(collider = new Collider) {
-        if(!collider.mass) return
-        
-        const [colliderVector] = Vector2.toVectors(collider)
+        if(!this.mass) return
 
-        const normal = colliderVector.calcNormal(this).normalize()
-        const relativeVelocity = collider.calculateRelativeVelocity(this)
-        const impulse = collider.calculateImpulse(this, normal, relativeVelocity)
+        let overlap = this.getOverlap(collider)
+        // if(this.radians || collider.radians) overlap = this.getOverlapWithRotation(collider)
+        // else overlap = this.getOverlap(collider)
 
-        collider.updateVelocity(impulse, normal)
-        collider.move(1)
-        collider.updateAngle()
+        if(overlap.x < overlap.y) {
+            if(this.x < collider.x) {
+                this.x -= overlap.x
+                if(this.mass > collider.mass && collider.mass && this.mass) collider.x -= overlap.x
+            }
+                
+            else {
+                this.x += overlap.x
+                if(this.mass > collider.mass && collider.mass && this.mass) collider.x += overlap.x
+            }
+            this.velocity.x = 0
+        }
 
-        // console.log(collider.radians, this.radians)
+        else {
+            if(this.y < collider.y) {
+                this.onGround = true
+                this.y -= overlap.y
+            }
+            else {
+                this.y += overlap.y
+            }
+            this.velocity.y = 0
+        }
+    }
 
-        // console.log(colliderVector, normal, relativeVelocity, impulse)
+    getOverlapWithRotation(collider = new Collider) {
+        const rotatedCorners = collider.cornersArray
+        let overlapX = Math.min(this.right - collider.x, collider.right - this.x)
+        let overlapY = Math.min(this.bottom - collider.y, collider.bottom - this.y)
+
+        for (const corner of rotatedCorners) {
+            if (corner.x >= this.x && corner.x <= this.right && corner.y >= this.y && corner.y <= this.bottom) {
+                overlapX = Math.min(overlapX, Math.abs(corner.x - this.x))
+                overlapY = Math.min(overlapY, Math.abs(corner.y - this.y))
+            }
+        }
+
+        return new Vector2(overlapX, overlapY)
+    }
+
+    getOverlap(collider = new Collider) {
+        return new Vector2(
+            Math.min(this.right - collider.x, collider.right - this.x),
+            Math.min(this.bottom - collider.y, collider.bottom - this.y)
+        )
     }
 
     setRestitution(value = 0.5) {
@@ -90,13 +123,12 @@ export default class Collider extends Area {
 
     fall(delta = 0) {
         if(this.onGround) {
-            if(!this.isFall) this.velocity.setPosition()
+            if(!this.isFall) this.velocity.y = 0
             this.isFall = true
         }
         else {
             this.velocity.move(this.world.gravity, delta * this.mass)
             this.isFall = false
-            // console.log(this.point)
         }
     }
 
@@ -104,15 +136,21 @@ export default class Collider extends Area {
         let {x: vx, y: vy} = this.velocity
         let {abs} = Math
 
-        if(abs(vx) > this.friction) this.velocity.x -= this.friction * delta * getNumberSign(vx)
+        if(abs(vx) > 0.1) this.velocity.x -= vx * this.friction * delta / 2
         else this.velocity.x = 0
         
-        if(abs(vy) > this.friction) this.velocity.y -= this.friction * delta * getNumberSign(vy)
+        if(abs(vy) > 0.1) this.velocity.y -= vy * this.friction * delta / 2
         else this.velocity.y = 0
     }
 
     move(delta = 0 ) {
-        super.move(this.velocity, delta * this.speed)
+        if(this.velocity.x || this.velocity.y)
+            super.move(this.velocity, delta * this.speed)
+    }
+
+    limitVelocity() {
+        if(Math.abs(this.velocity.x) > this.maxVelocity.x) this.velocity.x = this.maxVelocity.x * getNumberSign(this.velocity.x)
+        if(Math.abs(this.velocity.y) > this.maxVelocity.y) this.velocity.y = this.maxVelocity.y * getNumberSign(this.velocity.y)
     }
 
     isMakeMainCollider(isMainCollider = false) {
@@ -121,6 +159,7 @@ export default class Collider extends Area {
 
     update(delta) {
         this.fall(delta)
+        this.limitVelocity()
         this.move(delta)
         this.stopping(delta)
         super.update(delta)

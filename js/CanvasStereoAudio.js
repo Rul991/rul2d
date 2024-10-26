@@ -11,6 +11,11 @@ export default class CanvasStereoAudio extends CanvasAudio {
         this.connect()
     }
 
+    play() {
+        super.play()
+        this.context.resume().then(() => this.audio.play())
+    }
+
     connect() {
         this.source.connect(this.panner)
         this.panner.connect(this.context.destination)
