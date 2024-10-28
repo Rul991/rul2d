@@ -18,10 +18,6 @@ export default class Collider extends Rectangle {
         this.maxSpeed = 100
     }
 
-    setConstraint() {
-        this.constraint = new Constraint()
-    }
-
     lockAngle(isLock = false) {
         this.isLockAngle = isLock
     }
@@ -33,10 +29,6 @@ export default class Collider extends Rectangle {
 
     get radians() {
         return this.body.angle
-    }
-
-    get onFloor() {
-        return this.body.onFloor
     }
 
     get velocity() {
@@ -64,7 +56,7 @@ export default class Collider extends Rectangle {
 
     set point(value) {
         super.point = value
-        if(this.body) this.body.position = [value.x, value.y]
+        if(this.body) this.body.position = [value.x + this.width / 2, value.y + this.height / 2]
     }
 
     get point() {
@@ -99,15 +91,25 @@ export default class Collider extends Rectangle {
         return rect.draw(ctx, color)
     }
 
+    updatePosition() {
+        let [x, y] = this.body.position
+        this.x = x - this.width / 2
+        this.y = y - this.height / 2
+    }
+
     update() {
         let speedMagnitude = this.velocity.magnitude()
         let normalizedSpeed = this.velocity.normalize()
         if(speedMagnitude > this.maxSpeed) this.setVelocity(this.maxSpeed * normalizedSpeed.x, this.maxSpeed * normalizedSpeed.y)
 
-        if(this.velocity.y > 2) this.body.onFloor = false
-        if(this.isLockAngle) this.body.angle = 0
+        if(this.isLockAngle) {
+            this.body.angle = 0
+            this.body.angularVelocity = 0
+            this.body.angularForce = 0
+            this.body.angularDamping = 0
+        }
 
         let [x, y] = this.body.position
-        this.point = new Point(x, y)
+        this.updatePosition()
     }
 }

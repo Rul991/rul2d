@@ -127,9 +127,6 @@ export default class GameObject extends Point {
         if(this.mainCollider == sub) return
         
         sub.setPosition(sub.offset.x + this.x, sub.offset.y + this.y)
-        if(this.mainCollider) {
-            sub.addPosition(new Point(-this.mainCollider.width / 2, -this.mainCollider.height / 2))
-        }
     }
 
     updateSubObjectsCoordinates() {

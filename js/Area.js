@@ -76,7 +76,7 @@ export default class Area extends Rectangle {
             let thisBox = this.getBoundingRotatedBox()
             let rectBox = rect.getBoundingRotatedBox()
 
-            return thisBox.x < rectBox.right && thisBox.right > rectBox.x && thisBox.y < rectBox.bottom && thisBox.bottom >rectBox.y
+            return thisBox.x < rectBox.right && thisBox.right > rectBox.x && thisBox.y < rectBox.bottom && thisBox.bottom > rectBox.y
         }
     }
 
@@ -84,6 +84,7 @@ export default class Area extends Rectangle {
         if(rect == this) return false
 
         if(!this.isAABBIntersecting(rect)) return false
+        else if(!this.radians && !rect.radians) return true
 
         let len = this.cornersArray.length
 
