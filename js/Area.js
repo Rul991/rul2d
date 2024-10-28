@@ -69,8 +69,21 @@ export default class Area extends Rectangle {
         return (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1)
     }
 
+    isAABBIntersecting(rect = new Rectangle) {
+        let {x, y, bottom, right, radians} = rect
+        if(!radians && !this.radians) return this.x < right && this.right > x && this.y < bottom && this.bottom > y
+        else {
+            let thisBox = this.getBoundingRotatedBox()
+            let rectBox = rect.getBoundingRotatedBox()
+
+            return thisBox.x < rectBox.right && thisBox.right > rectBox.x && thisBox.y < rectBox.bottom && thisBox.bottom >rectBox.y
+        }
+    }
+
     hasCollision(rect = new Rectangle()) {
         if(rect == this) return false
+
+        if(!this.isAABBIntersecting(rect)) return false
 
         let len = this.cornersArray.length
 

@@ -23,7 +23,11 @@ export default class GameObject extends Point {
         let right = 0
         let bottom = 0
 
-        this.forSubObjects(sub => {
+        this.forSubObjects(subObject => {
+            let sub
+            if(subObject.factRect) sub = subObject.factRect
+            else sub = subObject
+
             let temp = new Rectangle()
 
             if(sub.offset) temp.point = sub.offset
@@ -121,7 +125,11 @@ export default class GameObject extends Point {
 
     updateSubObjectCoordinates(sub) {
         if(this.mainCollider == sub) return
+        
         sub.setPosition(sub.offset.x + this.x, sub.offset.y + this.y)
+        if(this.mainCollider) {
+            sub.addPosition(new Point(-this.mainCollider.width / 2, -this.mainCollider.height / 2))
+        }
     }
 
     updateSubObjectsCoordinates() {

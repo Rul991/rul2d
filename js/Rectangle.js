@@ -10,6 +10,27 @@ export default class Rectangle extends Point {
         this.isFlip = new Point(1, 1)
     }
 
+    getBoundingRotatedBox() {
+        if(!this.radians) return this
+
+        let temp = new Rectangle()
+
+        let corners = new Point(
+            this.cornersArray.map(({x}) => x),
+            this.cornersArray.map(({y}) => y)
+        )
+
+        let right = Math.max(...corners.x)
+        let bottom = Math.max(...corners.y)
+        
+        temp.x = Math.min(...corners.x)
+        temp.y = Math.min(...corners.y)
+
+        temp.setSize(right - temp.x, bottom - temp.y)
+
+        return temp
+    }
+
     isPointInRect(point = new Point) {        
         let newPoint = new Point()
         
