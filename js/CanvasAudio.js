@@ -88,8 +88,12 @@ export default class CanvasAudio extends Point {
         if(!this.listenedObject || this.audioRadius == -1) return false
 
         const distance = this.getDistance(this.listenedObject)
-        
-        this.audio.volume = Math.max(this.volume - (distance / this.audioRadius * this.volume), 0)
+        if(!isFinite(distance)) return false
+
+        let volume = Math.max(this.volume - (distance / this.audioRadius * this.volume), 0)
+        if(!isFinite(volume)) return false
+
+        this.audio.volume = volume
 
         return true
     }

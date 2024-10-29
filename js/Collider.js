@@ -1,16 +1,14 @@
-import GameWorld from "./GameWorld.js"
-import { getNumberSign } from "./utils/numberWork.js"
 import Point from "./Point.js"
 import Rectangle from "./Rectangle.js"
 import Vector2 from "./Vector2.js"
-import {Body, Box, Constraint, Ray, World} from './utils/p2.js'
+import {Body, Box} from './utils/p2.js'
 import { randomRGBA } from "./utils/colorWork.js"
 
 export default class Collider extends Rectangle {
     constructor(x, y, width, height, isMainCollider) {
         super(x, y, width, height)
         this.setPosition(this.x, this.y)
-        this.lockAngle(true)
+        this.lockAngle(false)
 
         this.isCollider = true
         this.isMainCollider = isMainCollider

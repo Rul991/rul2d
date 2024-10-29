@@ -10,6 +10,22 @@ export default class AnimatedSprite extends SpriteSheet {
         this.currentAnimation = new SpriteAnimation()
         this.currentAnimationFrame = new SpriteKeyFrame()
         this.currentTime = 0
+        console.log(this)
+    }
+
+    async loadFromJSON(src = '') {
+        let responce = await fetch(src)
+        let data = await responce.json()
+        
+        Object.entries(data).forEach(([animationKey, animation]) => {
+            let spriteAnimation = new SpriteAnimation()
+            let keyFrames = []
+            animation.keyframes.forEach(keyframe => {
+                keyFrames.push(new SpriteKeyFrame(keyframe.id, keyframe.duration))
+            })
+            spriteAnimation.addKeyFrames(...keyFrames)
+            this.addAnimation(animationKey, spriteAnimation)
+        })
     }
 
     addAnimation(key = '', animation = new SpriteAnimation()) {
