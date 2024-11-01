@@ -114,6 +114,15 @@ export default class GameObject extends Point {
         })
     }
 
+    setSize(width, height) {
+        this.width = width ?? 1
+        this.height = height ?? this.width
+
+        this.forSubObjects(sub => {
+            if(sub.setSize) sub.setSize(this.width, this.height)
+        })
+    }
+
     init(canvas = new HTMLCanvasElement, camera = new Camera, world = new GameWorld) {
         return null
     }
