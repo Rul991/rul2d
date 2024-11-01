@@ -88,9 +88,11 @@ export default class Rectangle extends Point {
     }
 
     set scale(value) {
+        this.addPosition(new Point(this.width / 2, this.height / 2))
         this.setSize(this.width / this.scale, this.height / this.scale)
         this._scale = value
         this.setSize(this.width * this.scale, this.height * this.scale)
+        this.addPosition(new Point(-this.width / 2, -this.height / 2))
     }
 
     get scale() {
