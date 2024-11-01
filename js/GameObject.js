@@ -121,6 +121,7 @@ export default class GameObject extends Point {
     setOffsetForSubObject(sub) {
         sub.offset = new Point()
         sub.offset.point = sub
+        sub.setPosition = sub.offset.setPosition
     }
 
     updateSubObjectCoordinates(sub) {

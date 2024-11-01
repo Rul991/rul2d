@@ -95,19 +95,24 @@ export default class Collider extends Rectangle {
         this.y = y - this.height / 2
     }
 
-    update() {
+    updateVelocity() {
         let speedMagnitude = this.velocity.magnitude()
         let normalizedSpeed = this.velocity.normalize()
         if(speedMagnitude > this.maxSpeed) this.setVelocity(this.maxSpeed * normalizedSpeed.x, this.maxSpeed * normalizedSpeed.y)
+    }
 
+    updateAngle() {
         if(this.isLockAngle) {
             this.body.angle = 0
             this.body.angularVelocity = 0
             this.body.angularForce = 0
             this.body.angularDamping = 0
         }
+    }
 
-        let [x, y] = this.body.position
+    update() {
+        this.updateVelocity()
+        this.updateAngle()
         this.updatePosition()
     }
 }

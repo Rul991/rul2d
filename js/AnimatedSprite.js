@@ -10,7 +10,6 @@ export default class AnimatedSprite extends SpriteSheet {
         this.currentAnimation = new SpriteAnimation()
         this.currentAnimationFrame = new SpriteKeyFrame()
         this.currentTime = 0
-        console.log(this)
     }
 
     async loadFromJSON(src = '') {

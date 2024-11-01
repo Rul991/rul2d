@@ -4,13 +4,27 @@ import Point from "./Point.js"
 export default class PointerableObject extends InteractiveObject {
     constructor(x, y, width, height) {
         super(x, y, width, height)
-
         this.pointerPosition = new Point()
+
         this.setHoverCallback()
+        this.setStartCallback()
+        this.setEndCallback()
     }
 
     setHoverCallback(callback = (point = new Point) => {}) {
         this.hoverCallback = callback
+    }
+
+    setStartCallback(callback = (point = new Point) => {}) {
+        this.startCallback = (point = new Point) => {
+            if(this.isPointInRect(point)) callback(point)
+        }
+    }
+
+    setEndCallback(callback = (point = new Point) => {}) {
+        this.endCallback = (point = new Point) => {
+            if(this.isPointInRect(point)) callback(point)
+        }
     }
 
     reset() {
@@ -46,11 +60,16 @@ export default class PointerableObject extends InteractiveObject {
 
         const upCallback = e => {
             this.isLeftButtonPressed = false
+            this.endCallback(this.pointerPosition)
         }
 
         canvas.addEventListener('pointerdown', e => {
-            getPointerPosition(e)
+            let {clientX, clientY} = e
+            let pointerPosition = new Point(clientX, clientY)
             this.isLeftButtonPressed = true
+
+            getPointerPosition(e)
+            this.startCallback(this.updatePointWithCamera(pointerPosition))
         })
 
         canvas.addEventListener('pointermove', e => {
