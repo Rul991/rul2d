@@ -47,13 +47,9 @@ export default class CanvasPath extends Rectangle {
         this.setSize(right - this.x, bottom - this.y)
     }
 
-    set point(value) {
-        super.point = value
+    setPosition(x, y) {
+        super.setPosition(x, y)
         this.updatePosition()
-    }
-    
-    get point() {
-        return super.point
     }
 
     drawLine(ctx, color = null, type = 'stroke') {

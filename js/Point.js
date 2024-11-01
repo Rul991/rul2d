@@ -46,8 +46,7 @@ export default class Point {
     }
 
     set point({x,y}) {
-        this.x = x ?? 0
-        this.y = y ?? this.x
+        this.setPosition(x, y)
     }
 
     get point() {
@@ -55,7 +54,8 @@ export default class Point {
     }
 
     setPosition(x, y) {
-        this.point = {x,y}
+        this.x = x ?? 0
+        this.y = y ?? this.x
     }
 
     smoothSetPosition(x, y, step = 60, time = 1000) {

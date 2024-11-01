@@ -51,13 +51,9 @@ export default class CanvasShape extends Rectangle {
         this.updatePath()
     }
 
-    set point(value) {
-        super.point = value
+    setPosition(x, y) {
+        super.setPosition(x, y)
         this.updatePath()
-    }
-
-    get point() {
-        return super.point
     }
 
     updatePath() {
