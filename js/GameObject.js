@@ -115,16 +115,22 @@ export default class GameObject extends Point {
     }
 
     setSize(width, height) {
-        this.width = width ?? 1
-        this.height = height ?? this.width
+        let oldSize = new Rectangle(0, 0, this.width, this.height)
+        
+        this.width = width || 1
+        this.height = height || this.width
+        
+        if(oldSize.width == 1 && oldSize.height == 1) oldSize.rect = this
 
         this.forSubObjects(sub => {
-            if(sub.setSize) sub.setSize(this.width, this.height)
+            if(sub.setSize) sub.setSize((sub.width / oldSize.width) * this.width, (sub.height / oldSize.height) * this.height)
         })
     }
 
     init(canvas = new HTMLCanvasElement, camera = new Camera, world = new GameWorld) {
-        return null
+        this.canvas = canvas
+        this.camera = camera
+        this.world = world
     }
 
     setOffsetForSubObject(sub) {

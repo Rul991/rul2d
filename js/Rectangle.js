@@ -155,8 +155,8 @@ export default class Rectangle extends Point {
     }
 
     setSize(width, height) {
-        this.width = width ?? 1
-        this.height = height ?? this.width
+        this.width = width || 1
+        this.height = height || this.width
     }
 
     flip(x = false, y = false) {
