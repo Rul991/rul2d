@@ -1,6 +1,7 @@
 import { getNumberSign } from "./utils/numberWork.js"
 import Point from "./Point.js"
 import Rectangle from "./Rectangle.js"
+import Vector2 from "./Vector2.js"
 
 export default class Camera extends Point {
     constructor(ctx) {
@@ -22,15 +23,15 @@ export default class Camera extends Point {
         this.smoothingQuality = quality
     }
 
-    setLimit(x, y) {
-        this.limit = new Point(x, y)
+    setLimit(min = new Point, max = new Point) {
+        this.limit = {min, max}
     }
 
     updateLimit() {
         if(!this.limit) return
 
-        if(Math.abs(this.x) > this.limit.x) this.x = this.limit.x * getNumberSign(this.x)
-        if(Math.abs(this.y) > this.limit.y) this.y = this.limit.y * getNumberSign(this.y)
+        let [vector] = Vector2.toVectors(this)
+        this.point = vector.clamp(this.limit.min, this.limit.max)
     }
 
     updateSmoothing() {

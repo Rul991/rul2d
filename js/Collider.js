@@ -54,7 +54,7 @@ export default class Collider extends Rectangle {
 
     setPosition(x, y) {
         super.setPosition(x, y)
-        if(this.body) this.body.position = [value.x + this.width / 2, value.y + this.height / 2]
+        if(this.body) this.body.position = [x + this.width / 2, y + this.height / 2]
     }
 
     setBox(width, height) {
