@@ -46,7 +46,7 @@ export default class Vector2 extends Point {
     }
 
     clamp(min = new Point, max = new Point) {
-        let point = this
+        let point = this.point
 
         if(point.x > max.x) point.x = max.x
         else if(point.x < min.x) point.x = min.x

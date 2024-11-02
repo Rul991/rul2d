@@ -30,8 +30,13 @@ export default class Camera extends Point {
     updateLimit() {
         if(!this.limit) return
 
-        let [vector] = Vector2.toVectors(this)
-        this.point = vector.clamp(this.limit.min, this.limit.max)
+        let {min, max} = this.limit
+
+        if(this.x > max.x) this.x = max.x
+        else if(this.x < min.x) this.x = min.x
+
+        if(this.y > max.y) this.y = max.y
+        else if(this.y < min.y) this.y = min.y
     }
 
     updateSmoothing() {
