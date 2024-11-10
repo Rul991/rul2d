@@ -53,6 +53,7 @@ export default class CanvasPath extends Rectangle {
     }
 
     drawLine(ctx, color = null, type = 'stroke') {
+        if(!this.isInViewport && !this.isVisible) return
         this.drawRotated(ctx, () => {
             if(!this.points) return
             if(!this.points.size) return

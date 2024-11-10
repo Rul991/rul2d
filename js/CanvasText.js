@@ -121,6 +121,7 @@ export default class CanvasText extends Rectangle {
     }
 
     draw(ctx) {
+        if(!this.isInViewport && !this.isVisible) return
         this.updateFont(ctx)
         this.updateFittedText(ctx)
 

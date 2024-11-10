@@ -93,7 +93,7 @@ export default class Camera extends Point {
         return viewport
     }
 
-    isInViewport(object = new Point) {
+    isObjectInViewport(object = new Point) {
         let {x, y, right, bottom} = this.viewport
         if(object.width) return object.right > x && object.x < right && object.bottom > y && object.y < bottom
         else if(object.x !== undefined) return this.viewport.isPointInRect(object)
@@ -102,7 +102,7 @@ export default class Camera extends Point {
     }
 
     culling(object = new Point, callback = (object = new Point) => {}) {
-        if(this.isInViewport(object)) callback(object)
+        if(this.isObjectInViewport(object)) callback(object)
     }
 
     update(callback = () => {}) {

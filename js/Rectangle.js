@@ -200,6 +200,7 @@ export default class Rectangle extends Point {
     }
 
     draw(ctx, color = null) {
+        if(!this.isInViewport && !this.isVisible) return
         if(!this.isVisible) return
 
         this.drawRotated(ctx, (x, y, width, height) => {

@@ -56,7 +56,19 @@ export default class GameObject extends Point {
             bottom = Math.max(bottom, temp._bottom)
         })
 
-        rect.setSize(right - rect.x, bottom - rect.y)
+        let width = right - rect.x
+        let height = bottom - rect.y
+
+
+        rect.setPosition(
+            isFinite(rect.x) ? rect.x : this.x, 
+            isFinite(rect.y) ? rect.y : this.y
+        )
+
+        rect.setSize(
+            isFinite(width) ? width : 1, 
+            isFinite(height) ? height : 1
+        )
 
         return rect
     }

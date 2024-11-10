@@ -15,11 +15,6 @@ export default class GameWorld {
         this.uiObjects = new Set()
         this.colliders = new Set()
         this.setCamera(camera)
-
-        this.world.on('beginContact', ({bodyA, bodyB}) => {
-            if(bodyA.position[1] > bodyB.position[1]) bodyA.onFloor = true
-            else bodyB.onFloor = true
-        })
     }
 
     setCamera(camera = new Camera) {
@@ -60,21 +55,39 @@ export default class GameWorld {
         })
     }
 
+    setObjectInViewport(objectBoundingRect, drawableObject) {
+        if(!drawableObject) drawableObject = objectBoundingRect
+        drawableObject.isInViewport = false
+        this.camera.culling(objectBoundingRect, () => drawableObject.isInViewport = true)
+    }
+
+    drawGameObject(gameObject) {
+        if(gameObject.isVisible) {
+            this.setObjectInViewport(gameObject.factRect, gameObject)
+            if(!gameObject.isInViewport) return
+
+            gameObject.forSubObjects(sub => {
+                this.setObjectInViewport(sub)
+            })
+            gameObject.draw(this.ctx)
+        }
+    }
+
     update() {
         createGameLoop(([delta, prevTime]) => {
             clearCanvas(this.ctx)
-            this.world.step(delta, prevTime)
+            if(this.world.bodies.length) this.world.step(delta, prevTime)
 
             this.camera.update(() => {
                 this.gameObjects.forEach(gameObject => {
                     gameObject.update(delta)
-                    gameObject.draw(this.ctx)
+                    this.drawGameObject(gameObject)
                 })
             })
 
             this.uiObjects.forEach(ui => {
                 ui.update(delta)
-                ui.draw(this.ctx)
+                if(ui.isVisible) ui.draw(this.ctx)
             })
         })
     }

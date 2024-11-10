@@ -72,8 +72,8 @@ export default class CanvasShape extends Rectangle {
     }
 
     draw(ctx, color) {
-        if(!this.isVisible) return
         if(!this.drawPoints) return
+        if(!this.isInViewport && !this.isVisible) return
 
         if(this.drawPoints.length > 2) this.fill(ctx, color)
         else this.stroke(ctx, color)
@@ -81,6 +81,7 @@ export default class CanvasShape extends Rectangle {
 
     fill(ctx, color) {
         if(!this.drawPoints) return
+        if(!this.isInViewport && !this.isVisible) return
 
         this.drawRotated(ctx, (x, y) => {
             fillPath(ctx, this.drawPoints, color)
@@ -89,6 +90,7 @@ export default class CanvasShape extends Rectangle {
 
     stroke(ctx, color) {
         if(!this.drawPoints) return
+        if(!this.isInViewport && !this.isVisible) return
         ctx.lineWidth = this.lineWidth
 
         this.drawRotated(ctx, (x, y) => {

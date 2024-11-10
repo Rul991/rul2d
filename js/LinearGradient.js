@@ -51,8 +51,10 @@ export default class LinearGradient extends Rectangle {
     }
 
     draw(ctx = new CanvasRenderingContext2D) {
-        if(this.isNeedUpdateGradient) this.updateGradient(ctx)
+        if(!this.isInViewport && !this.isVisible) return
         if(!this.gradient) return
+
+        if(this.isNeedUpdateGradient) this.updateGradient(ctx)
         
         this.drawRotated(ctx, (x, y, width, height) => {
             fillRect(ctx, x, y, width, height, this.gradient)

@@ -6,6 +6,7 @@ export default class Point {
         this.setColor()
         this.setVisibity(true)
         this.lineWidth = 3
+        this.isInViewport = false
     }
 
     setColor(color) {
@@ -83,7 +84,7 @@ export default class Point {
     }
 
     draw(ctx, color = null) {
-        if(!this.isVisible) return
+        if(!this.isInViewport && !this.isVisible) return
         this.drawPoint(ctx, color)
     }
 
