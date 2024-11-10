@@ -64,11 +64,12 @@ export default class GameWorld {
     drawGameObject(gameObject) {
         if(gameObject.isVisible) {
             this.setObjectInViewport(gameObject.factRect, gameObject)
-            if(!gameObject.isInViewport) return
+            if(!gameObject.isInViewport && gameObject.isRenderedFromCameraView) return
 
-            gameObject.forSubObjects(sub => {
-                this.setObjectInViewport(sub)
-            })
+            if(gameObject.isRenderedFromCameraView) 
+                gameObject.forSubObjects(sub => {
+                    this.setObjectInViewport(sub)
+                })
             gameObject.draw(this.ctx)
         }
     }
@@ -76,7 +77,9 @@ export default class GameWorld {
     update() {
         createGameLoop(([delta, prevTime]) => {
             clearCanvas(this.ctx)
-            if(this.world.bodies.length) this.world.step(delta, prevTime)
+            
+            if(this.world.bodies.length) 
+                this.world.step(delta, prevTime)
 
             this.camera.update(() => {
                 this.gameObjects.forEach(gameObject => {

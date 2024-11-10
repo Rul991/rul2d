@@ -6,7 +6,8 @@ export default class Point {
         this.setColor()
         this.setVisibity(true)
         this.lineWidth = 3
-        this.isInViewport = false
+        this.isInViewport = true
+        this.isRenderedFromCameraView = true
     }
 
     setColor(color) {
