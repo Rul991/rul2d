@@ -6,13 +6,28 @@ export default class Rectangle extends Point {
     constructor(x,y,width,height) {
         super(x,y)
         this.setSize(width, height)
+
         this._radians = 0
         this.isFlip = new Point(1, 1)
+
+        this.cachedBoundingBox = null
+        this.isNeedUpdateGeometry = true
+        this.getBoundingBox()
+
+        this.cachedCorners = null
+        this.corners // caching corners
     }
 
-    getBoundingRotatedBox() {
+    set isNeedUpdateGeometry(value) {
+        this.isNeedUpdateCorners = value
+        this.isNeedUpdateBoundingBox = value
+    }
+
+    getBoundingBox() {
+        if(!this.isNeedUpdateBoundingBox) return this.cachedBoundingBox
         if(!this.radians) return this
 
+        this.isNeedUpdateBoundingBox = false
         let temp = new Rectangle()
 
         let corners = new Point(
@@ -28,7 +43,9 @@ export default class Rectangle extends Point {
 
         temp.setSize(right - temp.x, bottom - temp.y)
 
-        return temp
+        this.cachedBoundingBox = temp
+
+        return this.cachedBoundingBox
     }
 
     isPointInRect(point = new Point) {        
@@ -64,6 +81,7 @@ export default class Rectangle extends Point {
 
     set radians(value) {
         this._radians = value % deg2rad(360)
+        this.isNeedUpdateGeometry = true
     }
 
     get radians() {
@@ -125,10 +143,13 @@ export default class Rectangle extends Point {
     }
 
     get corners() {
+        if(!this.isNeedUpdateCorners) return this.cachedCorners
+        this.isNeedUpdateCorners = false
+
         let cos = Math.cos(this.radians)
         let sin = Math.sin(this.radians)
 
-        return {
+        this.cachedCorners = {
             leftBottom: new Point(
                 (-this.width / 2) * cos - (this.height / 2) * sin + this.center.x,
                 (-this.width / 2) * sin + (this.height / 2) * cos + this.center.y
@@ -146,6 +167,8 @@ export default class Rectangle extends Point {
                 (-this.width / 2) * sin + (-this.height / 2) * cos + this.center.y
             )
         }
+
+        return this.cachedCorners
     }
 
     get cornersArray() {
@@ -156,7 +179,13 @@ export default class Rectangle extends Point {
         return Math.sqrt(this.width ** 2 + this.height ** 2)
     }
 
+    setPosition(x, y) {
+        this.isNeedUpdateGeometry = true
+        super.setPosition(x, y)
+    }
+
     setSize(width, height) {
+        this.isNeedUpdateGeometry = true
         this.width = width || 1
         this.height = height || this.width
     }

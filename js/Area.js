@@ -73,8 +73,8 @@ export default class Area extends Rectangle {
         let {x, y, bottom, right, radians} = rect
         if(!radians && !this.radians) return this.x < right && this.right > x && this.y < bottom && this.bottom > y
         else {
-            let thisBox = this.getBoundingRotatedBox()
-            let rectBox = rect.getBoundingRotatedBox()
+            let thisBox = this.getBoundingBox()
+            let rectBox = rect.getBoundingBox()
 
             return thisBox.x < rectBox.right && thisBox.right > rectBox.x && thisBox.y < rectBox.bottom && thisBox.bottom > rectBox.y
         }

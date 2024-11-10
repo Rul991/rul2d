@@ -95,7 +95,10 @@ export default class Camera extends Point {
 
     isObjectInViewport(object = new Point) {
         let {x, y, right, bottom} = this.viewport
-        if(object.width) return object.right > x && object.x < right && object.bottom > y && object.y < bottom
+        if(object.width) {
+            let boundingBox = object.getBoundingBox() 
+            return boundingBox.right > x && boundingBox.x < right && boundingBox.bottom > y && boundingBox.y < bottom
+        }
         else if(object.x !== undefined) return this.viewport.isPointInRect(object)
         
         return false
