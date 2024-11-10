@@ -51,7 +51,7 @@ export default class LinearGradient extends Rectangle {
     }
 
     draw(ctx = new CanvasRenderingContext2D) {
-        if(!this.isInViewport && !this.isVisible) return
+        if(!this.isInViewport || !this.isVisible) return
         if(!this.gradient) return
 
         if(this.isNeedUpdateGradient) this.updateGradient(ctx)

@@ -84,7 +84,7 @@ export default class Point {
     }
 
     draw(ctx, color = null) {
-        if(!this.isInViewport && !this.isVisible) return
+        if(!this.isInViewport || !this.isVisible) return
         this.drawPoint(ctx, color)
     }
 
@@ -94,9 +94,5 @@ export default class Point {
 
     move({x, y}, delta = 1/60) {
         this.addPosition(new Point(x * delta, y * delta))
-    }
-
-    drawWithCulling(ctx, camera, color = null) {
-        camera.culling(this, obj => this.draw(ctx, color))
     }
 }
