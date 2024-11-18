@@ -104,12 +104,51 @@ export default class Camera extends Point {
         return false
     }
 
+    initUpdatingCursorPosition() {
+        if(this.isInitUpdatingCursorPosition) return
+        if(!this.ctx) return
+
+        let canvas = this.ctx.canvas
+
+        const updateCursorPosition = e => {
+            this.cursorPosition = new Point(e.clientX, e.clientY)
+        }
+
+        canvas.addEventListener('mousedown', e => updateCursorPosition(e))
+        canvas.addEventListener('mousemove', e => updateCursorPosition(e))
+
+        this.isInitUpdatingCursorPosition = true
+    }
+
+    getPointOnCanvas() {
+        if(!this.cursorPosition) return null
+        let {x, y} = this.cursorPosition
+
+        let rect = {left: 0, top: 0}
+        if(this.ctx) rect = this.ctx.canvas.getBoundingClientRect()
+
+        let {left, top} = rect
+
+        return new Point(x - left, y - top)
+    }
+
+    getCursorPosition() {
+        if(!this.cursorPosition) return new Point(null, null)
+        let cursorPointOnCanvas = this.getPointOnCanvas()
+
+        let {x, y} = this.cursorPosition
+        const getUpdatedCoordinate = (cursorPosition, cameraPosition) => cursorPosition / this.zoom - cameraPosition
+        
+        return new Point(getUpdatedCoordinate(x, this.x), getUpdatedCoordinate(y, this.y))
+    }
+
     culling(object = new Point, callback = (object = new Point) => {}) {
         if(this.isObjectInViewport(object)) callback(object)
     }
 
     update(callback = () => {}) {
         if(!this.ctx) return
+        this.initUpdatingCursorPosition()
 
         this.startRender()
         this.translate()

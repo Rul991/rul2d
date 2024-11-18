@@ -60,6 +60,13 @@ export default class Point {
         this.y = y ?? this.x
     }
 
+    setOffsetPosition(x, y) {
+        if(this.offset)
+            this.offset.setPosition(x, y)
+        else
+            this.setPosition(x, y)
+    }
+
     smoothSetPosition(x, y, step = 60, time = 1000) {
         let stepX = (x - this.x) / step
         let stepY = (y - this.y) / step

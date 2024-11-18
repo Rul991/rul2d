@@ -19,22 +19,10 @@ export default class InteractiveObject extends Rectangle {
         this.camera = camera
     }
 
-    getCanvasFromCamera() {
-        if(this.camera) if(this.camera.ctx) 
-                return this.camera.ctx.canvas
-
-        return null
-    }
-
     getPointOnCanvas({x, y}) {
-        let rect = {left: 0, top: 0}
+        if(this.camera) return this.camera.getPointOnCanvas()
 
-        let canvas = this.getCanvasFromCamera()
-        if(canvas) rect = canvas.getBoundingClientRect()
-
-        let {left, top} = rect
-
-        return new Point(x - left, y - top)
+        return new Point(x, y)
     }
 
     isRenderingFromCameraView(value = true) {
@@ -46,10 +34,7 @@ export default class InteractiveObject extends Rectangle {
         if(!this.camera) return point
         if(!this.isRenderedFromCameraView) return point
         else {
-            let {x, y} = point
-            const getUpdatedCoordinate = (position, cameraPosition) => position / this.camera.zoom - cameraPosition
-            
-            return new Point(getUpdatedCoordinate(x, this.camera.x), getUpdatedCoordinate(y, this.camera.y))
+            return this.camera.getCursorPosition()
         }
     }
 
