@@ -48,22 +48,6 @@ export default class Rectangle extends Point {
         return this.cachedBoundingBox
     }
 
-    isPointInRect(point = new Point) {        
-        let newPoint = new Point()
-        
-        if(this.radians) {
-            let sin = Math.sin(-this.radians)
-            let cos = Math.cos(-this.radians)
-
-            newPoint = new Point(point.x - this.center.x, point.y - this.center.y)
-            newPoint = new Point(newPoint.x * cos - newPoint.y * sin, newPoint.x * sin + newPoint.y * cos)
-            newPoint = new Point(newPoint.x + this.center.x, newPoint.y + this.center.y)
-        }
-        else newPoint = point
-        
-        return newPoint.x >= this.x && newPoint.x <= this.right && newPoint.y >= this.y && newPoint.y <= this.bottom
-    }
-
     set rotatedRect(rect) {
         let {radians} = rect
 
@@ -148,23 +132,24 @@ export default class Rectangle extends Point {
 
         let cos = Math.cos(this.radians)
         let sin = Math.sin(this.radians)
+        let center = this.center
 
         this.cachedCorners = {
             leftBottom: new Point(
-                (-this.width / 2) * cos - (this.height / 2) * sin + this.center.x,
-                (-this.width / 2) * sin + (this.height / 2) * cos + this.center.y
+                (-this.width / 2) * cos - (this.height / 2) * sin + center.x,
+                (-this.width / 2) * sin + (this.height / 2) * cos + center.y
             ),
             rightBottom: new Point(
-                (this.width / 2) * cos - (this.height / 2) * sin + this.center.x,
-                (this.width / 2) * sin + (this.height / 2) * cos + this.center.y
+                (this.width / 2) * cos - (this.height / 2) * sin + center.x,
+                (this.width / 2) * sin + (this.height / 2) * cos + center.y
             ),
             rightTop: new Point(
-                (this.width / 2) * cos - (-this.height / 2) * sin + this.center.x,
-                (this.width / 2) * sin + (-this.height / 2) * cos + this.center.y
+                (this.width / 2) * cos - (-this.height / 2) * sin + center.x,
+                (this.width / 2) * sin + (-this.height / 2) * cos + center.y
             ),
             leftTop: new Point(
-                (-this.width / 2) * cos - (-this.height / 2) * sin + this.center.x,
-                (-this.width / 2) * sin + (-this.height / 2) * cos + this.center.y
+                (-this.width / 2) * cos - (-this.height / 2) * sin + center.x,
+                (-this.width / 2) * sin + (-this.height / 2) * cos + center.y
             )
         }
 
