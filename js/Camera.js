@@ -111,17 +111,25 @@ export default class Camera extends Point {
         let canvas = this.ctx.canvas
 
         const updateCursorPosition = e => {
-            this.cursorPosition = new Point(e.clientX, e.clientY)
+            if(!e.touches) this.cursorPosition = new Point(e.clientX, e.clientY)
+            else {
+                let {clientX, clientY} = e.touches[0]
+
+                this.cursorPosition = new Point(clientX, clientY)
+            }
         }
 
         canvas.addEventListener('mousedown', e => updateCursorPosition(e))
         canvas.addEventListener('mousemove', e => updateCursorPosition(e))
 
+        canvas.addEventListener('touchstart', e => updateCursorPosition(e))
+        canvas.addEventListener('touchmove', e => updateCursorPosition(e))
+
         this.isInitUpdatingCursorPosition = true
     }
 
     getPointOnCanvas() {
-        if(!this.cursorPosition) return null
+        if(!this.cursorPosition) return new Point(null)
         let {x, y} = this.cursorPosition
 
         let rect = {left: 0, top: 0}
@@ -133,10 +141,12 @@ export default class Camera extends Point {
     }
 
     getCursorPosition() {
-        if(!this.cursorPosition) return new Point(null, null)
+        if(!this.cursorPosition) return new Point(null)
         let cursorPointOnCanvas = this.getPointOnCanvas()
 
-        let {x, y} = this.cursorPosition
+        if(!cursorPointOnCanvas) return new Point(null)
+        let {x, y} = cursorPointOnCanvas
+
         const getUpdatedCoordinate = (cursorPosition, cameraPosition) => cursorPosition / this.zoom - cameraPosition
         
         return new Point(getUpdatedCoordinate(x, this.x), getUpdatedCoordinate(y, this.y))

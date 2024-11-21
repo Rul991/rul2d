@@ -19,16 +19,10 @@ export default class InteractiveObject extends Rectangle {
         this.camera = camera
     }
 
-    getPointOnCanvas({x, y}) {
-        if(this.camera) return this.camera.getPointOnCanvas()
-
-        return new Point(x, y)
-    }
-
     isRenderingFromCameraView(value = true) {
         this.isRenderedFromCameraView = value
     }
-
+    
     isPointInRect(point = new Point) {
         if(!point) return false
         let newPoint = new Point()
@@ -37,7 +31,7 @@ export default class InteractiveObject extends Rectangle {
             let sin = Math.sin(-this.radians)
             let cos = Math.cos(-this.radians)
             let center = this.center
-
+            
             newPoint = new Point(point.x - center.x, point.y - center.y)
             newPoint = new Point(newPoint.x * cos - newPoint.y * sin, newPoint.x * sin + newPoint.y * cos)
             newPoint = new Point(newPoint.x + center.x, newPoint.y + center.y)
@@ -46,13 +40,38 @@ export default class InteractiveObject extends Rectangle {
         
         return newPoint.x >= this.x && newPoint.x <= this.right && newPoint.y >= this.y && newPoint.y <= this.bottom
     }
+    
+    getCanvasFromCamera() {
+        if(this.camera) if(this.camera.ctx) 
+                return this.camera.ctx.canvas
+
+        return null
+    }
+
+    getPointOnCanvas({x, y}) {
+        let rect = {left: 0, top: 0}
+
+        let canvas = this.getCanvasFromCamera()
+        if(canvas) rect = canvas.getBoundingClientRect()
+
+        let {left, top} = rect
+
+        return new Point(x - left, y - top)
+    }
+
+    isRenderingFromCameraView(value = true) {
+        this.isRenderedFromCameraView = value
+    }
 
     updatePointWithCamera({x, y}) {
         let point = this.getPointOnCanvas({x, y})
         if(!this.camera) return point
         if(!this.isRenderedFromCameraView) return point
         else {
-            return this.camera.getCursorPosition()
+            let {x, y} = point
+            const getUpdatedCoordinate = (position, cameraPosition) => position / this.camera.zoom - cameraPosition
+            
+            return new Point(getUpdatedCoordinate(x, this.camera.x), getUpdatedCoordinate(y, this.camera.y))
         }
     }
 
