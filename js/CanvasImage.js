@@ -19,10 +19,10 @@ export default class CanvasImage extends Rectangle {
         this.image.dispatchEvent(event)
     }
 
-    doWhenImageIsLoaded(callback = event => {}) {
+    doWhenImageIsLoaded(callback = event => {}, once = false) {
         const doWhenIsLoaded = e => {
             callback(e)
-            this.image.removeEventListener('image-load', doWhenIsLoaded)
+            if(once) this.image.removeEventListener('image-load', doWhenIsLoaded)
         }
 
         if(!this.isImageLoaded) this.image.addEventListener('image-load', doWhenIsLoaded)
