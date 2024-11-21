@@ -19,7 +19,9 @@ export default class RelativePositionManager extends Rectangle {
 
     updatePosition() {
         let {width, height} = this.canvas
+
         this.object.setOffsetPosition(this.x * width, this.y * height)
+
         if(this.object.setSize && (this.width != -1 || this.height != -1)) this.object.setSize(this.width * width, this.height * height)
     }
 
