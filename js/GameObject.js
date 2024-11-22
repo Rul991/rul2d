@@ -99,6 +99,7 @@ export default class GameObject extends Point {
 
             if(sub.isCollider) {
                 this.colliders.add(sub)
+                sub.root = this
             }
             
         })
