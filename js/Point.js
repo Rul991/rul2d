@@ -56,8 +56,8 @@ export default class Point {
     }
 
     setPosition(x, y) {
-        this.x = x ?? 0
-        this.y = y ?? this.x
+        this.x = x !== undefined ? x : 0
+        this.y = y !== undefined ? y : this.x
     }
 
     setOffsetPosition(x, y) {
