@@ -156,7 +156,7 @@ export default class Camera extends Point {
         if(this.isObjectInViewport(object)) callback(object)
     }
 
-    update(callback = () => {}) {
+    update(callback = () => {}, delta) {
         if(!this.ctx) return
         this.initUpdatingCursorPosition()
 

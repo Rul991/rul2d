@@ -23,6 +23,24 @@ export default class Rectangle extends Point {
         this.isNeedUpdateBoundingBox = value
     }
 
+    isPointInRect(point = new Point) {
+        if(!point) return false
+        let newPoint = new Point()
+        
+        if(this.radians) {
+            let sin = Math.sin(-this.radians)
+            let cos = Math.cos(-this.radians)
+            let center = this.center
+            
+            newPoint = new Point(point.x - center.x, point.y - center.y)
+            newPoint = new Point(newPoint.x * cos - newPoint.y * sin, newPoint.x * sin + newPoint.y * cos)
+            newPoint = new Point(newPoint.x + center.x, newPoint.y + center.y)
+        }
+        else newPoint.point = point
+        
+        return newPoint.x >= this.x && newPoint.x <= this.right && newPoint.y >= this.y && newPoint.y <= this.bottom
+    }
+
     getBoundingBox() {
         if(!this.isNeedUpdateBoundingBox) return this.cachedBoundingBox
         if(!this.radians) return this
@@ -46,6 +64,12 @@ export default class Rectangle extends Point {
         this.cachedBoundingBox = temp
 
         return this.cachedBoundingBox
+    }
+
+    getMaxBoundingBox() {
+        let rect = this.rect
+        rect.degrees = 45
+        return rect.getBoundingBox()
     }
 
     set rotatedRect(rect) {

@@ -88,6 +88,7 @@ export default class CanvasText extends Rectangle {
 
         this.isTextFull = false
         
+        let text = this.text
         for(let symb of symbols) {
             let lastIndex = fittedText.length - 1
             
@@ -98,7 +99,7 @@ export default class CanvasText extends Rectangle {
                 if(!this.isIgnoreHeight) {
                     if(textHeight + height > this.height) {
                         this.isTextFull = true
-                        this.text = this.text.substring(0, symbolsCount)
+                        text = this.text.substring(0, symbolsCount)
                         break
                     }
                     else textHeight += height

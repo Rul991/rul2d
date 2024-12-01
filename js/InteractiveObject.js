@@ -23,24 +23,6 @@ export default class InteractiveObject extends Rectangle {
         this.isRenderedFromCameraView = value
     }
     
-    isPointInRect(point = new Point) {
-        if(!point) return false
-        let newPoint = new Point()
-        
-        if(this.radians) {
-            let sin = Math.sin(-this.radians)
-            let cos = Math.cos(-this.radians)
-            let center = this.center
-            
-            newPoint = new Point(point.x - center.x, point.y - center.y)
-            newPoint = new Point(newPoint.x * cos - newPoint.y * sin, newPoint.x * sin + newPoint.y * cos)
-            newPoint = new Point(newPoint.x + center.x, newPoint.y + center.y)
-        }
-        else newPoint.point = point
-        
-        return newPoint.x >= this.x && newPoint.x <= this.right && newPoint.y >= this.y && newPoint.y <= this.bottom
-    }
-    
     getCanvasFromCamera() {
         if(this.camera) if(this.camera.ctx) 
                 return this.camera.ctx.canvas

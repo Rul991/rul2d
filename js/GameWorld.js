@@ -6,15 +6,15 @@ import { World } from "./utils/p2.js"
 export default class GameWorld {
     constructor({camera = new Camera, canvas = createCanvas(), width = 0, height = 0, gravity = new Point(0, 9.81)}) {
         this.world = new World()
-        this.canvas = canvas
+        this.canvas = canvas ?? createCanvas()
         this.ctx = getContext2d(canvas)
         this.canvas.width = width || this.canvas.width
         this.canvas.height = height || this.canvas.height
-        this.setGravity(gravity)
+        this.setGravity(gravity ?? new Point(0, 9.81))
         this.gameObjects = new Set()
         this.uiObjects = new Set()
         this.colliders = new Set()
-        this.setCamera(camera)
+        this.setCamera(camera ?? new Camera)
     }
 
     setCamera(camera = new Camera) {
@@ -86,7 +86,7 @@ export default class GameWorld {
                     gameObject.update(delta)
                     this.drawGameObject(gameObject)
                 })
-            })
+            }, delta)
 
             this.uiObjects.forEach(ui => {
                 ui.update(delta)
