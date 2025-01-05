@@ -85,19 +85,21 @@ export default class DrawableObject {
     /**
      * Draw object on canvas without opacity support
      * @param {CanvasRenderingContext2D} ctx
+     * @param {string} [color] 
      */
 
-    _draw(ctx) {
+    _draw(ctx, color = null) {
         return
     }
 
     /**
      * Draw object on canvas
      * @param {CanvasRenderingContext2D} ctx
+     * @param {string} [color]
      */
 
-    draw(ctx) {
-        this.doWithOpacity(ctx, () => this._draw(ctx))
+    draw(ctx, color = null) {
+        this.doWithOpacity(ctx, () => this._draw(ctx, color = null))
     }
 
     /**

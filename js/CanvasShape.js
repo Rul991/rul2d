@@ -11,6 +11,13 @@ export default class CanvasShape extends Rectangle {
         this.drawPoints = []
     }
 
+    async loadFromJSON(src = '') {
+        let response = await fetch(src)
+        let data = await response.json()
+
+        this.setPath(data)
+    }
+
     setPath(points = [new Point]) {
         this.shapePoints = points
         this.updatePath()
@@ -71,7 +78,7 @@ export default class CanvasShape extends Rectangle {
         return this.drawPoints.map(p => new Point(p.x + x, p.y + y))
     }
 
-    _draw(ctx, color) {
+    draw(ctx, color) {
         if(!this.drawPoints) return
         if(!this.isNeedDraw()) return
 
@@ -85,7 +92,7 @@ export default class CanvasShape extends Rectangle {
 
         this.doWithOpacity(ctx, () => {
             this.drawRotated(ctx, (x, y) => {
-                fillPath(ctx, this.drawPoints, color)
+                fillPath(ctx, this.drawPoints, color ?? this.color)
             }, this.center)
         })
     }
@@ -98,7 +105,7 @@ export default class CanvasShape extends Rectangle {
 
         this.doWithOpacity(ctx, () => {
             this.drawRotated(ctx, (x, y) => {
-                strokePath(ctx, this.drawPoints, color)
+                strokePath(ctx, this.drawPoints, color ?? this.color)
             }, this.center)
         })
     }

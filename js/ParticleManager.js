@@ -49,9 +49,6 @@ export default class ParticleManager extends Point {
             else if(key == 'maxParticlesAtOneUpdate') {
                 this.setMaxParticlesSpawnAtOneUpdate(element)
             }
-            else if(key == 'particleCount') {
-                this.setCount(element)
-            }
             else if(key == 'spawnRange') {
                 this.setSpawnRange(
                     new Point(element.min.x, element.min.y), 
@@ -73,6 +70,10 @@ export default class ParticleManager extends Point {
             else if(this[key] !== undefined) {
                 this[key] = element
             }
+        }
+
+        if(data.particleCount !== undefined) {
+            this.setCount(data.particleCount)
         }
     }
 
@@ -243,10 +244,10 @@ export default class ParticleManager extends Point {
                 particle.velocity.addPosition(gravity)
 
                 let { drawableObject } = particle
+                drawableObject.update(delta)
 
                 if(!updatedObjects.has(drawableObject)) {
                     updatedObjects.add(drawableObject)
-                    drawableObject.update(delta)
                 }
 
                 if(particle.isNeedRecreate && !this.isOneShoot && this.isPlaying) {

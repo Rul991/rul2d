@@ -51,9 +51,11 @@ export default class Particle extends Point {
 
         initPosition.point = obj
         obj.point = this
+        if(obj.updateSubObjectsCoordinates) obj.updateSubObjectsCoordinates()
 
         callback(obj)
         obj.point = initPosition
+        if(obj.updateSubObjectsCoordinates) obj.updateSubObjectsCoordinates()
 
         if(obj.degrees !== undefined) {
             obj.degrees = initAngle
