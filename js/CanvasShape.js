@@ -71,7 +71,7 @@ export default class CanvasShape extends Rectangle {
         return this.drawPoints.map(p => new Point(p.x + x, p.y + y))
     }
 
-    draw(ctx, color) {
+    _draw(ctx, color) {
         if(!this.drawPoints) return
         if(!this.isNeedDraw()) return
 
@@ -83,9 +83,11 @@ export default class CanvasShape extends Rectangle {
         if(!this.drawPoints) return
         if(!this.isNeedDraw()) return
 
-        this.drawRotated(ctx, (x, y) => {
-            fillPath(ctx, this.drawPoints, color)
-        }, this.center)
+        this.doWithOpacity(ctx, () => {
+            this.drawRotated(ctx, (x, y) => {
+                fillPath(ctx, this.drawPoints, color)
+            }, this.center)
+        })
     }
 
     stroke(ctx, color) {
@@ -94,8 +96,10 @@ export default class CanvasShape extends Rectangle {
         
         ctx.lineWidth = this.lineWidth
 
-        this.drawRotated(ctx, (x, y) => {
-            strokePath(ctx, this.drawPoints, color)
-        }, this.center)
+        this.doWithOpacity(ctx, () => {
+            this.drawRotated(ctx, (x, y) => {
+                strokePath(ctx, this.drawPoints, color)
+            }, this.center)
+        })
     }
 }

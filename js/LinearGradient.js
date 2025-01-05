@@ -50,7 +50,7 @@ export default class LinearGradient extends Rectangle {
         ]
     }
 
-    draw(ctx = new CanvasRenderingContext2D) {
+    _draw(ctx = new CanvasRenderingContext2D) {
         if(!this.isNeedDraw()) return
         if(!this.gradient) return
 

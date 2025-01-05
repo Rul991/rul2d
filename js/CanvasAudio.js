@@ -98,7 +98,7 @@ export default class CanvasAudio extends Point {
         return true
     }
 
-    draw(ctx, color = null) {
+    _draw(ctx, color = null) {
         if(!this.isNeedDraw()) return
         ctx.lineWidth = this.lineWidth
         strokeArc(ctx, this.x, this.y, this.audioRadius, color ?? this.color)

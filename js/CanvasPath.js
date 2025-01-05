@@ -77,7 +77,7 @@ export default class CanvasPath extends Rectangle {
         this.drawLine(ctx, color, 'stroke')
     }
 
-    draw(ctx, color = null) {
+    _draw(ctx, color = null) {
         this.stroke(ctx, color ?? this.color)
     }
 }

@@ -6,6 +6,7 @@ export default class DrawableObject {
     constructor() {
         this.lineWidth = 3
         this.opacity = 1
+        this.root = null
         this.isInViewport = true
         this.isRenderedFromCameraView = true
         this.isInitialized = false
@@ -58,13 +59,45 @@ export default class DrawableObject {
         return
     }
 
+    get inheritOpacity() {
+        let rootOpacity
+
+        if(!this.root) rootOpacity = 1
+        else rootOpacity = this.root.inheritOpacity
+
+        return this.opacity * rootOpacity
+    }
+
+    /**
+     * Change global alpha and do something
+     * @param {CanvasRenderingContext2D} ctx 
+     * @param {Function} callback 
+     */
+    doWithOpacity(ctx, callback = () => {}) {
+        let initAlpha = ctx.globalAlpha
+        let opacity = this.inheritOpacity * initAlpha
+
+        ctx.globalAlpha = opacity
+        callback()
+        ctx.globalAlpha = initAlpha
+    }
+
+    /**
+     * Draw object on canvas without opacity support
+     * @param {CanvasRenderingContext2D} ctx
+     */
+
+    _draw(ctx) {
+        return
+    }
+
     /**
      * Draw object on canvas
      * @param {CanvasRenderingContext2D} ctx
      */
 
     draw(ctx) {
-        return
+        this.doWithOpacity(ctx, () => this._draw(ctx))
     }
 
     /**

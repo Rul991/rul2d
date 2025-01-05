@@ -80,7 +80,7 @@ export default class Point extends DrawableObject {
         fillArc(ctx, this.x, this.y, 1, color ?? this.color)
     }
 
-    draw(ctx, color = null) {
+    _draw(ctx, color = null) {
         if(!this.isNeedDraw()) return
         this.drawPoint(ctx, color)
     }

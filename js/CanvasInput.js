@@ -200,7 +200,7 @@ export default class CanvasInput extends GameObject {
         this.button.initInteractiveObject(canvas, camera)
     }
 
-    draw(ctx) {
+    _draw(ctx) {
         if(!this.isNeedDraw()) return
 
         if(this.isFocus) {

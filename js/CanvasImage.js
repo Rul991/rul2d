@@ -61,7 +61,7 @@ export default class CanvasImage extends Rectangle {
         super.setSize(width, height)
     }
 
-    draw(ctx) {
+    _draw(ctx) {
         if(!this.isImageLoaded) return
         if(!this.isNeedDraw()) return
         

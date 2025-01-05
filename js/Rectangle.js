@@ -236,7 +236,7 @@ export default class Rectangle extends Point {
         this.center.drawPoint(ctx, color ?? this.color)
     }
 
-    draw(ctx, color = null) {
+    _draw(ctx, color = null) {
         if(!this.isNeedDraw()) return
 
         this.drawRotated(ctx, (x, y, width, height) => {

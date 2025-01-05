@@ -78,10 +78,9 @@ export default class Particle extends Point {
         if(!this.isNeedDraw()) return
 
         this.moveToPositionAndBack(this.drawableObject, obj => {
-            let initAlpha = ctx.globalAlpha
-            ctx.globalAlpha = this.opacity
-            this.camera.culling(obj, () => obj.draw(ctx))
-            ctx.globalAlpha = initAlpha
+            this.doWithOpacity(ctx, () => {
+                this.camera.culling(obj, () => obj.draw(ctx))
+            })
         })
     }
 

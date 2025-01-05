@@ -155,6 +155,7 @@ export default class ParticleManager extends Point {
         
         for (let i = 0; i < count; i++) {
             let particle = new Particle()
+            particle.root = this
             this.recreateParticle(particle)
 
             this.particles.push(particle)
@@ -221,7 +222,7 @@ export default class ParticleManager extends Point {
         this.initObjects(this.particles)
     }
 
-    draw(ctx = new CanvasRenderingContext2D) {
+    _draw(ctx = new CanvasRenderingContext2D) {
         if(!this.isStart) return
         if(!this.isVisible) return
 

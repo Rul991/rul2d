@@ -13,12 +13,14 @@ export default class RoundedRectangle extends Rectangle {
 
     _drawRoundedRect(ctx = new CanvasRenderingContext2D, color = null, type = 'fill') {
         if(!this.isNeedDraw()) return
-        this.drawRotated(ctx, (x, y, width, height) => {
-            ctx.beginPath()
-            ctx[`${type}Style`] = color ?? this.color
-            ctx.roundRect(x, y, width, height, this.radius)
-            ctx[type]()
-            ctx.closePath()
+        this.doWithOpacity(ctx, () => {
+            this.drawRotated(ctx, (x, y, width, height) => {
+                ctx.beginPath()
+                ctx[`${type}Style`] = color ?? this.color
+                ctx.roundRect(x, y, width, height, this.radius)
+                ctx[type]()
+                ctx.closePath()
+            })
         })
     }
 

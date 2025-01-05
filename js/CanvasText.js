@@ -120,7 +120,7 @@ export default class CanvasText extends Rectangle {
         }
     }
 
-    draw(ctx) {
+    _draw(ctx) {
         if(!this.isNeedDraw()) return
         this.updateFont(ctx)
         this.updateFittedText(ctx)

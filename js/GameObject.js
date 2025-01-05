@@ -83,6 +83,8 @@ export default class GameObject extends Point {
 
     addSubObjects(...subObjects) {
         subObjects.forEach(sub => {
+            sub.root = this
+
             if(sub.isMainCollider && !this.mainCollider) {
                 this.mainCollider = sub
                 this.setPosition = this.mainCollider.setPosition
@@ -99,7 +101,6 @@ export default class GameObject extends Point {
 
             if(sub.isCollider) {
                 this.colliders.add(sub)
-                sub.root = this
             }
             
         })
@@ -108,6 +109,8 @@ export default class GameObject extends Point {
     removeSubObjects(...subObjects) {
         subObjects.forEach(sub => {
             if(!this.subObjects.all.delete(sub)) return
+
+            sub.root = null
 
             const subName = sub.constructor.name.toLowerCase()
             this.subObjects[subName].delete(sub)
