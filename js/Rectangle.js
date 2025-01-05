@@ -18,6 +18,9 @@ export default class Rectangle extends Point {
         this.corners // caching corners
     }
 
+    /**
+     * @param {boolean} value
+     */
     set isNeedUpdateGeometry(value) {
         this.isNeedUpdateCorners = value
         this.isNeedUpdateBoundingBox = value
@@ -184,10 +187,6 @@ export default class Rectangle extends Point {
         return Object.entries(this.corners).map(([key, point]) => point)
     }
 
-    get diagonal() {
-        return Math.sqrt(this.width ** 2 + this.height ** 2)
-    }
-
     setPosition(x, y) {
         this.isNeedUpdateGeometry = true
         super.setPosition(x, y)
@@ -238,8 +237,7 @@ export default class Rectangle extends Point {
     }
 
     draw(ctx, color = null) {
-        if(!this.isInViewport || !this.isVisible) return
-        if(!this.isVisible) return
+        if(!this.isNeedDraw()) return
 
         this.drawRotated(ctx, (x, y, width, height) => {
             fillRect(ctx, x, y, width, height, color ?? this.color)

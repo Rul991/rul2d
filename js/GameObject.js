@@ -140,12 +140,6 @@ export default class GameObject extends Point {
         })
     }
 
-    init(canvas = new HTMLCanvasElement, camera = new Camera, world = new GameWorld) {
-        this.canvas = canvas
-        this.camera = camera
-        this.world = world
-    }
-
     setOffsetForSubObject(sub) {
         sub.offset = new Point()
         sub.offset.point = sub

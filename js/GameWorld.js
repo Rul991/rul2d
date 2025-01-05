@@ -63,8 +63,8 @@ export default class GameWorld {
 
     drawGameObject(gameObject) {
         if(gameObject.isVisible) {
-            this.setObjectInViewport(gameObject.factRect, gameObject)
-            if(!gameObject.isInViewport && gameObject.isRenderedFromCameraView) return
+            // this.setObjectInViewport(gameObject.factRect, gameObject)
+            // if(!gameObject.isInViewport && gameObject.isRenderedFromCameraView) return
 
             if(gameObject.isRenderedFromCameraView) 
                 gameObject.forSubObjects(sub => {

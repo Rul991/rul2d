@@ -63,7 +63,7 @@ export default class CanvasImage extends Rectangle {
 
     draw(ctx) {
         if(!this.isImageLoaded) return
-        if(!this.isInViewport || !this.isVisible) return
+        if(!this.isNeedDraw()) return
         
         this.drawRotated(ctx, (x, y, width, height) => {
             drawImage(ctx, this.image, {x, y, width, height}, this.cuttedImage)

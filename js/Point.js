@@ -1,17 +1,10 @@
+import DrawableObject from "./DrawableObject.js"
 import { fillArc } from "./utils/canvasWork.js"
 
-export default class Point {
+export default class Point extends DrawableObject {
     constructor(x,y) {
+        super()
         this.setPosition(x,y)
-        this.setColor()
-        this.setVisibity(true)
-        this.lineWidth = 3
-        this.isInViewport = true
-        this.isRenderedFromCameraView = true
-    }
-
-    setColor(color) {
-        this.color = color ?? 'green'
     }
 
     getAngle(point = new Point) {
@@ -41,10 +34,6 @@ export default class Point {
         this.orbitRadians += angleSpeed
 
         return this.point
-    }
-
-    setVisibity(isVisible = true) {
-        this.isVisible = isVisible
     }
 
     set point({x,y}) {
@@ -92,12 +81,8 @@ export default class Point {
     }
 
     draw(ctx, color = null) {
-        if(!this.isInViewport || !this.isVisible) return
+        if(!this.isNeedDraw()) return
         this.drawPoint(ctx, color)
-    }
-
-    toJSON() {
-        return JSON.stringify(this)
     }
 
     move({x, y}, delta = 1/60) {

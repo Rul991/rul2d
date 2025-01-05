@@ -17,7 +17,7 @@ export default class Vector2 extends Point {
         this.x *= x
         this.y *= y
 
-        return this.point
+        return new Vector2(this.x, this.y)
     }
 
     multiply(value = 0 || new Point) {
@@ -31,7 +31,7 @@ export default class Vector2 extends Point {
         this.x += x
         this.y += y
 
-        return this.point
+        return new Vector2(this.x, this.y)
     }
 
     summarizeOnNumber(number = 0) {
@@ -54,7 +54,7 @@ export default class Vector2 extends Point {
         if(point.y > max.y) point.y = max.y
         else if(point.y < min.y) point.y = min.y
 
-        return point
+        return new Vector2(point.x, point.y)
     }
 
     normalize() {
@@ -74,12 +74,15 @@ export default class Vector2 extends Point {
         return this.x * x + this.y * y
     }
 
-    static toVectors(...objects) {
-        let vectors = [new Vector2]
-        vectors.pop()
+    static toVector(obj = new Point) {
+        return new Vector2(obj.x, obj.y)
+    }
 
-        objects.forEach(({x, y}) => {
-            vectors.push(new Vector2(x, y))
+    static toVectors(...objects) {
+        let vectors = []
+
+        objects.forEach(obj => {
+            vectors.push(Vector2.toVector(obj))
         })
 
         return vectors

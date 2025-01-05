@@ -12,7 +12,7 @@ export default class RoundedRectangle extends Rectangle {
     }
 
     _drawRoundedRect(ctx = new CanvasRenderingContext2D, color = null, type = 'fill') {
-        if(!this.isInViewport || !this.isVisible) return
+        if(!this.isNeedDraw()) return
         this.drawRotated(ctx, (x, y, width, height) => {
             ctx.beginPath()
             ctx[`${type}Style`] = color ?? this.color

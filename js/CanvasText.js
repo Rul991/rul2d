@@ -83,13 +83,12 @@ export default class CanvasText extends Rectangle {
     fitText(ctx) {
         let fittedText = ['']
         let textHeight = 0
-        let symbols = this.text.split('')
         let symbolsCount = 0
 
         this.isTextFull = false
         
         let text = this.text
-        for(let symb of symbols) {
+        for(let symb of text) {
             let lastIndex = fittedText.length - 1
             
             let {width, height} = measureText(ctx, fittedText[lastIndex] + symb)
@@ -99,7 +98,7 @@ export default class CanvasText extends Rectangle {
                 if(!this.isIgnoreHeight) {
                     if(textHeight + height > this.height) {
                         this.isTextFull = true
-                        text = this.text.substring(0, symbolsCount)
+                        text = text.substring(0, symbolsCount)
                         break
                     }
                     else textHeight += height
@@ -122,7 +121,7 @@ export default class CanvasText extends Rectangle {
     }
 
     draw(ctx) {
-        if(!this.isInViewport || !this.isVisible) return
+        if(!this.isNeedDraw()) return
         this.updateFont(ctx)
         this.updateFittedText(ctx)
 

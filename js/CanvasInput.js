@@ -201,7 +201,7 @@ export default class CanvasInput extends GameObject {
     }
 
     draw(ctx) {
-        if(!this.isInViewport || !this.isVisible) return
+        if(!this.isNeedDraw()) return
 
         if(this.isFocus) {
             this.styleRectangle.draw(ctx, this.style.focusBackground)
