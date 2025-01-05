@@ -9,6 +9,7 @@ export default class DrawableObject {
         this.isInViewport = true
         this.isRenderedFromCameraView = true
         this.isInitialized = false
+        this.offset = null
 
         this.setVisibity()
         this.setColor()

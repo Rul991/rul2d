@@ -9,13 +9,18 @@ export default class Particle extends Point {
         this.lifeTime = 0
         this.currentTime = 0
 
-        this.angle = 0
+        this.degrees = 0
+        this.angularVelocity = 0
 
         this.velocity = new Vector2
         this.drawableObject = null
 
         this.isNeedRecreate = false
         this.isPlaying = false
+    }
+
+    setDegrees(degrees = 0) {
+        this.degrees = degrees % 360
     }
 
     pause() {
@@ -41,7 +46,7 @@ export default class Particle extends Point {
         let initAngle 
         if(obj.degrees !== undefined) {
             initAngle = obj.degrees
-            obj.degrees = this.angle
+            obj.degrees = this.degrees
         }
 
         initPosition.point = obj
@@ -62,6 +67,11 @@ export default class Particle extends Point {
         )
     }
 
+    setRandomAngularVelocity(min = 0, max = 0) {
+        this.degrees = 0
+        this.angularVelocity = randomRange(min, max)
+    }
+
     draw(ctx = new CanvasRenderingContext2D) {
         if(!this.drawableObject) return
         if(!this.isPlaying) return
@@ -70,7 +80,7 @@ export default class Particle extends Point {
         this.moveToPositionAndBack(this.drawableObject, obj => {
             let initAlpha = ctx.globalAlpha
             ctx.globalAlpha = this.opacity
-            obj.draw(ctx)
+            this.camera.culling(obj, () => obj.draw(ctx))
             ctx.globalAlpha = initAlpha
         })
     }
@@ -93,6 +103,7 @@ export default class Particle extends Point {
 
         this.updateTime(delta)
         this.updateOpacity()
+        this.setDegrees(this.degrees + this.angularVelocity * delta)
         this.move(this.velocity, delta)
     }
 }

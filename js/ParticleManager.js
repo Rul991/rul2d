@@ -28,6 +28,11 @@ export default class ParticleManager extends Point {
         this.setVelocityRange()
 
         this.setSpawnDelay()
+        this.setAngularVelocityRange()
+    }
+
+    setAngularVelocityRange(min = 0, max = 0) {
+        this.angularVelocityRange = {min, max}
     }
 
     async loadFromJSON(src = '') {
@@ -136,6 +141,7 @@ export default class ParticleManager extends Point {
     }
 
     recreateParticle(particle = new Particle) {
+        particle.setRandomAngularVelocity(this.angularVelocityRange.min, this.angularVelocityRange.max)
         particle.setRandomVelocity(this.velocityRange.min, this.velocityRange.max)
         particle.setDrawableObject(chooseFromArray(this.drawableObjects))
         particle.setLifeTime(this.lifeTime)
@@ -153,6 +159,7 @@ export default class ParticleManager extends Point {
 
             this.particles.push(particle)
         }
+        this.initObjects(this.particles)
     }
 
     getUnplayingParticle() {
@@ -188,11 +195,14 @@ export default class ParticleManager extends Point {
             this.remainingParticles--
             let spawnPosition = this.getRandomSpawnPosition()
             particle.point = spawnPosition
+            particle.setRandomAngularVelocity(this.angularVelocityRange.min, this.angularVelocityRange.max)
             particle.play()
         }
     }
 
-    initDrawableObjects(objects = []) {
+    initObjects(objects = []) {
+        if(!this.isInitialized) return
+        
         objects.forEach(object => {
             if(!object.isInitialized) {
                 object.init(this.canvas, this.camera, this.world)
@@ -202,14 +212,13 @@ export default class ParticleManager extends Point {
 
     setDrawableObject(...objects) {
         this.drawableObjects = objects
-        if(!this.isInitialized) return
-
-        this.initDrawableObjects(objects)
+        this.initObjects(this.drawableObjects)
     }
 
     init(canvas, camera, world) {
         super.init(canvas, camera, world)
-        this.initDrawableObjects(this.drawableObjects)
+        this.initObjects(this.drawableObjects)
+        this.initObjects(this.particles)
     }
 
     draw(ctx = new CanvasRenderingContext2D) {
