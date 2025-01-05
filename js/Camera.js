@@ -2,19 +2,34 @@ import { getNumberSign } from "./utils/numberWork.js"
 import Point from "./Point.js"
 import Rectangle from "./Rectangle.js"
 import Vector2 from "./Vector2.js"
+import { strokeRect } from "./utils/canvasWork.js"
 
 export default class Camera extends Point {
     constructor(ctx) {
         super()
+
         this.setContext(ctx)
         this.setZoom()
         this.setSmoothing()
+        this.setZoomLimit()
+
         this.limit = null
+        this.isConsiderSize = false
+        this.isLimitZoom = false
+    }
+
+    set zoom(value) {
+        this._zoom = value
+        this.limitZoom()
+    }
+
+    get zoom() {
+        return this._zoom
     }
 
     setPosition(x, y) {
         super.setPosition(x, y)
-        this.updateLimit()
+        this.limitPosition()
     }
 
     setSmoothing(enabled = false, quality = 'low') {
@@ -23,20 +38,43 @@ export default class Camera extends Point {
         this.smoothingQuality = quality
     }
 
-    setLimit(min = new Point, max = new Point) {
+    setLimit(min = new Point, max = new Point, {isConsiderSize = this.isConsiderSize, isLimitZoom = this.isLimitZoom} = {}) {
         this.limit = {min, max}
+        this.isConsiderSize = isConsiderSize
+        this.isLimitZoom = isLimitZoom
     }
 
-    updateLimit() {
+    limitZoom() {
+        if(!this.isLimitZoom || !this.zoomLimit) return
+
+        if(this.zoom > this.zoomLimit.max) this.zoom = this.zoomLimit.max
+        else if(this.zoom < this.zoomLimit.min) this.zoom = this.zoomLimit.min
+    }
+
+    setZoomLimit(min = 0.01, max = 3) {
+        this.zoomLimit = {min, max}
+    }
+
+    limitPosition() {
         if(!this.limit) return
 
         let {min, max} = this.limit
+        let {width, height} = this.ctx.canvas
 
-        if(this.x > max.x) this.x = max.x
-        else if(this.x < min.x) this.x = min.x
+        if(this.isConsiderSize) {
+            width /= this.zoom
+            height /= this.zoom
+        }
+        else {
+            width = 0
+            height = 0
+        }
 
-        if(this.y > max.y) this.y = max.y
-        else if(this.y < min.y) this.y = min.y
+        if(this.x + width > max.x && max !== NaN) this.x = max.x - width
+        else if(this.x < min.x && min !== NaN) this.x = min.x
+
+        if(this.y + height > max.y && max !== NaN) this.y = max.y - height
+        else if(this.y < min.y && min !== NaN) this.y = min.y
     }
 
     updateSmoothing() {
@@ -166,5 +204,14 @@ export default class Camera extends Point {
 
         callback()
         this.endRender()
+    }
+
+    drawLimit(ctx, color = null) {
+        if(!this.limit) return
+
+        let {min, max} = this.limit
+
+        ctx.lineWidth = this.lineWidth
+        strokeRect(ctx, min.x, min.y, max.x - min.x, max.y - min.y, color ?? this.color)
     }
 }
