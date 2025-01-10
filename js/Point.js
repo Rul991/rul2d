@@ -7,6 +7,8 @@ export default class Point extends DrawableObject {
         this.setPosition(x,y)
     }
 
+    static drawRadius = 3
+
     getAngle(point = new Point) {
         return Math.atan2(this.y - point.y, this.x - point.x)
     }
@@ -75,8 +77,8 @@ export default class Point extends DrawableObject {
     }
 
     drawPoint(ctx, color = null) {
-        fillArc(ctx, this.x, this.y, 3, color ?? this.color)
-        fillArc(ctx, this.x, this.y, 2, 'white')
+        fillArc(ctx, this.x, this.y, Point.drawRadius, color ?? this.color)
+        fillArc(ctx, this.x, this.y, Point.drawRadius - 1, 'white')
         fillArc(ctx, this.x, this.y, 1, color ?? this.color)
     }
 
@@ -87,5 +89,9 @@ export default class Point extends DrawableObject {
 
     move({x, y}, delta = 1/60) {
         this.addPosition(new Point(x * delta, y * delta))
+    }
+
+    simplify() {
+        return {x: this.x, y: this.y}
     }
 }

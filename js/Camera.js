@@ -52,6 +52,7 @@ export default class Camera extends Point {
     }
 
     setZoomLimit(min = 0.01, max = 3) {
+        this.isLimitZoom = true
         this.zoomLimit = {min, max}
     }
 
@@ -133,8 +134,13 @@ export default class Camera extends Point {
 
     isObjectInViewport(object = new Point) {
         let {x, y, right, bottom} = this.viewport
-        if(object.getBoundingBox) {
-            let boundingBox = object.getBoundingBox() 
+        if(object.getBoundingBox || object.width) {
+            let boundingBox
+            if(object.getBoundingBox) boundingBox = object.getBoundingBox()
+            else {
+                boundingBox = new Rectangle()
+                boundingBox.rotatedRect = object
+            }
             return boundingBox.right > x && boundingBox.x < right && boundingBox.bottom > y && boundingBox.y < bottom
         }
         else if(object.x !== undefined) return this.viewport.isPointInRect(object)

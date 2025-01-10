@@ -8,7 +8,7 @@ export default class CanvasShape extends Rectangle {
         super(x, y, width, height)
 
         this.shapePoints = []
-        this.drawPoints = []
+        this.drawablePoints = []
     }
 
     async loadFromJSON(src = '') {
@@ -34,7 +34,7 @@ export default class CanvasShape extends Rectangle {
     }
 
     fitPath() {
-        if(!this.shapePoints) if(!this.shapePoints.length) return
+        if(!this.shapePoints.length) return
 
         let xMin = 0, xMax = -0, yMin = 0, yMax = -0
 
@@ -63,50 +63,72 @@ export default class CanvasShape extends Rectangle {
         this.updatePath()
     }
 
-    updatePath() {
-        if(this.shapePoints) if(this.shapePoints.length) {
-            this.drawPoints = this.shapePoints.map(({x, y}) => {
-                let newX = x * this.width + this.x - this.center.x
-                let newY = this.height * y + this.y - this.center.y
-
-                return new Point(newX, newY)
-            })
-        }
+    deleteAllPoints() {
+        this.shapePoints = []
+        this.drawablePoints = []
     }
 
-    rotatePath(x, y) {
-        return this.drawPoints.map(p => new Point(p.x + x, p.y + y))
+    updatePath() {
+        if(!this.shapePoints) return this.deleteAllPoints()
+        if(!this.shapePoints.length) return this.deleteAllPoints()
+
+        this.drawablePoints = this.shapePoints.map(({x, y}) => {
+            let newX = x * this.width + this.x - this.center.x
+            let newY = this.height * y + this.y - this.center.y
+
+            return new Point(newX, newY)
+        })
     }
 
     draw(ctx, color) {
-        if(!this.drawPoints) return
+        if(!this.drawablePoints) return
         if(!this.isNeedDraw()) return
 
-        if(this.drawPoints.length > 2) this.fill(ctx, color)
+        if(this.drawablePoints.length > 2) this.fill(ctx, color)
         else this.stroke(ctx, color)
     }
 
-    fill(ctx, color) {
-        if(!this.drawPoints) return
+    drawPath(ctx, callback = () => {}) {
+        if(!this.drawablePoints.length) return
         if(!this.isNeedDraw()) return
 
         this.doWithOpacity(ctx, () => {
             this.drawRotated(ctx, (x, y) => {
-                fillPath(ctx, this.drawPoints, color ?? this.color)
+                callback()
             }, this.center)
         })
     }
 
-    stroke(ctx, color) {
-        if(!this.drawPoints) return
-        if(!this.isNeedDraw()) return
-        
-        ctx.lineWidth = this.lineWidth
+    fill(ctx, color) {
+        this.drawPath(ctx, () => {
+            fillPath(ctx, this.drawablePoints, color ?? this.color)
+        })
+    }
 
-        this.doWithOpacity(ctx, () => {
-            this.drawRotated(ctx, (x, y) => {
-                strokePath(ctx, this.drawPoints, color ?? this.color)
-            }, this.center)
+    stroke(ctx, color) {
+        this.drawPath(ctx, () => {
+            strokePath(ctx, this.drawablePoints, color ?? this.color)
+        })
+    }
+
+    drawPoints(ctx, color) {
+        this.drawPath(ctx, () => {
+            this.drawablePoints.forEach(point => {
+                point.draw(ctx, color)
+            })
+        })
+    }
+
+    drawPointByIndex(ctx, indexes = [0], color) {
+        if(!indexes.length || !this.drawablePoints.length) return
+
+        this.drawPath(ctx, () => {
+            indexes.forEach(index => {
+                let point = this.drawablePoints.at(index)
+                if(!point) return
+
+                point.draw(ctx, color)
+            })
         })
     }
 }

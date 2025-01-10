@@ -14,7 +14,7 @@ export default class GameWorld {
         this.gameObjects = new Set()
         this.uiObjects = new Set()
         this.colliders = new Set()
-        this.setCamera(camera ?? new Camera)
+        this.setCamera(camera ?? new Camera(this.ctx))
     }
 
     setCamera(camera = new Camera) {
@@ -63,8 +63,8 @@ export default class GameWorld {
 
     drawGameObject(gameObject) {
         if(gameObject.isVisible) {
-            // this.setObjectInViewport(gameObject.factRect, gameObject)
-            // if(!gameObject.isInViewport && gameObject.isRenderedFromCameraView) return
+            this.setObjectInViewport(gameObject.factRect, gameObject)
+            if(!gameObject.isNeedDraw() && gameObject.isRenderedFromCameraView) return
 
             if(gameObject.isRenderedFromCameraView) 
                 gameObject.forSubObjects(sub => {

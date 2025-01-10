@@ -3,10 +3,36 @@ export default class KeyboardEventManager {
         this.keys = {}
     }
 
+    static stringifyKey(key = '', {metaKey = false, ctrlKey = false, shiftKey = false} = {}) {
+        let stringifiedKey = key
+
+        if(stringifiedKey.includes('Key')) {
+            stringifiedKey = stringifiedKey.replace('Key', '')
+        }
+        
+        stringifiedKey = stringifiedKey.toLowerCase()
+        
+        if(shiftKey) {
+            stringifiedKey = `shift-${stringifiedKey}`
+        }
+        
+        if(metaKey) {
+            stringifiedKey = `meta-${stringifiedKey}`
+        }
+        
+        if(ctrlKey) {
+            stringifiedKey = `ctrl-${stringifiedKey}`
+        }
+
+        return stringifiedKey
+    }
+
     addKey(key = '', callback = (event = new KeyboardEvent) => {}, options = {metaKey:  false, ctrlKey:  false, shiftKey:  false, isPreventDefault: false}) {
-        this.keys[key] = {}
-        this.keys[key].callback = callback
-        this.keys[key].options = options
+        let stringifiedKey = KeyboardEventManager.stringifyKey(key, options)
+        this.keys[stringifiedKey] = {}
+        this.keys[stringifiedKey].key = key
+        this.keys[stringifiedKey].callback = callback
+        this.keys[stringifiedKey].options = options
     }
 
     addKeys(keys = [''], callback = (event = new KeyboardEvent) => {}, options = {metaKey:  false, ctrlKey:  false, shiftKey:  false, isPreventDefault: false}) {
@@ -29,8 +55,8 @@ export default class KeyboardEventManager {
 
     addControls(eventType = 'keydown') {
         addEventListener(eventType, e => {
-            Object.entries(this.keys).forEach(([key, value]) => {
-                KeyboardEventManager.onEvent(e, key, value.callback, value.options)
+            Object.entries(this.keys).forEach(([_, value]) => {
+                KeyboardEventManager.onEvent(e, value.key, value.callback, value.options)
             })
         })
     }

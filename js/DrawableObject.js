@@ -11,6 +11,7 @@ export default class DrawableObject {
         this.isRenderedFromCameraView = true
         this.isInitialized = false
         this.offset = null
+        this.isNeedCulling = true
 
         this.setVisibity()
         this.setColor()
@@ -22,7 +23,7 @@ export default class DrawableObject {
      */
 
     isNeedDraw() {
-        return this.isVisible && this.isInViewport
+        return (this.isVisible && this.isInViewport) || !this.isNeedCulling
     }
 
     /**
@@ -99,16 +100,24 @@ export default class DrawableObject {
      */
 
     draw(ctx, color = null) {
-        this.doWithOpacity(ctx, () => this._draw(ctx, color = null))
+        this.doWithOpacity(ctx, () => this._draw(ctx, color ?? this.color))
     }
 
     /**
-     * Return JSON string of object
-     * @returns {string}
+     * Return only need parameters
+     * @returns {object}
+     */
+    simplify() {
+        return {}
+    }
+
+    /**
+     * Return value that will be used during conversion to JSON
+     * @returns {this}
      */
 
     toJSON() {
-        return JSON.stringify(this)
+        return this
     }
 
     /**

@@ -243,4 +243,13 @@ export default class Rectangle extends Point {
             fillRect(ctx, x, y, width, height, color ?? this.color)
         })
     }
+
+    simplify() {
+        return {
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height
+        }
+    }
 }

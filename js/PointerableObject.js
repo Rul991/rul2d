@@ -36,7 +36,7 @@ export default class PointerableObject extends InteractiveObject {
         let updatedPoint = this.updatePointWithCamera(point)
 
         if(this.isPointInRect(updatedPoint)) {
-            if(this.isLeftButtonPressed) {
+            if(this.isPressed) {
                 if(this._isAddInteractives) this.interactives++
                 this.isInteracted = true
                 this.callback(updatedPoint)
@@ -51,6 +51,7 @@ export default class PointerableObject extends InteractiveObject {
 
     addControls(canvas = new HTMLCanvasElement) {
         const getPointerPosition = e => {
+            this.lastEvent = e
             let {clientX, clientY} = e
             let pointerPosition = new Point(clientX, clientY)
             this.pointerPosition.point = pointerPosition
@@ -59,14 +60,15 @@ export default class PointerableObject extends InteractiveObject {
         }
 
         const upCallback = e => {
-            this.isLeftButtonPressed = false
+            this.lastEvent = e
+            this.isPressed = false
             this.endCallback(this.pointerPosition)
         }
 
         canvas.addEventListener('pointerdown', e => {
             let {clientX, clientY} = e
             let pointerPosition = new Point(clientX, clientY)
-            this.isLeftButtonPressed = true
+            this.isPressed = true
 
             getPointerPosition(e)
             this.startCallback(this.updatePointWithCamera(pointerPosition))

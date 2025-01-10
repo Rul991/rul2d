@@ -12,6 +12,7 @@ export default class InteractiveObject extends Rectangle {
         this.setCallback()
         this.doIfNotInteracted()
 
+        this.lastEvent = null
         this._isAddInteractives = true
     }
 
@@ -88,7 +89,8 @@ export default class InteractiveObject extends Rectangle {
         return false
     }
 
-    init(canvas, camera) {
+    init(canvas, camera, world) {
+        super.init(canvas, camera, world)
         this.addControls(canvas)
         this.setCamera(camera)
     }

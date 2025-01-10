@@ -46,6 +46,7 @@ export default class TouchableObject extends InteractiveObject {
 
     addControls(canvas = new HTMLCanvasElement) {
         const updateTouches = e => {
+            this.lastEvent = e
             this.getAllTouches(e)
         }
 
