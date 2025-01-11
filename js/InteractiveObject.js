@@ -14,6 +14,11 @@ export default class InteractiveObject extends Rectangle {
 
         this.lastEvent = null
         this._isAddInteractives = true
+        this.isPreventDefault = false
+    }
+
+    preventDefaultWhenNeed(e = new Event) {
+        if(this.isPreventDefault) e.preventDefault()
     }
 
     setCamera(camera = new Camera()) {

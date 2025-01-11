@@ -3,6 +3,7 @@ import InteractiveObject from './InteractiveObject.js'
 export default class ClickableObject extends InteractiveObject {
     addControls(canvas = new HTMLCanvasElement) {
         canvas.addEventListener('pointerdown', e => {
+            this.preventDefaultWhenNeed(e)
             this.lastEvent = e
             let {clientX: x, clientY: y} = e
             let {left, top} = canvas.getBoundingClientRect()

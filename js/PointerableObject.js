@@ -60,12 +60,14 @@ export default class PointerableObject extends InteractiveObject {
         }
 
         const upCallback = e => {
+            this.preventDefaultWhenNeed(e)
             this.lastEvent = e
             this.isPressed = false
             this.endCallback(this.pointerPosition)
         }
 
         canvas.addEventListener('pointerdown', e => {
+            this.preventDefaultWhenNeed(e)
             let {clientX, clientY} = e
             let pointerPosition = new Point(clientX, clientY)
             this.isPressed = true
@@ -75,6 +77,7 @@ export default class PointerableObject extends InteractiveObject {
         })
 
         canvas.addEventListener('pointermove', e => {
+            this.preventDefaultWhenNeed(e)
             getPointerPosition(e)
         })
 
