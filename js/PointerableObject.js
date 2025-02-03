@@ -1,7 +1,23 @@
 import InteractiveObject from "./InteractiveObject.js"
 import Point from "./Point.js"
 
+/**
+ * Represents an object that can be interacted with using pointer events.
+ * Extends from InteractiveObject to provide interactive capabilities.
+ * @extends InteractiveObject
+ */
+
 export default class PointerableObject extends InteractiveObject {
+
+    /**
+     * Creates an instance of PointerableObject at specified position and dimensions.
+     * 
+     * @param {number} x - The x-coordinate of the object.
+     * @param {number} y - The y-coordinate of the object.
+     * @param {number} width - The width of the object.
+     * @param {number} height - The height of the object.
+     */
+
     constructor(x, y, width, height) {
         super(x, y, width, height)
         this.pointerPosition = new Point()
@@ -11,9 +27,21 @@ export default class PointerableObject extends InteractiveObject {
         this.setEndCallback()
     }
 
+    /**
+     * Sets the callback function to be called when the pointer hovers over the object.
+     * 
+     * @param {(point=new Point) => {}} [callback] - The callback function for hover events.
+     */
+
     setHoverCallback(callback = (point = new Point) => {}) {
         this.hoverCallback = callback
     }
+
+    /**
+     * Sets the callback function to be called when the pointer starts interacting with the object.
+     * 
+     * @param {(point=new Point) => {}} [callback] - The callback function for start interactions.
+     */
 
     setStartCallback(callback = (point = new Point) => {}) {
         this.startCallback = (point = new Point) => {
@@ -21,16 +49,32 @@ export default class PointerableObject extends InteractiveObject {
         }
     }
 
+    /**
+     * Sets the callback function to be called when the pointer ends interaction with the object.
+     * 
+     * @param {(point=new Point) => {}} [callback] - The callback function for end interactions.
+     */
+
     setEndCallback(callback = (point = new Point) => {}) {
         this.endCallback = (point = new Point) => {
             if(this.isPointInRect(point)) callback(point)
         }
     }
 
+    /**
+     * Resets the state of the object, including hover state.
+     */
+
     reset() {
         super.reset()
         this.isHovered = false
     }
+
+    /**
+     * Processes interaction with the pointer, updating states and invoking callbacks.
+     * 
+     * @param {Point} [point] - The point representing the current pointer position.
+     */
 
     interactive(point = new Point) {
         let updatedPoint = this.updatePointWithCamera(point)
@@ -48,6 +92,12 @@ export default class PointerableObject extends InteractiveObject {
         }
         else this.notInteractedCallback(updatedPoint)
     }
+
+    /**
+     * Adds pointer event controls to the specified canvas.
+     * 
+     * @param {HTMLCanvasElement} [canvas=new HTMLCanvasElement()] - The canvas element to attach pointer controls to.
+     */
 
     addControls(canvas = new HTMLCanvasElement) {
         const getPointerPosition = e => {
@@ -84,6 +134,10 @@ export default class PointerableObject extends InteractiveObject {
         canvas.addEventListener('pointerup', upCallback)
         canvas.addEventListener('pointercancel', upCallback)
     }
+
+    /**
+     * Updates the pointerable object's state based on the current pointer position.
+     */
 
     update() {
         super.update(this.pointerPosition)

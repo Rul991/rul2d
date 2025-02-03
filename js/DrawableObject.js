@@ -1,5 +1,7 @@
+import Color from "./Color.js"
+
 /**
- * Based class
+ * Based class for drawable objects
  */
 
 export default class DrawableObject {
@@ -23,18 +25,18 @@ export default class DrawableObject {
      */
 
     isNeedDraw() {
-        return (this.isVisible && this.isInViewport) || !this.isNeedCulling
+        return !this.isNeedCulling || (this.isVisible && this.isInViewport)
     }
 
     /**
      * Set color
      * 
-     * if color equal null, object will use *this.color* like color
-     * @param {string|null} color - hex/rgb/rgba/hsl/hsla string
+     * if color equal null, object's color is green
+     * @param {Color | null} color - color
      */
 
     setColor(color = null) {
-        this.color = color ?? 'green'
+        this.color = color ?? Color.Green
     }
 
     /**
@@ -53,12 +55,22 @@ export default class DrawableObject {
 
     /**
      * Update object state
-     * @param {number} delta
+     * @param {number} delta - delta time
      */
 
     update(delta) {
         return
     }
+
+    /**
+     * Gets the inherited opacity of the current object.
+     * The inherited opacity is calculated by multiplying the object's own opacity
+     * with the opacity of its root object. If the object does not have a root,
+     * it defaults to full opacity (1).
+     * 
+     * @returns {number} The calculated inherited opacity of the object, ranging from 0 (fully transparent)
+     *                   to 1 (fully opaque).
+     */
 
     get inheritOpacity() {
         let rootOpacity
@@ -71,8 +83,8 @@ export default class DrawableObject {
 
     /**
      * Change global alpha and do something
-     * @param {CanvasRenderingContext2D} ctx 
-     * @param {Function} callback 
+     * @param {CanvasRenderingContext2D} ctx - 2d canvas context
+     * @param {() => {}} callback - funciton, what happened when alpha changed
      */
     doWithOpacity(ctx, callback = () => {}) {
         let initAlpha = ctx.globalAlpha
@@ -84,23 +96,41 @@ export default class DrawableObject {
     }
 
     /**
-     * Draw object on canvas without opacity support
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {string} [color] 
+     * Draw object on canvas without opacity, lineWidth and color support
+     * @param {CanvasRenderingContext2D} ctx - 2d canvas context
      */
 
-    _draw(ctx, color = null) {
+    _draw(ctx) {
         return
     }
 
     /**
      * Draw object on canvas
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {string} [color]
+     * @param {CanvasRenderingContext2D} ctx - 2d canvas context
+     * @param {Color} [color] - drawed color or null
      */
 
     draw(ctx, color = null) {
-        this.doWithOpacity(ctx, () => this._draw(ctx, color ?? this.color))
+        if(!this.isNeedDraw()) return
+
+        this.updateContextParameters(ctx, color)
+        this.doWithOpacity(ctx, () => this._draw(ctx))
+    }
+
+    /**
+     * Update lineWidth, fillStyle and strokeStyle
+     * @param {CanvasRenderingContext2D} ctx - 2d canvas context
+     * @param {Color} color - color or null
+     */
+    updateContextParameters(ctx, color = null) {
+        let usedColor = color ?? this.color
+        let stringColor = usedColor.toString()
+
+        ctx.lineWidth = this.lineWidth
+        ctx.fillStyle = stringColor
+        ctx.strokeStyle = stringColor
+
+        return stringColor
     }
 
     /**
@@ -122,7 +152,7 @@ export default class DrawableObject {
 
     /**
      * Set visibility
-     * @param {boolean} isVisible 
+     * @param {boolean} isVisible - if true, object draw
      */
 
     setVisibity(isVisible = true) {

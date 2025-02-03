@@ -1,10 +1,19 @@
-import { getNumberSign } from "./utils/numberWork.js"
 import Point from "./Point.js"
 import Rectangle from "./Rectangle.js"
-import Vector2 from "./Vector2.js"
-import { strokeRect } from "./utils/canvasWork.js"
+
+/**
+ * Represents a camera in a 2D space.
+ * Camera can zoom, smooth rendering, and limit its position within certain bounds.
+ * @extends Point
+ */
 
 export default class Camera extends Point {
+
+    /**
+     * Creates an instance of Camera.
+     * @param {CanvasRenderingContext2D} ctx - rendering context of the canvas.
+     */
+    
     constructor(ctx) {
         super()
 
@@ -16,21 +25,44 @@ export default class Camera extends Point {
         this.limit = null
         this.isConsiderSize = false
         this.isLimitZoom = false
+        this.isInitializedUpdatingCursorPosition = false
     }
+
+    /**
+     * Sets the zoom level of the camera.
+     * @param {number} value - zoom level to set.
+     */
 
     set zoom(value) {
         this._zoom = value
         this.limitZoom()
     }
 
+    /**
+     * Gets the current zoom level of the camera.
+     * @returns {number} current zoom level.
+     */
+
     get zoom() {
         return this._zoom
     }
+
+    /**
+     * Sets the position of the camera.
+     * @param {number} x - left corner's coordinate.
+     * @param {number} y - top corner's coordinate.
+     */
 
     setPosition(x, y) {
         super.setPosition(x, y)
         this.limitPosition()
     }
+
+    /**
+     * Enables or disables smoothing for rendering.
+     * @param {boolean} [enabled=false] - indicates whether smoothing should be enabled.
+     * @param {'low' | 'medium' | 'high'} [quality='low'] - quality of smoothing.
+     */
 
     setSmoothing(enabled = false, quality = 'low') {
         if(!this.ctx) return
@@ -38,11 +70,25 @@ export default class Camera extends Point {
         this.smoothingQuality = quality
     }
 
+    /**
+     * Sets the limits for the camera position.
+     * @param {Point} [min=new Point] - minimum position limit.
+     * @param {Point} [max=new Point] - maximum position limit.
+     * @param {Object} [options] - options for considering size and limiting zoom.
+     * @param {boolean} [options.isConsiderSize=this.isConsiderSize] - whether to consider the size during limiting.
+     * @param {boolean} [options.isLimitZoom=this.isLimitZoom] - whether to limit the zoom level.
+     */
+
     setLimit(min = new Point, max = new Point, {isConsiderSize = this.isConsiderSize, isLimitZoom = this.isLimitZoom} = {}) {
         this.limit = {min, max}
         this.isConsiderSize = isConsiderSize
         this.isLimitZoom = isLimitZoom
     }
+
+    /**
+     * Limits the zoom level to specified constraints.
+     * @protected
+     */
 
     limitZoom() {
         if(!this.isLimitZoom || !this.zoomLimit) return
@@ -51,10 +97,21 @@ export default class Camera extends Point {
         else if(this.zoom < this.zoomLimit.min) this.zoom = this.zoomLimit.min
     }
 
+    /**
+     * Sets the limits for zoom level.
+     * @param {number} [min=0.01] - The minimum zoom level.
+     * @param {number} [max=3] - The maximum zoom level.
+     */
+
     setZoomLimit(min = 0.01, max = 3) {
         this.isLimitZoom = true
         this.zoomLimit = {min, max}
     }
+
+    /**
+     * Limits the position of the camera within defined boundaries.
+     * @protected
+     */
 
     limitPosition() {
         if(!this.limit) return
@@ -78,22 +135,47 @@ export default class Camera extends Point {
         else if(this.y < min.y && min !== NaN) this.y = min.y
     }
 
+    /**
+     * Updates the smoothing settings in the rendering context.
+     * @protected
+     */
+
     updateSmoothing() {
         this.ctx.imageSmoothingEnabled = this.smoothingEnabled
         this.ctx.imageSmoothingQuality = this.smoothingQuality
     }
 
+    /**
+     * Sets the rendering context for the camera.
+     * @param {CanvasRenderingContext2D} ctx - The rendering context of the canvas.
+     */
+
     setContext(ctx) {
         this.ctx = ctx ?? null
     }
+
+    /**
+     * Sets the zoom level of the camera.
+     * @param {number} [zoom=1] - The zoom level to set.
+     */
 
     setZoom(zoom = 1) {
         this.zoom = zoom
     }
 
+    /**
+     * Adds to the current zoom level.
+     * @param {number} [zoom=0] - The amount to add to the current zoom level.
+     */
+
     addZoom(zoom = 0) {
         this.setZoom(this.zoom + zoom)
     }
+
+    /**
+     * Prepares the rendering context for drawing.
+     * @protected
+     */
 
     startRender() {
         if(!this.ctx) return
@@ -102,11 +184,21 @@ export default class Camera extends Point {
         this.ctx.save()
     }
 
+    /**
+     * Restores the rendering context after drawing.
+     * @protected
+     */
+
     endRender() {
         if(!this.ctx) return
 
         this.ctx.restore()
     }
+
+    /**
+     * Translates the context based on the camera's position and zoom level.
+     * @protected
+     */
 
     translate() {
         if(!this.ctx) return
@@ -115,11 +207,21 @@ export default class Camera extends Point {
         this.ctx.translate(x * zoom, y * zoom)
     }
 
+    /**
+     * Scales the context based on the camera's zoom level.
+     * @protected
+     */
+
     scale() {
         if(!this.ctx) return
 
         this.ctx.scale(this.zoom, this.zoom)
     }
+
+    /**
+     * Gets the viewport rectangle of the camera considering the current position and zoom.
+     * @returns {Rectangle} The rectangle representing the current viewport.
+     */
 
     get viewport() {
         let viewport = new Rectangle()
@@ -131,6 +233,12 @@ export default class Camera extends Point {
 
         return viewport
     }
+
+    /**
+     * Checks if a given object is within the viewport of the camera.
+     * @param {Point} [object=new Point()] - The object to check against the viewport.
+     * @returns {boolean} True if the object is within the viewport; otherwise, false.
+     */
 
     isObjectInViewport(object = new Point) {
         let {x, y, right, bottom} = this.viewport
@@ -148,8 +256,13 @@ export default class Camera extends Point {
         return false
     }
 
+    /**
+     * Initializes the updating of the cursor position by adding necessary event listeners.
+     * @protected
+     */
+
     initUpdatingCursorPosition() {
-        if(this.isInitUpdatingCursorPosition) return
+        if(this.isInitializedUpdatingCursorPosition) return
         if(!this.ctx) return
 
         let canvas = this.ctx.canvas
@@ -169,8 +282,13 @@ export default class Camera extends Point {
         canvas.addEventListener('touchstart', e => updateCursorPosition(e))
         canvas.addEventListener('touchmove', e => updateCursorPosition(e))
 
-        this.isInitUpdatingCursorPosition = true
+        this.isInitializedUpdatingCursorPosition = true
     }
+
+    /**
+     * Gets the cursor position relative to the canvas.
+     * @returns {Point} The cursor position on the canvas.
+     */
 
     getPointOnCanvas() {
         if(!this.cursorPosition) return new Point(null)
@@ -184,6 +302,11 @@ export default class Camera extends Point {
         return new Point(x - left, y - top)
     }
 
+    /**
+     * Gets the cursor position adjusted by the camera's position and zoom level.
+     * @returns {Point} The adjusted cursor position in the camera's coordinate system.
+     */
+
     getCursorPosition() {
         if(!this.cursorPosition) return new Point(null)
         let cursorPointOnCanvas = this.getPointOnCanvas()
@@ -196,9 +319,21 @@ export default class Camera extends Point {
         return new Point(getUpdatedCoordinate(x, this.x), getUpdatedCoordinate(y, this.y))
     }
 
+    /**
+     * Executes a callback for an object if it is within the camera's viewport.
+     * @param {Point} [object=new Point()] - The object to check for viewport inclusion.
+     * @param {function(object: Point):void} [callback=(object=new Point) => {}] - The callback to execute if the object is in the viewport.
+     */
+
     culling(object = new Point, callback = (object = new Point) => {}) {
         if(this.isObjectInViewport(object)) callback(object)
     }
+
+    /**
+     * Updates the camera state, rendering context, and invokes a provided callback.
+     * @param {callback=() => {}} [callback=() => {}] - A callback function to be executed during the update.
+     * @param {number} [delta] - The time delta for the update (optional).
+     */
 
     update(callback = () => {}, delta) {
         if(!this.ctx) return
@@ -210,14 +345,5 @@ export default class Camera extends Point {
 
         callback()
         this.endRender()
-    }
-
-    drawLimit(ctx, color = null) {
-        if(!this.limit) return
-
-        let {min, max} = this.limit
-
-        ctx.lineWidth = this.lineWidth
-        strokeRect(ctx, min.x, min.y, max.x - min.x, max.y - min.y, color ?? this.color)
     }
 }

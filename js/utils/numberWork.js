@@ -1,35 +1,41 @@
 /**
- * Floor number
- * @param {number} number 
- * @param {number} numbersAfterDot 
- * @returns {number}
+ * Floors a number to a specified number of decimal places.
+ * 
+ * @param {number} number - The number to be floored.
+ * @param {number} [numbersAfterDot=0] - The number of decimal places to retain.
+ * @returns {number} The floored number with the specified decimal places.
  */
+
 export const floor = (number, numbersAfterDot = 0) => Math.floor(number * (10 ** numbersAfterDot)) / (10 ** numbersAfterDot)
 
 /**
- * Return random generated number in the range from min to max
- * @param {number} min 
- * @param {number} max 
- * @param {number} numbersAfterDot 
- * @returns {number}
+ * Generates a random number within a specified range, optionally with a defined number of decimal places.
+ * 
+ * @param {number} min - The minimum value of the range.
+ * @param {number} max - The maximum value of the range.
+ * @param {number} [numbersAfterDot=0] - The number of decimal places to retain.
+ * @returns {number} A random number within the specified range.
  */
+
 export const randomRange = (min, max, numbersAfterDot = 0) =>  floor(Math.random() * (max - min) + min, numbersAfterDot)
 
 /**
- * Returns boolean
- * @param {number} chance 
- * @param {number} maxChance 
- * @returns {boolean}
+ * Determines if a random chance occurs based on a specified probability and a maximum chance.
+ * 
+ * @param {number} chance - The probability of the event occurring.
+ * @param {number} maxChance - The maximum chance value (defining the range).
+ * @returns {boolean} True if the event occurs; otherwise, false.
  */
+
 export const randomChance = (chance, maxChance) => randomRange(0, maxChance) < chance
 
 /**
- * Returns random element of array
+ * Randomly selects an element from the provided array.
  * 
- * if length of array equal 0, returns *null*
- * @param {Array} arr 
- * @returns {number|null}
+ * @param {Array} arr - The array from which to choose.
+ * @returns {*} A randomly selected element from the array, or null if the array is empty.
  */
+
 export const chooseFromArray = arr => {
     if(!arr.length) return null
 
@@ -37,9 +43,10 @@ export const chooseFromArray = arr => {
 }
 
 /**
- * Returns sign of number
- * @param {number} num 
- * @returns {number}
+ * Returns the sign of a number.
+ * 
+ * @param {number} num - The number to evaluate.
+ * @returns {-1 | 0 | 1} -1 if the number is negative, 1 if positive, or 0 if zero.
  */
 
 export const getNumberSign = num => {
@@ -50,28 +57,33 @@ export const getNumberSign = num => {
 }
 
 /**
- * Returns precents of value
- * @param {number} value 
- * @param {{min: number, max: number}} param1
- * @returns {number}
+ * Calculates the percentage of a value within a defined range.
+ * 
+ * @param {number} value - The value to calculate the percentage for.
+ * @param {{min: number, max: number}} [range={min: 0, max: 100}] - The range object defining the minimum and maximum values.
+ * @returns {number} The percentage of the value within the specified range.
  */
+
 export const percents = (value, {min = 0, max = 100} = {}) => (value - min) / (max - min)
 
 /**
- * Return
- * @param {string} char 
- * @returns {boolean}
+ * Checks if a character is a digit.
+ * 
+ * @param {string} char - The character to check.
+ * @returns {boolean} True if the character is a digit; otherwise, false.
  */
+
 export const isDigit = char => !isNaN(parseInt(char))
 
 const lastIndex = arr => arr.length - 1
 
-
 /**
- * Return numbers from string in array
- * @param {string} string 
- * @returns {number[]}
+ * Extracts numbers from a string and returns them as an array.
+ * 
+ * @param {string} [string=''] - The input string from which to extract numbers.
+ * @returns {Array<number>} An array of numbers extracted from the string.
  */
+
 export const getNumbersFromString = (string = '') => {
     let numbers = ['']
     let prevSymbolIsDigit = false
@@ -102,15 +114,19 @@ export const getNumbersFromString = (string = '') => {
 }
 
 /**
- * Converts degrees to radians
- * @param {number} degrees 
- * @returns {number} radians
+ * Converts degrees to radians.
+ * 
+ * @param {number} degrees - The angle in degrees to be converted.
+ * @returns {number} The angle converted to radians.
  */
+
 export const deg2rad = (degrees) => degrees / 180 * Math.PI
 
 /**
- * Converts radians to degrees
- * @param {number} radians 
- * @returns {number} degrees
+ * Converts radians to degrees.
+ * 
+ * @param {number} radians - The angle in radians to be converted.
+ * @returns {number} The angle converted to degrees.
  */
+
 export const rad2deg = (radians) => radians / Math.PI * 180

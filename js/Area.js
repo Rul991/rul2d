@@ -1,9 +1,20 @@
-import Collider from "./Collider.js"
+import Collider from "./P2Collider.js"
 import GameWorld from "./GameWorld.js"
 import Point from "./Point.js"
 import Rectangle from "./Rectangle.js"
 
+/**
+ * Class that shows if there are intersections with an object
+ * @extends Rectangle
+ */
 export default class Area extends Rectangle {
+    /**
+     * Class that shows if there are intersections with an object
+     * @param {number} x - left corner coordinate
+     * @param {number} y - top corner coordinate
+     * @param {number} width - width 
+     * @param {number} height - height
+     */
     constructor(x, y, width, height) {
         super(x, y, width, height)
 
@@ -14,23 +25,43 @@ export default class Area extends Rectangle {
         this.doWhenEndedContact()
     }
 
+    /**
+     * Set GameWorld and world's colliders
+     * @param {GameWorld} world 
+     */
     setWorld(world = new GameWorld) {
         this.world = world
         this.colliders = this.world.colliders
     }
 
+    /**
+     * Set callback that is called when the intersection begins
+     * @param {(collider = new Collider) => {}} callback - callback that is called when the intersection begins
+     */
     doWhenBeganContact(callback = (collider = new Collider) => {}) {
         this.beginContactCallback = callback
     }
     
+    /**
+    * Set callback that is called when the intersection continues
+    * @param {(collider = new Collider) => {}} callback - callback that is called when the intersection continues
+    */
     doWhenContinuedContact(callback = (collider = new Collider, delta = 0) => {}) {
         this.continueContactCallback = callback
     }
 
+    /**
+    * Set callback that is called when the intersection ends
+    * @param {(collider = new Collider) => {}} callback - callback that is called when the intersection ends
+    */
     doWhenEndedContact(callback = (collider = new Collider) => {}) {
         this.endContactCallback = callback
     }
 
+    /**
+     * Check contacts with colliders
+     * @param {number} delta - delta time
+     */
     checkContacts(delta) {
         for(const collider of this.colliders) {
             if(!collider.prevAreasContacted) collider.prevAreasContacted = new Set()
@@ -55,6 +86,14 @@ export default class Area extends Rectangle {
         }   
     }
 
+    /**
+     * Is lines intersect
+     * @param {Point} p1 - start point of first line
+     * @param {Point} p2 - end point of first line
+     * @param {Point} p3 - start point of second line 
+     * @param {Point} p4 - end point of second line 
+     * @returns {boolean}
+     */
     isLinesIntersect(p1 = new Point, p2 = new Point, p3 = new Point, p4 = new Point) {
         let x1 = p1.x, y1 = p1.y,
             x2 = p2.x, y2 = p2.y,
@@ -69,6 +108,11 @@ export default class Area extends Rectangle {
         return (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1)
     }
 
+    /**
+     * Is AABB Intersecting
+     * @param {Rectangle} rect - collider's rectangle
+     * @returns {boolean}
+     */
     isAABBIntersecting(rect = new Rectangle) {
         let {x, y, bottom, right, radians} = rect
         if(!radians && !this.radians) return this.x < right && this.right > x && this.y < bottom && this.bottom > y
@@ -80,6 +124,11 @@ export default class Area extends Rectangle {
         }
     }
 
+    /**
+     * Do area has collision with collider
+     * @param {Rectangle} rect - collider's rectangle
+     * @returns {boolean}
+     */
     hasCollision(rect = new Rectangle()) {
         if(rect == this) return false
 
@@ -104,7 +153,12 @@ export default class Area extends Rectangle {
         return false
     }
 
+    /**
+     * Update contacts 
+     * @param {number} delta - delta time
+     */
     update(delta) {
+        super.update(delta)
         this.checkContacts(delta)
     }
 }
