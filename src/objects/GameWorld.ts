@@ -1,5 +1,6 @@
 import IManager from "../interfaces/IManager"
 import IRoot from "../interfaces/IRoot"
+import ISize from "../interfaces/ISize"
 import { Canvas, Context, Dict } from "../utils/types"
 import Camera from "./Camera"
 import CanvasManager from "./CanvasManager"
@@ -29,11 +30,11 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     private _gameScenes: Dict<GameScene>
     private _currentScene: GameScene | null
 
-    constructor({root = document.body, camera = new Camera}: {root?: HTMLElement, camera?: Camera} = {}) {
+    constructor({root = document.body, camera = new Camera, size = null}: {root?: HTMLElement, camera?: Camera, size?: ISize | null} = {}) {
         super()
 
         this._canvasManager = new CanvasManager()
-        this._canvas = this._canvasManager.create({root})
+        this._canvas = this._canvasManager.create({root, size})
         this._ctx = this._canvasManager.getContext()!
 
         this._camera = camera ?? new Camera()
@@ -61,6 +62,10 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         return
     }
 
+    addGameScene(key: string, scene: GameScene): void {
+        
+    }
+
     private _drawCurrentScene(delta: number): void {
         if(!this._currentScene) return
 
@@ -70,7 +75,9 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
 
     private _update(): void {
         GameWorld.createGameLoop((delta, prevTime) => {
-            this._drawCurrentScene(delta)
+            this._camera.update(() => {
+                this._drawCurrentScene(delta)
+            })
         })
     }
 
