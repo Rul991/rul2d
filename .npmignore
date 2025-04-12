@@ -1,6 +1,5 @@
 package-lock.json
 node_modules
-dist/*
 src/test.ts
 what i want on rul2d v2.md
 index.css

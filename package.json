@@ -1,20 +1,46 @@
 {
-  "name": "ts",
-  "version": "0.0.1",
-  "main": "src/index.ts",
+  "name": "rul2d",
+  "version": "0.0.5",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.esm.js"
+      },
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "start": "rollup -c",
-    "test": "rollup -c -w"
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "Rul",
-  "license": "ISC",
+  "license": "MIT",
   "description": "",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/node": "^22.14.0",
-    "rollup": "^4.39.0",
+    "rollup": "^4.39.0"
+  },
+  "dependencies": {
     "tslib": "^2.8.1"
   },
-  "type": "module"
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rul991/rul2d-v2.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,4 +1,18 @@
-export default class CustomObject {
+import EventEmitter from "events"
+
+export default class CustomObject extends EventEmitter {
+    private static createdObjectsCount: number = 0
+    private _id: number
+
+    constructor() {
+        super()
+        this._id = CustomObject.createdObjectsCount++
+    }
+
+    get id(): number {
+        return this._id
+    }
+
     log(): void {
         console.log(this)
     }

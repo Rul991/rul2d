@@ -5,6 +5,7 @@ import { Canvas, Context, Dict } from "../utils/types"
 import Camera from "./Camera"
 import CanvasManager from "./CanvasManager"
 import CustomObject from "./CustomObject"
+import DrawableObject from "./DrawableObject"
 import GameScene from "./GameScene"
 
 export default class GameWorld extends CustomObject implements IManager, IRoot {
@@ -63,10 +64,21 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     }
 
     addGameScene(key: string, scene: GameScene): void {
-        
+        scene.roots.set(this.id, this)
+        scene.managers.add(this)
+
+        if(!this._currentScene) this.setScene(key)
     }
 
-    private _drawCurrentScene(delta: number): void {
+    setScene(key: string): void {
+        this._currentScene = this._gameScenes.get(key) ?? null
+    }
+
+    getScene(): GameScene | null {
+        return this._currentScene
+    }
+
+    private _updateCurrentScene(delta: number): void {
         if(!this._currentScene) return
 
         this._currentScene.update(delta)
@@ -76,7 +88,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     private _update(): void {
         GameWorld.createGameLoop((delta, prevTime) => {
             this._camera.update(() => {
-                this._drawCurrentScene(delta)
+                this._updateCurrentScene(delta)
             })
         })
     }

@@ -3,39 +3,55 @@ import ISimpleDrawableObject from "../interfaces/ISimpleDrawableObject"
 import ISimplePoint from "../interfaces/ISimplePoint"
 import Angle from "../utils/Angle"
 import Color from "../utils/Color"
-import { Context, NumberOrNull } from "../utils/types"
+import { Context, NumberOrNull, PointType } from "../utils/types"
 import DrawableObject from "./DrawableObject"
 
 export default class Point extends DrawableObject implements IPointerable {
     static drawRadius: number = 3
 
-    public x: number
-    public y: number
+    protected _x: number
+    protected _y: number
 
     constructor(x: NumberOrNull = null, y: NumberOrNull = null) {
         super()
 
-        this.x = 0
-        this.y = 0
+        this._x = 0
+        this._y = 0
 
         this.setPosition(x, y)
+    }
+
+    set x(value: number) {
+        this.setPosition(value, this._y)
+    }
+
+    get x(): number {
+        return this._x
+    }
+
+    set y(value: number) {
+        this.setPosition(this._x, value)
+    }
+
+    get y(): number {
+        return this._y
     }
 
     set point({x, y}: ISimplePoint) {
         this.setPosition(x, y)
     }
 
-    get point(): IPointerable {
-        return new Point(this.x, this.y)
+    get point(): PointType {
+        return new Point(this._x, this._y)
     }
 
     setPosition(x: NumberOrNull = null, y: NumberOrNull = null): void {
-        this.x = x ?? 0
-        this.y = y ?? this.x
+        this._x = x ?? 0
+        this._y = y ?? this._x
     }
 
     addPosition(x: number, y: number): void {
-        this.setPosition(this.x + x, this.y + y)
+        this.setPosition(this._x + x, this._y + y)
     }
 
     move({x, y}: ISimplePoint, delta: number): void {
@@ -45,13 +61,13 @@ export default class Point extends DrawableObject implements IPointerable {
     simplify(): ISimpleDrawableObject & ISimplePoint {
         return {
             ...super.simplify(),
-            x: this.x,
-            y: this.y
+            x: this._x,
+            y: this._y
         }
     }
 
     drawPoint(ctx: Context): void {
-        const drawArc = (radius: number) => ctx.arc(this.x, this.y, radius, 0, Angle.Pi2)
+        const drawArc = (radius: number) => ctx.arc(this._x, this._y, radius, 0, Angle.Pi2)
         
         this.updateColor(ctx)
         drawArc(Point.drawRadius)

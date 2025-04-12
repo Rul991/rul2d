@@ -34,9 +34,9 @@ export default class Search {
         return left
     }
 
-    static linear<T>(arr: T[], target: T, callback: SearchCallback<T> = obj => +obj): number {
+    static linear<T>(arr: T[], target: number, callback: SearchCallback<T> = obj => +obj): number {
         for (let i = 0; i < arr.length; i++) {
-            if(callback(arr[i]) == target) return i
+            if(callback(arr[i]) === target) return i
         }
 
         return -1

@@ -1,4 +1,6 @@
+import IPointerable from "../interfaces/IPointerable"
 import IRoot from "../interfaces/IRoot"
+import ISimplePoint from "../interfaces/ISimplePoint"
 
 // callbacks
 export type Callback = () => void
@@ -16,3 +18,7 @@ export type SmoothingQuality = 'low' | 'medium' | 'high'
 export type Context = CanvasRenderingContext2D
 export type Canvas = HTMLCanvasElement
 export type Dict<T> = Map<string, T>
+
+// intersections
+
+export type PointType = IPointerable & ISimplePoint

@@ -1,9 +1,10 @@
 import IManager from "../interfaces/IManager"
 import IRoot from "../interfaces/IRoot"
 import ISimpleDrawableObject from "../interfaces/ISimpleDrawableObject"
+import ISimplePoint from "../interfaces/ISimplePoint"
 import Bounds from "../utils/Bounds"
 import Color from "../utils/Color"
-import { Context, CurrentRoot, Dict } from "../utils/types"
+import { Context, CurrentRoot, Dict, PointType } from "../utils/types"
 import CustomObject from "./CustomObject"
 
 export default abstract class DrawableObject extends CustomObject implements IRoot {
@@ -14,21 +15,23 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     protected _opacity: number
     protected _zIndex: number
     protected _currentRootId: number
-    
+    protected _offset: ISimplePoint
     protected _color: Color
-    protected _managers: Set<IManager>
-    public roots: Map<number, DrawableObject>
+
+    public managers: Set<IManager>
+    public roots: Map<number, IRoot>
 
     constructor() {
         super()
 
+        this.managers = new Set()
+        this.roots = new Map()
         this._lineWidth = 1
         this._color = Color.Green
-        this.roots = new Map()
         this._currentRootId = 0
         this._opacity = 1
         this._zIndex = 0
-        this._managers = new Set()
+        this._offset = {x: 0, y: 0}
     }
 
     get zIndex(): number {
@@ -37,7 +40,9 @@ export default abstract class DrawableObject extends CustomObject implements IRo
 
     set zIndex(z: number) {
         this._zIndex = z
-
+        for (const manager of this.managers) {
+            manager.updateZIndex()
+        }
     }
 
     get inheritOpacity(): number {
