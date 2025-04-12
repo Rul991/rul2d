@@ -1,20 +1,42 @@
-export * from "./utils/types"
-export {default as Camera} from "./objects/Camera"
-export {default as CanvasManager} from "./objects/CanvasManager"
-export {default as CustomObject} from "./objects/CustomObject"
-export {default as DrawableObject} from "./objects/DrawableObject"
-export {default as GameEntity} from "./objects/GameEntity"
-export {default as GameObject} from "./objects/GameObject"
-export {default as GameScene} from "./objects/GameScene"
-export {default as GameWorld} from "./objects/GameWorld"
-export {default as KeyboardManager} from "./objects/KeyboardManager"
-export {default as Point} from "./objects/Point"
-export {default as Angle} from "./utils/Angle"
-export {default as Bounds} from "./utils/Bounds"
-export {default as Color} from "./utils/Color"
-export {default as KeyCodes} from "./utils/KeyCodes"
-export {default as MathUtils} from "./utils/MathUtils"
-export {default as Random} from "./utils/Random"
-export {default as Search} from "./utils/Search"
-export {default as Sorting} from "./utils/Sorting"
-export {default as VectorUtils} from "./utils/VectorUtils"
+import Camera from './objects/Camera'
+import CanvasManager from './objects/CanvasManager'
+import CustomObject from './objects/CustomObject'
+import DrawableObject from './objects/DrawableObject'
+import GameEntity from './objects/GameEntity'
+import GameObject from './objects/GameObject'
+import GameScene from './objects/GameScene'
+import GameWorld from './objects/GameWorld'
+import KeyboardManager from './objects/KeyboardManager'
+import Point from './objects/Point'
+import Angle from './utils/Angle'
+import Bounds from './utils/Bounds'
+import Color from './utils/Color'
+import KeyCodes from './utils/KeyCodes'
+import MathUtils from './utils/MathUtils'
+import Random from './utils/Random'
+import Search from './utils/Search'
+import Sorting from './utils/Sorting'
+import VectorUtils from './utils/VectorUtils'
+
+export * from './utils/types'
+export {
+  Camera,
+  CanvasManager,
+  CustomObject,
+  DrawableObject,
+  GameEntity,
+  GameObject,
+  GameScene,
+  GameWorld,
+  KeyboardManager,
+  Point,
+  Angle,
+  Bounds,
+  Color,
+  KeyCodes,
+  MathUtils,
+  Random,
+  Search,
+  Sorting,
+  VectorUtils
+}

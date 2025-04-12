@@ -1,27 +1,43 @@
 import nodeResolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
+import dts from 'rollup-plugin-dts'
 
-export default {
-    input: 'src/index.ts',
+export default [
+  {
+    // for dev: src/test.ts
+    // for release: src/index.ts
+    input: 'src/test.ts',
     output: [
-        {
-          file: 'dist/index.mjs', 
-          format: 'esm',             
-          sourcemap: true            
-        },
-        {
-            file: 'dist/index.cjs',
-            format: 'commonjs',
-            sourcemap: true
-        }
+      {
+        file: 'dist/index.mjs',
+        format: 'esm',
+      },
+      {
+        file: 'dist/index.cjs',
+        format: 'cjs',
+      },
     ],
     plugins: [
-        nodeResolve({'browser': true}),
-        typescript({
-            tsconfig: './tsconfig.json'
-        })
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: true,
+        declarationDir: 'dist/types',
+        sourceMap: false,
+      }),
+      nodeResolve({browser: true})
     ],
-    watch: {
-        include: 'src/**/*'
-    }
-}
+  },
+
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: 'dist/index.d.ts',
+        format: 'es',
+      },
+    ],
+    plugins: [
+      dts(),
+    ],
+  },
+];

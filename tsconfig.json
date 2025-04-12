@@ -8,7 +8,10 @@
         "rootDir": "./src",
         "lib": ["ES2017", "DOM"],
         "noEmitOnError": true,
-        "declaration": true
+        "declaration": true,
+        "declarationMap": true,
+        "declarationDir": "./dist/types",
+        "noEmit": false
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist"]

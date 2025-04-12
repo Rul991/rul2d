@@ -1,11 +1,8 @@
-import EventEmitter from "events"
-
-export default class CustomObject extends EventEmitter {
+export default class CustomObject {
     private static createdObjectsCount: number = 0
     private _id: number
 
     constructor() {
-        super()
         this._id = CustomObject.createdObjectsCount++
     }
 
