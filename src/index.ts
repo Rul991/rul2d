@@ -1,42 +1,52 @@
-import Camera from './objects/Camera'
-import CanvasManager from './objects/CanvasManager'
-import CustomObject from './objects/CustomObject'
-import DrawableObject from './objects/DrawableObject'
-import GameEntity from './objects/GameEntity'
-import GameObject from './objects/GameObject'
-import GameScene from './objects/GameScene'
-import GameWorld from './objects/GameWorld'
-import KeyboardManager from './objects/KeyboardManager'
-import Point from './objects/Point'
-import Angle from './utils/Angle'
-import Bounds from './utils/Bounds'
-import Color from './utils/Color'
-import KeyCodes from './utils/KeyCodes'
-import MathUtils from './utils/MathUtils'
-import Random from './utils/Random'
-import Search from './utils/Search'
-import Sorting from './utils/Sorting'
-import VectorUtils from './utils/VectorUtils'
-
+export {default as Angle} from './utils/Angle'
+export {default as Bounds} from './utils/Bounds'
+export {default as CachedValue} from './utils/CachedValue'
+export {default as Color} from './utils/Color'
+export {default as KeyCodes} from './utils/KeyCodes'
+export {default as MathUtils} from './utils/MathUtils'
+export {default as Random} from './utils/Random'
+export {default as Search} from './utils/Search'
+export {default as SimpleRect} from './utils/SimpleRect'
+export {default as Size} from './utils/Size'
+export {default as Sorting} from './utils/Sorting'
 export * from './utils/types'
-export {
-  Camera,
-  CanvasManager,
-  CustomObject,
-  DrawableObject,
-  GameEntity,
-  GameObject,
-  GameScene,
-  GameWorld,
-  KeyboardManager,
-  Point,
-  Angle,
-  Bounds,
-  Color,
-  KeyCodes,
-  MathUtils,
-  Random,
-  Search,
-  Sorting,
-  VectorUtils
-}
+export {default as VectorUtils} from './utils/VectorUtils'
+export {default as Camera} from './objects/Camera'
+export {default as CanvasManager} from './objects/CanvasManager'
+export {default as Circle} from './objects/Circle'
+export {default as CustomObject} from './objects/CustomObject'
+export {default as DrawableObject} from './objects/DrawableObject'
+export {default as EventEmitter} from './objects/EventEmitter'
+export {default as FollowedCamera} from './objects/FollowedCamera'
+export {default as GameEntity} from './objects/GameEntity'
+export {default as GameObject} from './objects/GameObject'
+export {default as GameScene} from './objects/GameScene'
+export {default as GameWorld} from './objects/GameWorld'
+export {default as KeyboardManager} from './objects/KeyboardManager'
+export {default as KeyStateManager} from './objects/KeyStateManager'
+export {default as Point} from './objects/Point'
+export {default as PointerableObject} from './objects/PointerableObject'
+export {default as PointerInputManager} from './objects/PointerInputManager'
+export {default as Rectangle} from './objects/Rectangle'
+export {default as Shape} from './objects/Shape'
+export {default as ShapeableObject} from './objects/ShapeableObject'
+export {default as IAngle} from './interfaces/IAngle'
+export {default as IAngleable} from './interfaces/IAngleable'
+export {default as IControlsManager} from './interfaces/IControlsManager'
+export {default as IEventEmitter} from './interfaces/IEventEmitter'
+export {default as IEventOptions} from './interfaces/IEventOptions'
+export {default as IKeyOptions} from './interfaces/IKeyOptions'
+export {default as IManager} from './interfaces/IManager'
+export {default as IMinMax} from './interfaces/IMinMax'
+export {default as IPointerable} from './interfaces/IPointerable'
+export {default as IRectangle} from './interfaces/IRectangle'
+export {default as IRoot} from './interfaces/IRoot'
+export {default as IShapeConfig} from './interfaces/IShapeConfig'
+export {default as ISimpleCamera} from './interfaces/ISimpleCamera'
+export {default as ISimpleDrawableObject} from './interfaces/ISimpleDrawableObject'
+export {default as ISimplePoint} from './interfaces/ISimplePoint'
+export {default as ISimpleRect} from './interfaces/ISimpleRect'
+export {default as ISimpleShape} from './interfaces/ISimpleShape'
+export {default as ISimpleSize} from './interfaces/ISimpleSize'
+export {default as ISizeable} from './interfaces/ISizeable'
+export {default as ValueEvent} from './events/ValueEvent'

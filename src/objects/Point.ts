@@ -1,24 +1,36 @@
 import IPointerable from "../interfaces/IPointerable"
 import ISimpleDrawableObject from "../interfaces/ISimpleDrawableObject"
 import ISimplePoint from "../interfaces/ISimplePoint"
+import ISimpleRect from '../interfaces/ISimpleRect'
 import Angle from "../utils/Angle"
 import Color from "../utils/Color"
-import { Context, NumberOrNull, PointType } from "../utils/types"
+import SimpleRect from '../utils/SimpleRect'
+import { Context, PointType } from "../utils/types"
+import Camera from './Camera'
 import DrawableObject from "./DrawableObject"
+import Rectangle from './Rectangle'
 
 export default class Point extends DrawableObject implements IPointerable {
+    static get NaN(): Point {
+        return new Point(NaN)
+    }
+    
     static drawRadius: number = 3
 
     protected _x: number
     protected _y: number
 
-    constructor(x: NumberOrNull = null, y: NumberOrNull = null) {
+    constructor(x?: number, y?: number) {
         super()
 
         this._x = 0
         this._y = 0
 
         this.setPosition(x, y)
+    }
+
+    get factRect(): ISimpleRect {
+        return new SimpleRect(this._x, this._y, 1)
     }
 
     set x(value: number) {
@@ -45,7 +57,14 @@ export default class Point extends DrawableObject implements IPointerable {
         return new Point(this._x, this._y)
     }
 
-    setPosition(x: NumberOrNull = null, y: NumberOrNull = null): void {
+    updatePositionByOffset({x, y}: ISimplePoint): void {
+        this.setPosition(
+            x + this.offset.x,
+            y + this.offset.y
+        )
+    }
+
+    setPosition(x?: number, y?: number): void {
         this._x = x ?? 0
         this._y = y ?? this._x
     }
@@ -67,8 +86,12 @@ export default class Point extends DrawableObject implements IPointerable {
     }
 
     drawPoint(ctx: Context): void {
-        const drawArc = (radius: number) => ctx.arc(this._x, this._y, radius, 0, Angle.Pi2)
-        
+        const drawArc = (radius: number) => {
+            ctx.beginPath()
+            ctx.arc(this._x, this._y, radius, 0, Angle.Pi2)
+            ctx.fill()
+            ctx.closePath()
+        }
         this.updateColor(ctx)
         drawArc(Point.drawRadius)
 
@@ -81,5 +104,10 @@ export default class Point extends DrawableObject implements IPointerable {
 
     protected _draw(ctx: Context): void {
         this.drawPoint(ctx)
+    }
+
+    isObjectInViewport(camera: Camera): boolean {
+        const {viewport} = camera
+        return viewport.isPointInShape(this)
     }
 }

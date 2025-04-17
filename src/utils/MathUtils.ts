@@ -1,4 +1,4 @@
-import IMinMax from "../interfaces/IMinMax"
+import IMinMax from '../interfaces/IMinMax';
 
 export default class MathUtils {
     static floor(x: number, afterDot: number = 0): number {
@@ -14,25 +14,25 @@ export default class MathUtils {
     }
 
     static updateWithAfterDotNumber(x: number, afterDot: number, callback: (power: number) => number): number {
-        if(!afterDot) return callback(x)
+        if (!afterDot) return callback(x)
         let power = 10 ** afterDot
         return callback(x * power) / power
     }
 
-    static percents(value: number, {min, max}: IMinMax = {min: 0, max: 100}): number {
+    static percents(value: number, { min, max }: IMinMax = { min: 0, max: 100 }): number {
         return (value - min) / (max - min)
     }
 
     static getArrayValueByCondition<T>(array: T[], conditionCallback: (value: number, last: number) => boolean, valueCallback = (value: T) => +value): T | null {
-        if(array.length == 0) return null
-        if(array.length == 1) return array[0]
+        if (array.length == 0) return null
+        if (array.length == 1) return array[0]
 
         let conditionValue = array[0]
         let conditionCallbackValue = valueCallback(conditionValue)
 
         for (const value of array) {
             let callbackValue = valueCallback(value)
-            if(conditionCallback(callbackValue, conditionCallbackValue)) {
+            if (conditionCallback(callbackValue, conditionCallbackValue)) {
                 conditionValue = value
                 conditionCallbackValue = callbackValue
             }

@@ -1,9 +1,9 @@
-import CustomObject from "./CustomObject"
 import KeyCodes, { FunctionKeys } from "../utils/KeyCodes"
-import { KeyboardEventCallback } from "../utils/types"
+import { EventCallback, KeyboardEventCallback } from "../utils/types"
 import IKeyOptions from "../interfaces/IKeyOptions"
+import EventEmitter from "./EventEmitter"
 
-export default class KeyboardManager extends CustomObject {
+export default class KeyboardManager extends EventEmitter<KeyboardEvent> {
     static defaultOptions: IKeyOptions = {
         altKey: false, 
         ctrlKey: false,
@@ -33,26 +33,19 @@ export default class KeyboardManager extends CustomObject {
         return KeyboardManager.stringify(event.code, event)
     }
 
-    private _events: Map<string, Set<KeyboardEventCallback>>
-
     constructor() {
         super()
 
-        this._events = new Map()
         this._events.set(KeyCodes.All, new Set())
     }
 
-    hasKey(key: string, options: IKeyOptions): [string, boolean] {
+    hasStringifiedKey(key: string, options: IKeyOptions): [string, boolean] {
         let resultKey = KeyboardManager.stringify(key, options)
         return [resultKey, this._events.has(resultKey)]
     }
 
     addKey(key: KeyCodes, callback: KeyboardEventCallback, options: IKeyOptions = KeyboardManager.defaultOptions) {
-        let [resultKey, isHasKey] = this.hasKey(key, options)
-        if(!isHasKey) this._events.set(resultKey, new Set())
-
-        let set = this._events.get(resultKey)!
-        return set.add(callback)
+        this.on(KeyboardManager.stringify(key, options), callback)
     }
 
     addKeys(keys: KeyCodes[], callback: KeyboardEventCallback, options: IKeyOptions = KeyboardManager.defaultOptions) {
@@ -60,22 +53,26 @@ export default class KeyboardManager extends CustomObject {
     }
 
     removeKey(key: string, callback: KeyboardEventCallback, options: IKeyOptions = KeyboardManager.defaultOptions): boolean {
-        let [resultKey, isHasKey] = this.hasKey(key, options)
-        if(!isHasKey) return false
-
-        let set = this._events.get(resultKey)!
-        return set.delete(callback)
+        return this.off(KeyboardManager.stringify(key, options), callback)
     }
 
-    handleAnyKey(e: KeyboardEvent) {
-        const [key, isHasKey] = this.hasKey(KeyCodes.Any, e)
+    onceKey(key: KeyCodes, callback: EventCallback<KeyboardEvent>, options: IKeyOptions = KeyboardManager.defaultOptions): void {
+        const onceCallback: EventCallback<KeyboardEvent> = e => {
+            callback(e)
+            this.removeKey(key, onceCallback, options)
+        }
+        this.addKey(key, onceCallback, options)
+    }
+
+    protected _handleAnyKey(e: KeyboardEvent) {
+        const [key, isHasKey] = this.hasStringifiedKey(KeyCodes.Any, e)
         if(!isHasKey) return
 
         let set = this._events.get(key)!
         set.forEach(callback => callback(e))
     }
 
-    handleAllKey(e: KeyboardEvent) {
+    protected _handleAllKey(e: KeyboardEvent) {
         let set = this._events.get(KeyCodes.All)!
 
         set.forEach(callback => callback(e))
@@ -95,8 +92,8 @@ export default class KeyboardManager extends CustomObject {
             const eventKey = KeyboardManager.from(e)
             const callbacks = this._events.get(eventKey)
 
-            this.handleAnyKey(e)
-            this.handleAllKey(e)
+            this._handleAnyKey(e)
+            this._handleAllKey(e)
 
             if(!callbacks) return 
 

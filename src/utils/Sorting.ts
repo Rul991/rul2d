@@ -51,7 +51,7 @@ export default class Sorting {
         return result
     }
 
-    static quick<T>(arr: T[], callback = (value: T) => value): T[] {
+    static quick<T>(arr: T[], callback = (value: T) => +value): T[] {
         if (arr.length <= 1) return arr
 
         const pivot = callback(arr[Math.floor(arr.length / 2)])

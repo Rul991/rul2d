@@ -1,4 +1,4 @@
-import { NumberOrNull, PointType } from "../utils/types"
+import { PointType } from "../utils/types"
 import ISimplePoint from "./ISimplePoint"
 
 export default interface IPointerable {
@@ -8,7 +8,7 @@ export default interface IPointerable {
     get x(): number
     set y(value: number)
     get y(): number
-    setPosition(x?: NumberOrNull, y?: NumberOrNull): void
+    setPosition(x?: number, y?: number): void
     addPosition(x: number, y: number): void
     move(point: ISimplePoint, delta: number): void
 }

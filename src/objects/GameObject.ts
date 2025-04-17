@@ -1,10 +1,17 @@
 import IManager from "../interfaces/IManager"
+import ISimplePoint from '../interfaces/ISimplePoint'
+import ISimpleRect from '../interfaces/ISimpleRect'
+import Search from '../utils/Search'
+import SimpleRect from '../utils/SimpleRect'
 import Sorting from "../utils/Sorting"
-import { Context } from "../utils/types"
+import { Context, DrawablePointerable } from "../utils/types"
+import Camera from './Camera'
 import DrawableObject from "./DrawableObject"
+import GameWorld from './GameWorld'
+import Rectangle from './Rectangle'
 
-export default class GameObject extends DrawableObject implements IManager {
-    private _objects: DrawableObject[]
+export default abstract class GameObject extends DrawableObject implements IManager {
+    protected _objects: DrawableObject[]
 
     constructor() {
         super()
@@ -12,18 +19,26 @@ export default class GameObject extends DrawableObject implements IManager {
         this._objects = []
     }
 
-    addObject(object: DrawableObject): void {
+    addObject(object: DrawableObject): boolean {
+        if(!object.canBeSubObject) {
+            console.warn('Cant be sub object', object)
+            return false
+        }
         Sorting.addToArray(this._objects, object, obj => obj.zIndex)
-        object.roots.set(this.id, object)
+        object.root = this
         object.managers.add(this)
+
+        return true
     }
 
     removeObject(object: DrawableObject): boolean {
-        let isDeleted: boolean = object.roots.delete(this.id)
+        let isDeleted: boolean = Boolean(object.root)
         if(!isDeleted) return false
 
-        object.roots.delete(this.id)
         object.managers.delete(this)
+
+        let i = Search.binary(this._objects, object, obj => obj.zIndex)
+        this._objects.splice(i, 1)
 
         return true
     }
@@ -47,7 +62,13 @@ export default class GameObject extends DrawableObject implements IManager {
         })
     }
 
-    protected _update(delta: number): void {}
+    updatePositionByOffset(point: ISimplePoint): void {
+        return
+    }
+
+    protected _update(delta: number): void {
+        this.updateObjects(delta)
+    }
 
     update(delta: number): void {
         this._update(delta)
@@ -55,5 +76,13 @@ export default class GameObject extends DrawableObject implements IManager {
 
     updateZIndex(): void {
         this._objects = Sorting.merge(this._objects, obj => obj.zIndex)
+    }
+
+    isObjectInViewport(camera: Camera): boolean {
+        return true
+    }
+
+    get factRect(): ISimpleRect {
+        return new SimpleRect(0, 0, 1, 1)
     }
 }

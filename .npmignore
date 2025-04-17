@@ -1,3 +1,9 @@
 dist/types/
 src/
-dist/test.d.ts
+node_modules/
+examples/
+.gitignore
+index.css
+index.html
+package-lock.json
+what i want on rul2d v2.md

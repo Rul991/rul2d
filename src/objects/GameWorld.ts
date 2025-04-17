@@ -1,12 +1,18 @@
-import IManager from "../interfaces/IManager"
-import IRoot from "../interfaces/IRoot"
-import ISize from "../interfaces/ISize"
-import { Canvas, Context, Dict } from "../utils/types"
-import Camera from "./Camera"
-import CanvasManager from "./CanvasManager"
-import CustomObject from "./CustomObject"
-import DrawableObject from "./DrawableObject"
-import GameScene from "./GameScene"
+import IManager from '../interfaces/IManager';
+import IRoot from '../interfaces/IRoot';
+import ISimpleSize from '../interfaces/ISimpleSize';
+import {
+  Canvas,
+  Context,
+  Dict,
+} from '../utils/types';
+import Camera from './Camera';
+import CanvasManager from './CanvasManager';
+import CustomObject from './CustomObject';
+import GameScene from './GameScene';
+import KeyboardManager from './KeyboardManager';
+import KeyStateManager from './KeyStateManager'
+import PointerInputManager from './PointerInputManager'
 
 export default class GameWorld extends CustomObject implements IManager, IRoot {
     static createGameLoop(callback: (delta: number, prevTime: number) => void): number {
@@ -31,8 +37,21 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     private _gameScenes: Dict<GameScene>
     private _currentScene: GameScene | null
 
-    constructor({root = document.body, camera = new Camera, size = null}: {root?: HTMLElement, camera?: Camera, size?: ISize | null} = {}) {
+    public downKeyboardManager: KeyboardManager
+    public upKeyboardManager: KeyboardManager
+    public keyStateManager: KeyStateManager
+    public pointerManager: PointerInputManager
+
+    constructor({root = document.body, camera = new Camera, size = null}: {root?: HTMLElement, camera?: Camera, size?: ISimpleSize | null} = {}) {
         super()
+
+        this.downKeyboardManager = new KeyboardManager()
+        this.upKeyboardManager = new KeyboardManager()
+
+        this.keyStateManager = new KeyStateManager()
+        this.keyStateManager.setManager(this.downKeyboardManager, this.upKeyboardManager)
+
+        this.pointerManager = new PointerInputManager()
 
         this._canvasManager = new CanvasManager()
         this._canvas = this._canvasManager.create({root, size})
@@ -58,16 +77,33 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     get camera(): Camera {
         return this._camera
     }
-    
-    updateZIndex(): void {
-        return
-    }
 
-    addGameScene(key: string, scene: GameScene): void {
-        scene.roots.set(this.id, this)
+    set camera(camera: Camera) {
+        this._camera = camera
+        this._camera.setContext(this._ctx)
+    }
+    
+    updateZIndex(): void {}
+
+    addScene(key: string, scene: GameScene): void {
+        this._gameScenes.set(key, scene)
+        scene.root = this
         scene.managers.add(this)
+        scene.init(this)
 
         if(!this._currentScene) this.setScene(key)
+    }
+
+    removeScene(key: string): void {
+        let scene = this._gameScenes.get(key)
+        let isDeleted = this._gameScenes.delete(key)
+
+        if(!isDeleted) return 
+
+        scene!.root = null
+        scene!.managers.delete(this)
+        
+        if(this._currentScene == scene) this._currentScene = null
     }
 
     setScene(key: string): void {
@@ -78,15 +114,29 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         return this._currentScene
     }
 
+    addControls(): void {
+        this.downKeyboardManager.addControls('keydown')
+        this.upKeyboardManager.addControls('keyup')
+        this.pointerManager.addControls(this._canvas)
+    }
+
     private _updateCurrentScene(delta: number): void {
         if(!this._currentScene) return
 
         this._currentScene.update(delta)
+
+        this._currentScene.forEach(obj => {
+            if(obj.isObjectInViewport(this.camera)) obj.isInViewport = true
+            else obj.isInViewport = false
+        })
+
         this._currentScene.draw(this._ctx)
     }
 
     private _update(): void {
         GameWorld.createGameLoop((delta, prevTime) => {
+            this.pointerManager.update()
+            this.canvasManager.clear()
             this._camera.update(() => {
                 this._updateCurrentScene(delta)
             })
@@ -94,6 +144,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     }
 
     start(): void {
+        this.addControls()
         this._update()
     }
 }

@@ -1,4 +1,4 @@
-export default interface ISize {
+export default interface ISimpleSize {
     width: number,
     height: number
 }

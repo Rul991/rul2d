@@ -1,5 +1,5 @@
 import ISimplePoint from "../interfaces/ISimplePoint"
-import ISize from "../interfaces/ISize"
+import ISimpleSize from "../interfaces/ISimpleSize"
 import { Canvas, Context } from "../utils/types"
 import CustomObject from "./CustomObject"
 
@@ -44,7 +44,7 @@ export default class CanvasManager extends CustomObject {
         return this._ctx
     }
 
-    resize({width, height}: ISize): void {
+    resize({width, height}: ISimpleSize): void {
         if(!this.isCanvasExist) return
 
         this._canvas!.width = width
@@ -56,7 +56,7 @@ export default class CanvasManager extends CustomObject {
         this.resize(this._canvas!.getBoundingClientRect())
     }
 
-    create({root = document.body, size = null}: {root?: HTMLElement, size?: ISize | null} = {}): Canvas {
+    create({root = document.body, size = null}: {root?: HTMLElement, size?: ISimpleSize | null} = {}): Canvas {
         let canvas = document.createElement('canvas')
         root.appendChild(canvas)
         this.setCanvas(canvas)
@@ -67,7 +67,7 @@ export default class CanvasManager extends CustomObject {
         return canvas
     }
 
-    clear({x: x, y: y}: ISimplePoint = {x: 0, y: 0}) {
+    clear({x, y}: ISimplePoint = {x: 0, y: 0}) {
         if(!this.isCanvasExist) return
 
         const {width, height} = this.canvas!

@@ -1,11 +1,13 @@
-import IPointerable from "./IPointerable"
+import { PointType } from "../utils/types"
 import ISimplePoint from "./ISimplePoint"
-import ISize from "./ISize"
+import ISimpleSize from "./ISimpleSize"
 
-export default interface ISizeable extends ISize {
+export default interface ISizeable {
     set center(value: ISimplePoint)
-    get center(): IPointerable
+    get center(): PointType
 
-    set size(value: ISize)
+    set size(value: ISimpleSize)
     get size(): ISizeable
+
+    setSize(width?: number, height?: number): void
 }

@@ -1,57 +1,3 @@
-# Rul2d V2
-
-> **`Rul2d`** is a powerful and flexible TypeScript library for creating games using HTML5 Canvas.
-> 
-> It provides tools for rendering graphical objects, managing scenes, animations, handling input events (mouse and keyboard).
-
-**To install, enter:**
-
-```shell
-npm i rul2d
-```
-
-**Template:**
-
-```typescript
-import { GameEntity, GameScene, GameWorld, Context } from 'rul2d'
-
-class NewEntity extends GameEntity {
-    constructor (x?: number, y?: number) {
-        super(x, y)
-    }
-
-    init(world: GameWorld): void {
-        
-    }
-
-    protected _draw(ctx: Context): void {
-        
-    }
-
-    protected _update(delta: number): void {
-        
-    }
-}
-
-class NewScene extends GameScene {
-    public test: NewEntity
-
-    constructor () {
-        super()
-        this.test = new NewEntity()
-        this.addObject(this.test)
-    }
-}
-
-const world = new GameWorld()
-world.addScene('new', new NewScene())
-world.setScene('new')
-world.start()
-```
-
-**Example:**
-
-```typescript
 import { Camera, Color, GameEntity, GameScene, GameWorld, Point, Rectangle, Size, Context, VectorUtils } from 'rul2d'
 
 class TestEntity extends GameEntity {
@@ -88,7 +34,7 @@ class TestEntity extends GameEntity {
     protected _draw(ctx: Context): void {
         super._draw(ctx)
 
-        this.rectangle.stroke(ctx, Color.Black)
+        this.rectangle.fill(ctx, Color.Black)
         this.camera.viewport.drawOutline(ctx, Color.Red)
     }
 
@@ -125,4 +71,3 @@ Camera.addStandardWheelListener(world.camera)
 world.addScene('test', new TestScene())
 world.start()
 world.log()
-```

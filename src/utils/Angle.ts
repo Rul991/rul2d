@@ -1,7 +1,9 @@
-import CustomObject from "../objects/CustomObject"
-import MathUtils from "./MathUtils"
+import IAngle from '../interfaces/IAngle';
+import IAngleable from '../interfaces/IAngleable';
+import CustomObject from '../objects/CustomObject';
+import MathUtils from './MathUtils';
 
-export default class Angle extends CustomObject {
+export default class Angle extends CustomObject implements IAngleable {
     static Pi = Math.PI
     static Pi2 = Angle.Pi * 2
     static Rad_1 = Angle.degToRad(1)
@@ -17,8 +19,19 @@ export default class Angle extends CustomObject {
     }
 
     static from(rad: number): Angle {
+        return this.fromRadians(rad)
+    }
+
+    static fromRadians(rad: number): Angle {
         let angle: Angle = new Angle
         angle.radians = rad
+
+        return angle
+    }
+
+    static fromDegrees(deg: number): Angle {
+        let angle = new Angle
+        angle.degrees = deg
 
         return angle
     }
@@ -31,7 +44,7 @@ export default class Angle extends CustomObject {
 
     set radians(rad: number) {
         this._radians = rad % Angle.Pi2
-        if(this._radians < 0) this._radians += Angle.Pi2
+        if (this._radians < 0) this._radians += Angle.Pi2
     }
 
     get radians(): number {
@@ -46,11 +59,18 @@ export default class Angle extends CustomObject {
         return Angle.radToDeg(this.radians)
     }
 
-    simplify(): {radians: number, degress: number} {
+    simplify(): IAngle {
         return {
-            radians: this.radians,
-            degress: this.degrees
+            radians: this.radians
         }
+    }
+
+    setAngle(angle: Angle): void {
+        this.radians = +angle
+    }
+
+    addAngle(angle: Angle): void {
+        this.setAngle(Angle.from(angle.radians + this.radians))
     }
 
     valueOf(): number {

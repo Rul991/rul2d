@@ -2,10 +2,14 @@ import IManager from "../interfaces/IManager"
 import IRoot from "../interfaces/IRoot"
 import ISimpleDrawableObject from "../interfaces/ISimpleDrawableObject"
 import ISimplePoint from "../interfaces/ISimplePoint"
+import ISimpleRect from '../interfaces/ISimpleRect'
 import Bounds from "../utils/Bounds"
 import Color from "../utils/Color"
 import { Context, CurrentRoot, Dict, PointType } from "../utils/types"
+import Camera from './Camera'
 import CustomObject from "./CustomObject"
+import EventEmitter from "./EventEmitter"
+import GameWorld from './GameWorld'
 
 export default abstract class DrawableObject extends CustomObject implements IRoot {
     static positiveNumberBounds: Bounds = new Bounds(Number.EPSILON, Number.MAX_SAFE_INTEGER)
@@ -18,20 +22,34 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     protected _offset: ISimplePoint
     protected _color: Color
 
+    public isVisible: boolean
+    public isInViewport: boolean
     public managers: Set<IManager>
-    public roots: Map<number, IRoot>
+    public root: CurrentRoot
+    public eventEmitter: EventEmitter
 
     constructor() {
         super()
 
+        this.eventEmitter = new EventEmitter()
+        this.root = null
         this.managers = new Set()
-        this.roots = new Map()
+
+        this.isVisible = true
+        this.isInViewport = true
+
         this._lineWidth = 1
         this._color = Color.Green
         this._currentRootId = 0
         this._opacity = 1
         this._zIndex = 0
         this._offset = {x: 0, y: 0}
+    }
+
+    abstract get factRect(): ISimpleRect
+
+    get canBeSubObject(): boolean {
+        return true
     }
 
     get zIndex(): number {
@@ -46,22 +64,57 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     }
 
     get inheritOpacity(): number {
-        let root: CurrentRoot = this.getCurrentRoot()
+        let {root} = this
 
         if(!root) return this._opacity
         else return this._opacity * root.inheritOpacity
     }
 
-    setCurrentRoot(id: number): void {
-        this._currentRootId = id
-    }
-
-    getCurrentRoot(): CurrentRoot {
-        return this.roots.get(this._currentRootId) ?? null
+    setVisibility(value: boolean): void {
+        this.isVisible = value
     }
 
     setColor(color: Color) {
         this._color = color
+    }
+
+    setOffset(x: number, y: number) {
+        this._offset.x = x
+        this._offset.y = y
+    }
+
+    abstract updatePositionByOffset(point: ISimplePoint): void 
+
+    set offset(point: ISimplePoint) {
+        this.setOffset(point.x, point.y)
+    }
+
+    get offset(): ISimplePoint {
+        return this._offset
+    }
+
+    set color(color: Color) {
+        this.setColor(color)
+    }
+
+    get color(): Color {
+        return this._color
+    }
+
+    set opacity(value: number) {
+        this._opacity = DrawableObject.opacityBounds.get(value)
+    }
+
+    get opacity(): number {
+        return this._opacity
+    }
+
+    set lineWidth(value: number) {
+        this._lineWidth = DrawableObject.positiveNumberBounds.get(value)
+    }
+
+    get lineWidth(): number {
+        return this._lineWidth
     }
 
     simplify(): ISimpleDrawableObject {
@@ -87,11 +140,21 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         ctx.globalAlpha = this.inheritOpacity
     }
 
+    init(world: GameWorld): void {
+        
+    }
+
+    needDraw(): boolean {
+        return this.isInViewport && this.isVisible
+    }
+
     update(delta: number): void {}
 
     protected abstract _draw(ctx: Context): void
+    abstract isObjectInViewport(camera: Camera): boolean
 
     draw(ctx: Context): void {
+        if(!this.needDraw()) return
         ctx.save()
 
         this.updateContextParameters(ctx)

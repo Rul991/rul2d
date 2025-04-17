@@ -14,6 +14,10 @@ export default class VectorUtils {
         return Math.sqrt(this.getDoubleDistance(first, second))
     }
 
+    static isInDistance(first: ISimplePoint, second: ISimplePoint, maxDistance: number): boolean {
+        return VectorUtils.getDoubleDistance(first, second) < (maxDistance * maxDistance)
+    }
+
     static magnitude(vector: ISimplePoint): number {
         return this.getDistance(vector, {x: 0, y: 0})
     }
@@ -24,5 +28,42 @@ export default class VectorUtils {
 
     static dot(first: ISimplePoint, second: ISimplePoint): number {
         return first.x * second.x + first.y * second.y
+    }
+
+    static createPointByCallback(first: ISimplePoint, second: ISimplePoint, callback: (first: number, second: number) => number): ISimplePoint {
+        return {
+            x: callback(first.x, second.x),
+            y: callback(first.y, second.y)
+        }
+    }
+
+    static plus(first: ISimplePoint, second: ISimplePoint): ISimplePoint {
+        return this.createPointByCallback(first, second, (f, s) => f + s)
+    }
+
+    static min(first: ISimplePoint, second: ISimplePoint): ISimplePoint {
+        return this.createPointByCallback(first, second, (f, s) => f - s)
+    }
+
+    static multiply(first: ISimplePoint, second: ISimplePoint): ISimplePoint {
+        return this.createPointByCallback(first, second, (f, s) => f * s)
+    }
+
+    static div(first: ISimplePoint, second: ISimplePoint): ISimplePoint {
+        return this.createPointByCallback(first, second, (f, s) => f / s)
+    }
+
+    static negative({x, y}: ISimplePoint): ISimplePoint {
+        return {
+            x: -x,
+            y: -y
+        }
+    }
+
+    static multiplyOnNumber({x, y}: ISimplePoint, num: number): ISimplePoint {
+        return {
+            x: x * num,
+            y: y * num
+        }
     }
 }
