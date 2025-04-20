@@ -1,6 +1,6 @@
+import IGameWorldBuilder from '../interfaces/IGameWorldBuilder'
 import IManager from '../interfaces/IManager';
 import IRoot from '../interfaces/IRoot';
-import ISimpleSize from '../interfaces/ISimpleSize';
 import {
   Canvas,
   Context,
@@ -15,14 +15,16 @@ import KeyStateManager from './KeyStateManager'
 import PointerInputManager from './PointerInputManager'
 
 export default class GameWorld extends CustomObject implements IManager, IRoot {
-    static createGameLoop(callback: (delta: number, prevTime: number) => void): number {
+    static createGameLoop(callback: (delta: number, lastDelta: number, prevTime: number) => void): number {
         let prevTime: number = Date.now()
         let delta: number = 0
+        let lastDelta: number = delta
 
-        const update: () => number = () => {          
+        const update: () => number = () => {    
             [delta, prevTime] = [(Date.now() - prevTime) / 1000, Date.now()]
-
-            callback(delta, prevTime)
+            
+            callback(delta, lastDelta, prevTime)
+            lastDelta = delta
 
             return requestAnimationFrame(update)
         }
@@ -42,7 +44,9 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     public keyStateManager: KeyStateManager
     public pointerManager: PointerInputManager
 
-    constructor({root = document.body, camera = new Camera, size = null}: {root?: HTMLElement, camera?: Camera, size?: ISimpleSize | null} = {}) {
+    public isUseCulling: boolean
+
+    constructor({root = document.body, camera = new Camera, size = null, useCulling = true}: IGameWorldBuilder = {}) {
         super()
 
         this.downKeyboardManager = new KeyboardManager()
@@ -62,6 +66,8 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
 
         this._gameScenes = new Map
         this._currentScene = null
+
+        this.isUseCulling = useCulling
     }
 
     get inheritOpacity(): number {
@@ -120,25 +126,26 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         this.pointerManager.addControls(this._canvas)
     }
 
-    private _updateCurrentScene(delta: number): void {
+    private _updateCurrentScene(delta: number, lastDelta: number): void {
         if(!this._currentScene) return
 
         this._currentScene.update(delta)
 
-        this._currentScene.forEach(obj => {
-            if(obj.isObjectInViewport(this.camera)) obj.isInViewport = true
-            else obj.isInViewport = false
-        })
+        if(this.isUseCulling) 
+            this._currentScene.forEach(obj => {
+                if(obj.isObjectInViewport(this.camera)) obj.isInViewport = true
+                else obj.isInViewport = false
+            })
 
         this._currentScene.draw(this._ctx)
     }
 
     private _update(): void {
-        GameWorld.createGameLoop((delta, prevTime) => {
+        GameWorld.createGameLoop((delta, lastDelta) => {
             this.pointerManager.update()
             this.canvasManager.clear()
             this._camera.update(() => {
-                this._updateCurrentScene(delta)
+                this._updateCurrentScene(delta, lastDelta)
             })
         })
     }

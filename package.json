@@ -1,11 +1,12 @@
 {
   "name": "rul2d",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/*"
+    "dist/*",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "rollup -c && rmdir /S /Q dist\\types",
@@ -18,6 +19,8 @@
     "engine",
     "2d",
     "typescript",
+    "html5",
+    "canvas",
     "rul2d"
   ],
   "author": "Rul",
@@ -35,7 +38,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rul991/rul2d.git"
+    "url": "git+https://github.com/Rul991/rul2d.git"
   },
   "publishConfig": {
     "access": "public"

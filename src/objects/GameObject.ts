@@ -4,14 +4,12 @@ import ISimpleRect from '../interfaces/ISimpleRect'
 import Search from '../utils/Search'
 import SimpleRect from '../utils/SimpleRect'
 import Sorting from "../utils/Sorting"
-import { Context, DrawablePointerable } from "../utils/types"
+import { Context } from "../utils/types"
 import Camera from './Camera'
 import DrawableObject from "./DrawableObject"
-import GameWorld from './GameWorld'
-import Rectangle from './Rectangle'
 
 export default abstract class GameObject extends DrawableObject implements IManager {
-    protected _objects: DrawableObject[]
+    protected _objects: DrawableObject[]    
 
     constructor() {
         super()

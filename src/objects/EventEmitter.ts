@@ -22,6 +22,8 @@ export default class EventEmitter<T extends Event = ValueEvent> extends CustomOb
         }
 
         let set: Set<EventCallback<T>> = this._events.get(key)!
+        
+        if (set.has(eventCallback)) return
         set.add(eventCallback)
     }
 
@@ -46,5 +48,10 @@ export default class EventEmitter<T extends Event = ValueEvent> extends CustomOb
         set.forEach(cb => {
             cb(event)
         })
+    }
+
+    emitDefault(key: string): void {
+        const event = new Event(key) as T
+        this.emit(event)
     }
 }

@@ -4,6 +4,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import createIndexPlugin from './create-index.js';
 import { argv } from 'process';
+import commonjs from '@rollup/plugin-commonjs';
 
 let name = 'index'
 if(argv.length > 3 && argv[3] == '--test') {
@@ -19,20 +20,22 @@ export default [
       {
         file: 'dist/index.mjs',
         format: 'esm',
+        format: 'iife',
       },
       {
         file: 'dist/index.cjs',
         format: 'cjs',
+        format: 'iife',
       },
     ],
     plugins: [
+      nodeResolve({browser: true}),
+      commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
         declaration: true,
         declarationDir: 'dist/types',
-        sourceMap: false,
       }),
-      nodeResolve({browser: true}),
       createIndexPlugin()
     ],
   },

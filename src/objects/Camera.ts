@@ -30,7 +30,7 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
                     deltaY = 0
                 }
 
-                camera.addPosition(deltaX / camera.zoom, deltaY / camera.zoom)
+                camera.addPosition(-deltaX / camera.zoom, -deltaY / camera.zoom)
             }
         })
 
@@ -89,13 +89,17 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
 
     get viewport(): Rectangle {
         let rect = new Rectangle(-this.x, -this.y, 1)
-        rect.setAngle(this._angle)
+        let angle: Angle = Angle.fromRadians(+this._angle)
+        rect.setAngle(angle)    
 
         if(!this._ctx) return rect
 
         const {width, height} = this._ctx.canvas
 
-        rect.setSize(width / this._zoom, height / this._zoom)
+        rect.setSize(
+            width  / this._zoom,
+            height / this._zoom
+        )
 
         return rect
     }
@@ -164,7 +168,7 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
     translate(): void {
         let {x, y} = this._position
         this.doIfContextExist(ctx => {
-            ctx.translate(-x, -y)
+            ctx.translate(x * this.zoom, y * this.zoom)
         })
     }
 
@@ -175,6 +179,7 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
     }
 
     rotate(): void {
+        if(!this._angle.radians) return
         this.doIfContextExist(ctx => {
             let {center: {x, y}} = this.viewport
             ctx.translate(x, y)
@@ -197,7 +202,7 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
         this.scale()
         this.rotate()
         this.updateSmoothing()
-        callback(this._ctx  )
+        callback(this._ctx)
         this.end()
     }
 

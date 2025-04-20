@@ -17,6 +17,7 @@ export type PointerCallback = (point: Point) => void
 
 export type CurrentRoot = null | IRoot
 export type SmoothingQuality = 'low' | 'medium' | 'high'
+export type LocalStorageEmitKeys = 'init' | 'load' | 'set'
 
 // short names
 
