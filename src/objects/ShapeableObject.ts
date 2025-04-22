@@ -1,9 +1,12 @@
+import IAngleable from '../interfaces/IAngleable'
 import IRectangle from '../interfaces/IRectangle'
 import IShapeConfig from '../interfaces/IShapeConfig'
 import ISimplePoint from '../interfaces/ISimplePoint'
 import ISimpleRect from '../interfaces/ISimpleRect'
 import ISimpleSize from '../interfaces/ISimpleSize'
 import ISizeable from '../interfaces/ISizeable'
+import Angle from '../utils/Angle'
+import Size from '../utils/Size'
 import { Context, PointType } from '../utils/types'
 import Camera from './Camera'
 import DrawableObject from './DrawableObject'
@@ -11,7 +14,7 @@ import Point from './Point'
 import Rectangle from './Rectangle'
 import Shape from './Shape'
 
-export default class ShapeableObject extends DrawableObject implements IShapeConfig, IRectangle {
+export default class ShapeableObject extends DrawableObject implements IShapeConfig, IRectangle, IAngleable {
     protected _shape: Shape = new Rectangle
     
     constructor(x?: number, y?: number) {
@@ -22,6 +25,7 @@ export default class ShapeableObject extends DrawableObject implements IShapeCon
     get bottom(): number {
         return this.shape.bottom
     }
+
     get right(): number {
         return this.shape.right
     }
@@ -78,7 +82,7 @@ export default class ShapeableObject extends DrawableObject implements IShapeCon
         this.shape.size = value
     }
 
-    get size(): ISizeable {
+    get size(): Size {
         return this.shape.size
     }
 
@@ -92,6 +96,14 @@ export default class ShapeableObject extends DrawableObject implements IShapeCon
     
     setShape(shape: Shape): void {
         this._shape = shape
+    }
+
+    setAngle(angle: Angle): void {
+        this.shape.setAngle(angle)
+    }
+
+    addAngle(angle: Angle): void {
+        this.setAngle(Angle.fromRadians(+this.shape.angle + +angle))
     }
 
     set shape(shape: Shape) {

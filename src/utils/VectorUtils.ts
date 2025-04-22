@@ -30,6 +30,18 @@ export default class VectorUtils {
         return first.x * second.x + first.y * second.y
     }
 
+    static normalize(point: ISimplePoint): ISimplePoint {
+        let {x, y} = point
+
+        let length = VectorUtils.magnitude(point)
+        if(!length) return {x: 0, y: 0}
+
+        return {
+            x: x / length,
+            y: y / length
+        }
+    }
+
     static createPointByCallback(first: ISimplePoint, second: ISimplePoint, callback: (first: number, second: number) => number): ISimplePoint {
         return {
             x: callback(first.x, second.x),
@@ -41,7 +53,7 @@ export default class VectorUtils {
         return this.createPointByCallback(first, second, (f, s) => f + s)
     }
 
-    static min(first: ISimplePoint, second: ISimplePoint): ISimplePoint {
+    static minus(first: ISimplePoint, second: ISimplePoint): ISimplePoint {
         return this.createPointByCallback(first, second, (f, s) => f - s)
     }
 

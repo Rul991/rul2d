@@ -42,7 +42,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this._color = Color.Green
         this._currentRootId = 0
         this._opacity = 1
-        this._zIndex = 0
+        this._zIndex = 1
         this._offset = {x: 0, y: 0}
     }
 
@@ -53,7 +53,9 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     }
 
     get zIndex(): number {
-        return this._zIndex
+        let rootIndex = 0
+        if(this.root) rootIndex = this.root.zIndex
+        return this._zIndex + rootIndex
     }
 
     set zIndex(z: number) {
@@ -74,11 +76,11 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this.isVisible = value
     }
 
-    setColor(color: Color) {
+    setColor(color: Color): void {
         this._color = color
     }
 
-    setOffset(x: number, y: number) {
+    setOffset(x: number, y: number): void {
         this._offset.x = x
         this._offset.y = y
     }

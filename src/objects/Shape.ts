@@ -18,6 +18,22 @@ import Camera from './Camera'
 import Point from "./Point"
 
 export default class Shape extends Point implements IRectangle, IAngleable {
+    static rotatePoints(corners: Point[], angle: Angle, center: Point): Point[] {
+        const radians = +angle
+        const cos = Math.cos(radians)
+        const sin = Math.sin(radians)
+
+        return corners.map(point => {
+            const translated = VectorUtils.minus(point, center)
+            const rotated = new Point(
+                translated.x * cos - translated.y * sin,
+                translated.x * sin + translated.y * cos
+            )
+
+            return Point.fromSimplePoint(VectorUtils.plus(rotated, center))
+        })
+    }
+
     static cosBounds: Bounds = new Bounds(-1, 1)
 
     protected _isCachedValueExist: boolean = false
@@ -133,7 +149,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         )
     }
 
-    get center(): PointType {
+    get center(): Point {
         let {x: cx, y: cy} = this._size.center
         return new Point(
             this.x + cx,
@@ -231,7 +247,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     isBoxesIntersects(other: ISimpleRect): boolean {
         let box = this.getBox()
 
-        return box.x < other.x + other.width && box.x + box.width > other.x && box.y < other.y + other.height && box.y + box.height > other.y
+        return box.x <= other.x + other.width && box.x + box.width >= other.x && box.y <= other.y + other.height && box.y + box.height >= other.y
     }
 
     isPointInShape(point: Point): boolean {
@@ -271,7 +287,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
 
     drawTransformed(ctx: Context, cb: (x: number, y: number, width: number, height: number) => void) {
         const {width, height} = this.size
-        const {x, y} = this
+        const {x, y} = this.center
 
         ctx.save()
         ctx.translate(x, y)

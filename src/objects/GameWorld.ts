@@ -55,8 +55,6 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         this.keyStateManager = new KeyStateManager()
         this.keyStateManager.setManager(this.downKeyboardManager, this.upKeyboardManager)
 
-        this.pointerManager = new PointerInputManager()
-
         this._canvasManager = new CanvasManager()
         this._canvas = this._canvasManager.create({root, size})
         this._ctx = this._canvasManager.getContext()!
@@ -64,10 +62,17 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         this._camera = camera ?? new Camera()
         this._camera.setContext(this._ctx)
 
+        this.pointerManager = new PointerInputManager()
+        this.pointerManager.setCamera(this._camera)
+
         this._gameScenes = new Map
         this._currentScene = null
 
         this.isUseCulling = useCulling
+    }
+
+    get zIndex(): number {
+        return 1
     }
 
     get inheritOpacity(): number {
@@ -144,6 +149,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         GameWorld.createGameLoop((delta, lastDelta) => {
             this.pointerManager.update()
             this.canvasManager.clear()
+            this._camera.updatePosition()
             this._camera.update(() => {
                 this._updateCurrentScene(delta, lastDelta)
             })

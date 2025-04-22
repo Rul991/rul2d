@@ -5,6 +5,8 @@ import IRectangle from "../interfaces/IRectangle"
 import ISimpleRect from "../interfaces/ISimpleRect"
 import Point from '../objects/Point'
 import DrawableObject from '../objects/DrawableObject'
+import Shape from '../objects/Shape'
+import ShapeableObject from '../objects/ShapeableObject'
 
 // callbacks
 export type Callback = () => void
@@ -18,6 +20,7 @@ export type PointerCallback = (point: Point) => void
 export type CurrentRoot = null | IRoot
 export type SmoothingQuality = 'low' | 'medium' | 'high'
 export type LocalStorageEmitKeys = 'init' | 'load' | 'set'
+export type FollowedCameraObject = DrawablePointerable | Shape | ShapeableObject | null 
 
 // short names
 

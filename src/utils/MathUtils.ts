@@ -1,6 +1,10 @@
 import IMinMax from '../interfaces/IMinMax';
 
 export default class MathUtils {
+    static lerp(value: number, target: number, factor: number): number {
+        return value + (target - value) * factor
+    }
+
     static floor(x: number, afterDot: number = 0): number {
         return MathUtils.updateWithAfterDotNumber(x, afterDot, Math.floor)
     }

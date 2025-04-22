@@ -1,10 +1,9 @@
-import IEventEmitter from "../interfaces/IEventEmitter"
 import { Dict, EventCallback } from "../utils/types"
 import IEventOptions from "../interfaces/IEventOptions"
 import CustomObject from "./CustomObject"
 import ValueEvent from '../events/ValueEvent'
 
-export default class EventEmitter<T extends Event = ValueEvent> extends CustomObject implements IEventEmitter<T> {
+export default class EventEmitter<T extends Event = ValueEvent, K extends string = string> extends CustomObject {
     protected _events: Dict<Set<EventCallback<T>>>
 
     constructor() {
@@ -12,7 +11,7 @@ export default class EventEmitter<T extends Event = ValueEvent> extends CustomOb
         this._events = new Map()
     }
 
-    on(key: string, callback: EventCallback<T>, {isOnce}: IEventOptions = {}): void {
+    on(key: K, callback: EventCallback<T>, {isOnce}: IEventOptions = {}): void {
         if(!this._events.has(key)) this._events.set(key, new Set())
 
         let eventCallback: EventCallback<T> = callback
@@ -27,11 +26,11 @@ export default class EventEmitter<T extends Event = ValueEvent> extends CustomOb
         set.add(eventCallback)
     }
 
-    once(key: string, callback: EventCallback<T>): void {
+    once(key: K, callback: EventCallback<T>): void {
         this.on(key, callback, {isOnce: true})
     }
 
-    off(key: string, callback: EventCallback<T>): boolean {
+    off(key: K, callback: EventCallback<T>): boolean {
         let set = this._events.get(key)
 
         if(!set) return false

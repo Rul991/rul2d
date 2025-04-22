@@ -3,13 +3,15 @@ import { SearchCallback } from "./types"
 
 export default class Sorting {
     static addToArray<T>(arr: T[], value: T, callback: SearchCallback<T> = obj => +obj): number {
-        if(!arr.length) {
-            arr.push(value)
-            return 0
-        }
+        // if(!arr.length) {
+        //     arr.push(value)
+        //     return 0
+        // }
 
         let index = Search.findInsertPosition(arr, value, callback)
         arr.splice(index, 0, value)
+
+        console.log(index, value)
         
         return index
     }

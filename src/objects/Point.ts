@@ -14,6 +14,10 @@ export default class Point extends DrawableObject implements IPointerable {
     static get NaN(): Point {
         return new Point(NaN)
     }
+
+    static fromSimplePoint({x, y}: ISimplePoint): Point {
+        return new Point(x, y)
+    }
     
     static drawRadius: number = 3
 

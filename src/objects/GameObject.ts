@@ -23,6 +23,8 @@ export default abstract class GameObject extends DrawableObject implements IMana
             return false
         }
         Sorting.addToArray(this._objects, object, obj => obj.zIndex)
+        // this._objects.push(object)
+        // this.updateZIndex()
         object.root = this
         object.managers.add(this)
 

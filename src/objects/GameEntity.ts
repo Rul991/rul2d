@@ -20,6 +20,7 @@ export default class GameEntity extends GameObject implements IPointerable {
 
         this._position = new Point(x, y)
         this._factRect = new CachedValue(new SimpleRect())
+        this._factRect.setUpdateCallback(() => this._updateFactRect())
     }
 
     addObject(object: DrawablePointerable): boolean {
@@ -94,8 +95,6 @@ export default class GameEntity extends GameObject implements IPointerable {
         let y: number = Infinity
         let bottom: number = -Infinity
 
-
-
         let width: number = right - x
         let height: number = bottom - y
 
@@ -122,7 +121,7 @@ export default class GameEntity extends GameObject implements IPointerable {
     }
 
     update(delta: number): void {
-        super.update(delta)
+        this._update(delta)
         this.updateObjectsPosition()
     }
 }

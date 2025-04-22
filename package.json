@@ -1,6 +1,6 @@
 {
   "name": "rul2d",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "rollup -c && rmdir /S /Q dist\\types",
-    "watch": "nodemon --ext ts -w src --exec \"npm run dev\" --ignore index.ts",
+    "test": "nodemon --ext ts -w src --exec \"npm run dev\" --ignore index.ts",
     "prepublish": "npm run build",
     "dev": "rollup -c --test"
   },
@@ -25,7 +25,7 @@
   ],
   "author": "Rul",
   "license": "MIT",
-  "description": "Rul2d is a powerful and flexible TypeScript library for creating games using HTML5 Canvas. It provides tools for rendering graphical objects, managing scenes, animations, handling input events (mouse and keyboard).",
+  "description": "Rul2d is a powerful and flexible TypeScript library for creating games using HTML5 Canvas.",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",

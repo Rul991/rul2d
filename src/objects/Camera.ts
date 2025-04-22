@@ -4,8 +4,11 @@ import ISimpleCamera from "../interfaces/ISimpleCamera"
 import ISimplePoint from "../interfaces/ISimplePoint"
 import Angle from "../utils/Angle"
 import Bounds from "../utils/Bounds"
+import MathUtils from '../utils/MathUtils'
 import { Callback, Canvas, Context, PointType, SmoothingQuality } from "../utils/types"
+import VectorUtils from '../utils/VectorUtils'
 import CustomObject from "./CustomObject"
+import DrawableObject from './DrawableObject'
 import Point from "./Point"
 import Rectangle from './Rectangle'
 
@@ -41,10 +44,12 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
     protected _zoom: number
     protected _zoomLimit: Bounds
     protected _position: Point
+    protected _targetPosition: Point
     protected _angle: Angle
 
     protected _smoothingEnabled: boolean
     protected _smoothingQuality: SmoothingQuality
+    protected _lerpFactor: number
 
     constructor(ctx?: Context) {
         super()
@@ -53,11 +58,17 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
         this._zoom = 1
         this._ctx = null
         this._position = new Point
+        this._targetPosition = new Point
         this._angle = new Angle()
         this._smoothingEnabled = false
         this._smoothingQuality = 'low'
+        this._lerpFactor = 0.5
 
         if(ctx) this.setContext(ctx)
+    }
+
+    setSmoothFactor(factor: number) {
+        this._lerpFactor = DrawableObject.opacityBounds.get(factor)
     }
 
     setSmoothing(enabled: boolean, quality: SmoothingQuality): void {
@@ -106,7 +117,7 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
 
     set x(value: number) {
         let {y} = this._position
-        this._position.setPosition(value, y)
+        this._targetPosition.setPosition(value, y)
     }
 
     get x(): number {
@@ -115,7 +126,7 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
 
     set y(value: number) {
         let {x} = this._position
-        this._position.setPosition(x, value)
+        this._targetPosition.setPosition(x, value)
     }
 
     get y(): number {
@@ -131,23 +142,41 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
     }
 
     set point(value: PointType) {
-        this._position.point = value
+        this._targetPosition.point = value
     }
 
     get point(): PointType {
         return this._position.point
     }
 
+    updatePosition(): void {
+        const t = this._lerpFactor
+        let {x, y} = VectorUtils.minus(
+            this._targetPosition,
+            this._position
+        )
+
+        if(t == 1) {
+            this._position.point = this._targetPosition
+        }
+        else {
+            this._position.setPosition(
+                MathUtils.lerp(this.x, x, t),
+                MathUtils.lerp(this.y, y, t),
+            )
+        }
+    }
+
     setPosition(x?: number, y?: number): void {
-        this._position.setPosition(x, y)
+        this._targetPosition.setPosition(x, y)
     }
 
     addPosition(x: number, y: number): void {
-        this._position.addPosition(x, y)
+        this._targetPosition.addPosition(x, y)
     }
 
     move(point: ISimplePoint, delta: number): void {
-        this._position.move(point, delta)
+        this._targetPosition.move(point, delta)
     }
 
     doIfContextExist(cb: (ctx: Context) => void): void {

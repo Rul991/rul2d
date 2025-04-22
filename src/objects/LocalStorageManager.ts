@@ -3,7 +3,7 @@ import IEventOptions from '../interfaces/IEventOptions'
 import { EventCallback, LocalStorageEmitKeys } from '../utils/types'
 import EventEmitter from './EventEmitter'
 
-export default class LocalStorageManager<T extends Record<string, any>> extends EventEmitter<StorageEvent<T>> {
+export default class LocalStorageManager<T extends Record<string, any>> extends EventEmitter<StorageEvent<T>, LocalStorageEmitKeys> {
     private _name: string
     private _value: Partial<T>
     private _isLoaded: boolean
@@ -45,7 +45,14 @@ export default class LocalStorageManager<T extends Record<string, any>> extends 
         localStorage.setItem(this._name, JSON.stringify(this._value))
     }
 
-    get<K extends keyof T>(key: K, defaultValue: T[K] | null = null): T[K] | null {
+    setAll<K extends keyof T>(obj: Partial<T>): void {
+        this._load()
+        for (const [key, value] of Object.entries(obj) as [K, T[K]][]) {
+            this.set(key, value)
+        }
+    }
+
+    get<K extends keyof T>(key: K, defaultValue?: T[K]): T[K] | undefined {
         this._load()
         return this._value[key] ?? defaultValue
     }
@@ -53,18 +60,6 @@ export default class LocalStorageManager<T extends Record<string, any>> extends 
     getAll(): Partial<T> {
         this._load()
         return this._value
-    }
-
-    on(key: LocalStorageEmitKeys, callback: EventCallback<StorageEvent<T>>, options?: IEventOptions): void {
-        super.on(key, callback, options)
-    }
-
-    once(key: LocalStorageEmitKeys, callback: EventCallback<StorageEvent<T>>): void {
-        super.once(key, callback)
-    }
-
-    off(key: LocalStorageEmitKeys, callback: EventCallback<StorageEvent<T>>): boolean {
-        return super.off(key, callback)
     }
 
     emitDefault(key: string): void {

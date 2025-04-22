@@ -130,3 +130,6 @@ world.log()
 ## Links
 
 - **`Changelog`**: [*click*](CHANGELOG.md)
+- **`Documentation`**:
+  - English: [*click*](docs/en.md)
+  - Русская: [*click*](docs/ru.md)

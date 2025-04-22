@@ -27,7 +27,7 @@ export default class PointerInputManager extends CustomObject implements IManage
         this._camera = null
     }
 
-    private _setCursorPoint(e: PointerEvent): void {
+    private _setCursorPoint(e: WheelEvent | PointerEvent): void {
         this._cursorPosition.point = this._createPoint(e)
     }
 
@@ -35,7 +35,7 @@ export default class PointerInputManager extends CustomObject implements IManage
         return e.pointerId - 1
     }
 
-    private _createPoint(e: PointerEvent): Point {
+    private _createPoint(e: WheelEvent | PointerEvent): Point {
         let point = new Point(e.offsetX, e.offsetY)
         return this._updatePointWithCamera(point)
     }
@@ -61,7 +61,7 @@ export default class PointerInputManager extends CustomObject implements IManage
         this._isPressed = this._pointerables.length > 0
     }
 
-    private _allControlsEventCallback(e: PointerEvent): void {
+    private _allControlsEventCallback(e: WheelEvent | PointerEvent): void {
         this._setCursorPoint(e)
     }
 
@@ -77,7 +77,7 @@ export default class PointerInputManager extends CustomObject implements IManage
         if(!this._camera) return point
 
         const {x, y} = point
-        const getUpdatedCoordinate = (position: number, cameraPosition: number) => position / this._camera!.zoom - cameraPosition
+        const getUpdatedCoordinate = (cursorPosition: number, cameraPosition: number) => cursorPosition / this._camera!.zoom - cameraPosition
         return new Point(
             getUpdatedCoordinate(x, this._camera.x),
             getUpdatedCoordinate(y, this._camera.y),
@@ -120,6 +120,10 @@ export default class PointerInputManager extends CustomObject implements IManage
 
         canvas.addEventListener('pointerout', e => {
             this._upEventCallback(e)
+            this._allControlsEventCallback(e)
+        })
+
+        canvas.addEventListener('wheel', e => {
             this._allControlsEventCallback(e)
         })
     }

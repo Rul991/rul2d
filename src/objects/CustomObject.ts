@@ -1,4 +1,4 @@
-export default class CustomObject {
+export default abstract class CustomObject {
     private static createdObjectsCount: number = 0
     private _id: number
 
