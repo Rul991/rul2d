@@ -4,9 +4,10 @@ import ISimpleCamera from "../interfaces/ISimpleCamera"
 import ISimplePoint from "../interfaces/ISimplePoint"
 import Angle from "../utils/Angle"
 import Bounds from "../utils/Bounds"
-import MathUtils from '../utils/MathUtils'
+import Logging from '../utils/static/Logging'
+import MathUtils from '../utils/static/MathUtils'
 import { Callback, Canvas, Context, PointType, SmoothingQuality } from "../utils/types"
-import VectorUtils from '../utils/VectorUtils'
+import VectorUtils from '../utils/static/VectorUtils'
 import CustomObject from "./CustomObject"
 import DrawableObject from './DrawableObject'
 import Point from "./Point"
@@ -36,6 +37,8 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
                 camera.addPosition(-deltaX / camera.zoom, -deltaY / camera.zoom)
             }
         })
+
+        Logging.engineLog('added standard wheel listener for', camera)
 
         return true
     }
@@ -69,11 +72,13 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
 
     setSmoothFactor(factor: number) {
         this._lerpFactor = DrawableObject.opacityBounds.get(factor)
+        Logging.engineLog('set smooth factor', this._lerpFactor, this)
     }
 
     setSmoothing(enabled: boolean, quality: SmoothingQuality): void {
         this._smoothingEnabled = enabled ?? this._smoothingEnabled
         this._smoothingQuality = quality ?? this._smoothingQuality
+        Logging.engineLog('set smoothing', this)
     }
 
     updateSmoothing(): void {
@@ -83,6 +88,7 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
 
         ctx.imageSmoothingEnabled = this._smoothingEnabled
         ctx.imageSmoothingQuality = this._smoothingQuality
+        Logging.engineLog('update smoothing', ctx)
     }
 
     setAngle(angle: Angle): void {
@@ -111,6 +117,8 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
             width  / this._zoom,
             height / this._zoom
         )
+
+        Logging.engineLog(`get viewport`, rect, this)
 
         return rect
     }
@@ -165,6 +173,15 @@ export default class Camera extends CustomObject implements IPointerable, IAngle
                 MathUtils.lerp(this.y, y, t),
             )
         }
+    }
+
+    get position(): Point {
+        return this._position
+    }
+
+    setPositionInstant(x?: number, y?: number): void {
+        this._position.setPosition(x, y)
+        this.setPosition(x, y)
     }
 
     setPosition(x?: number, y?: number): void {

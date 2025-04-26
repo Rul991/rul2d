@@ -1,5 +1,5 @@
 import IShapeConfig from '../interfaces/IShapeConfig'
-import MathUtils from '../utils/MathUtils'
+import MathUtils from '../utils/static/MathUtils'
 import Size from '../utils/Size'
 import { Context, DrawablePointerable, FollowedCameraObject } from '../utils/types'
 import Camera from './Camera'

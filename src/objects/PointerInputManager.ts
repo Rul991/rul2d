@@ -3,8 +3,8 @@ import { Canvas, SearchCallback } from '../utils/types'
 import PointerableObject from './PointerableObject'
 import Point from './Point'
 import CustomObject from './CustomObject'
-import Sorting from '../utils/Sorting'
-import Search from '../utils/Search'
+import Sorting from '../utils/static/Sorting'
+import Search from '../utils/static/Search'
 import Camera from './Camera'
 
 export default class PointerInputManager extends CustomObject implements IManager {

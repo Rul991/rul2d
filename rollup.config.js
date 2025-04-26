@@ -5,10 +5,14 @@ import typescript from '@rollup/plugin-typescript';
 import createIndexPlugin from './create-index.js';
 import { argv } from 'process';
 import commonjs from '@rollup/plugin-commonjs';
+import terser from '@rollup/plugin-terser';
 
 let name = 'index'
+let minFunction = terser
+
 if(argv.length > 3 && argv[3] == '--test') {
   name = 'test'
+  minFunction = (options) => ({})
 }
 
 export default [
@@ -18,15 +22,10 @@ export default [
     input: `src/${name}.ts`,
     output: [
       {
-        file: 'dist/index.mjs',
-        format: 'esm',
-        format: 'iife',
-      },
-      {
-        file: 'dist/index.cjs',
-        format: 'cjs',
-        format: 'iife',
-      },
+        file: 'dist/index.js',
+        format: 'umd',
+        name: 'rul2d'
+      }
     ],
     plugins: [
       nodeResolve({browser: true}),
@@ -36,7 +35,8 @@ export default [
         declaration: true,
         declarationDir: 'dist/types',
       }),
-      createIndexPlugin()
+      createIndexPlugin(),
+      minFunction()
     ],
   },
 

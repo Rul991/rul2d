@@ -13,7 +13,7 @@ import Color from '../utils/Color'
 import SimpleRect from '../utils/SimpleRect'
 import Size from "../utils/Size"
 import { Context, PointType } from "../utils/types"
-import VectorUtils from '../utils/VectorUtils'
+import VectorUtils from '../utils/static/VectorUtils'
 import Camera from './Camera'
 import Point from "./Point"
 

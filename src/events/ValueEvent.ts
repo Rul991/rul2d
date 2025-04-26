@@ -1,3 +1,3 @@
-export default class ValueEvent extends Event {
-    public value: any
+export default class ValueEvent<T = any> extends Event {
+    public value?: T
 }

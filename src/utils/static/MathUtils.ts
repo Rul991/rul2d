@@ -1,4 +1,4 @@
-import IMinMax from '../interfaces/IMinMax';
+import IMinMax from '../../interfaces/IMinMax';
 
 export default class MathUtils {
     static lerp(value: number, target: number, factor: number): number {

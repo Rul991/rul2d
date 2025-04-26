@@ -1,4 +1,4 @@
-import { SearchCallback } from "./types"
+import { SearchCallback } from "../types"
 
 export default class Search {
     static binary<T>(arr: T[], target: T, callback: SearchCallback<T> = obj => +obj): number {

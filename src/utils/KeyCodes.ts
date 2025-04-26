@@ -100,7 +100,7 @@ enum KeyCodes {
     Equal = "Equal"
 }
 
-export const FunctionKeys: KeyCodes[] = [
+export const FunctionKeys = [
     KeyCodes.AltLeft,
     KeyCodes.AltRight,
     KeyCodes.ShiftLeft,

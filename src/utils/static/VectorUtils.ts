@@ -1,5 +1,5 @@
-import ISimplePoint from "../interfaces/ISimplePoint"
-import Angle from "./Angle"
+import ISimplePoint from "../../interfaces/ISimplePoint"
+import Angle from "../Angle"
 
 export default class VectorUtils {
     static getAngle({x, y}: ISimplePoint, {x: x1, y: y1}: ISimplePoint): Angle {

@@ -1,5 +1,6 @@
 import StorageEvent from '../events/StorageEvent'
 import IEventOptions from '../interfaces/IEventOptions'
+import Logging from '../utils/static/Logging'
 import { EventCallback, LocalStorageEmitKeys } from '../utils/types'
 import EventEmitter from './EventEmitter'
 
@@ -23,7 +24,7 @@ export default class LocalStorageManager<T extends Record<string, any>> extends 
         let value = localStorage.getItem(this._name)
 
         if(!value) {
-            console.log(`LocalStorage "${this._name}" doesn't exist`)
+            Logging.warn(`LocalStorage "${this._name}" doesn't exist`)
             localStorage.setItem(this._name, '{}')
             this.emitDefault('init')
             return

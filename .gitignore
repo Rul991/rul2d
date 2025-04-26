@@ -8,3 +8,5 @@ index.html
 src/ignore
 .npmrc
 images/
+audio/
+jsons/

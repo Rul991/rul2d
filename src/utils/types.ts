@@ -20,6 +20,7 @@ export type PointerCallback = (point: Point) => void
 export type CurrentRoot = null | IRoot
 export type SmoothingQuality = 'low' | 'medium' | 'high'
 export type LocalStorageEmitKeys = 'init' | 'load' | 'set'
+export type CacheDictTypes = 'image' | 'text' | 'json'
 export type FollowedCameraObject = DrawablePointerable | Shape | ShapeableObject | null 
 
 // short names

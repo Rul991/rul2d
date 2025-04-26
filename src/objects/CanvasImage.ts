@@ -1,13 +1,14 @@
 import Angle from '../utils/Angle'
 import AssetsManager from '../utils/AssetsManager'
-import { Context } from '../utils/types'
+import SimpleRect from '../utils/SimpleRect'
+import { Callback, Context } from '../utils/types'
 import Rectangle from './Rectangle'
 import Shape from './Shape'
 import ShapeableObject from './ShapeableObject'
 
 export default class CanvasImage extends ShapeableObject {
     protected _cuttedImageBox: Rectangle | null
-    protected _image: HTMLImageElement | null
+    protected _image: HTMLImageElement
     protected _isLoaded: boolean
 
     constructor(x?: number, y?: number, width?: number, height?: number) {
@@ -15,7 +16,7 @@ export default class CanvasImage extends ShapeableObject {
         this.setSize(width, height)
 
         this._isLoaded = false
-        this._image = null
+        this._image = new Image
 
         this.eventEmitter.on('image-load', e => {
             this._isLoaded = true
@@ -24,6 +25,17 @@ export default class CanvasImage extends ShapeableObject {
         this._cuttedImageBox = null
 
         this.log()
+    }
+
+    doWhenLoaded(cb: Callback): void {
+        if(this.isLoaded()) {
+            cb()
+        }
+        else {
+            this.eventEmitter.once('image-load', e => {
+                cb()
+            })
+        }
     }
 
     setShape(shape: Shape): void {
@@ -38,7 +50,7 @@ export default class CanvasImage extends ShapeableObject {
             this._cuttedImageBox.setAngle(angle)
     }
 
-    cutImage(x: number, y: number, width: number, height: number): void {
+    cutImage({x, y, width, height}: SimpleRect): void {
         if(!this._cuttedImageBox) 
             this._cuttedImageBox = new Rectangle
 
@@ -56,7 +68,7 @@ export default class CanvasImage extends ShapeableObject {
         let image = await assets.loadImageFile(src)
 
         this.setImage(image)
-        this.eventEmitter.emitDefault('image-load')
+        image.addEventListener('load', e => this.eventEmitter.emitDefault('image-load'))
     }
 
     isLoaded(): boolean {

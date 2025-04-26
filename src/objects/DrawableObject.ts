@@ -5,6 +5,7 @@ import ISimplePoint from "../interfaces/ISimplePoint"
 import ISimpleRect from '../interfaces/ISimpleRect'
 import Bounds from "../utils/Bounds"
 import Color from "../utils/Color"
+import Logging from '../utils/static/Logging'
 import { Context, CurrentRoot, Dict, PointType } from "../utils/types"
 import Camera from './Camera'
 import CustomObject from "./CustomObject"
@@ -63,6 +64,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         for (const manager of this.managers) {
             manager.updateZIndex()
         }
+        Logging.engineLog('updated z-index', this)
     }
 
     get inheritOpacity(): number {
@@ -74,15 +76,19 @@ export default abstract class DrawableObject extends CustomObject implements IRo
 
     setVisibility(value: boolean): void {
         this.isVisible = value
+        Logging.engineLog(`update visibility: ${value}`, this)
     }
 
     setColor(color: Color): void {
         this._color = color
+        Logging.engineLog(`update color: ${color}`, this)
     }
 
     setOffset(x: number, y: number): void {
         this._offset.x = x
         this._offset.y = y
+
+        Logging.engineLog(`update offset: (${x} ${y})`, this)
     }
 
     abstract updatePositionByOffset(point: ISimplePoint): void 
@@ -105,6 +111,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
 
     set opacity(value: number) {
         this._opacity = DrawableObject.opacityBounds.get(value)
+        Logging.engineLog(`update opacity: (${this._opacity})`, this)
     }
 
     get opacity(): number {
@@ -113,6 +120,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
 
     set lineWidth(value: number) {
         this._lineWidth = DrawableObject.positiveNumberBounds.get(value)
+        Logging.engineLog(`update opacity: (${this._lineWidth})`, this)
     }
 
     get lineWidth(): number {
@@ -133,6 +141,8 @@ export default abstract class DrawableObject extends CustomObject implements IRo
 
         ctx.fillStyle = colorString
         ctx.strokeStyle = colorString
+
+        Logging.engineLog(`update color for context: (${ctx.fillStyle})`, this)
     }
 
     updateContextParameters(ctx: Context, color: Color = this._color): void {
@@ -140,17 +150,21 @@ export default abstract class DrawableObject extends CustomObject implements IRo
 
         ctx.lineWidth = this._lineWidth
         ctx.globalAlpha = this.inheritOpacity
+
+        Logging.engineLog(`update context parameters`, this)
     }
 
     init(world: GameWorld): void {
-        
+        Logging.engineLog(`initialized`, this)
     }
 
     needDraw(): boolean {
         return this.isInViewport && this.isVisible
     }
 
-    update(delta: number): void {}
+    update(delta: number): void {
+        Logging.engineLog(`updated(${delta})`, this)
+    }
 
     protected abstract _draw(ctx: Context): void
     abstract isObjectInViewport(camera: Camera): boolean
@@ -163,5 +177,6 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this._draw(ctx)
 
         ctx.restore()
+        Logging.engineLog(`drawed`, this)
     }
 }

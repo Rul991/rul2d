@@ -1,17 +1,13 @@
+import Logging from './Logging'
 import Search from "./Search"
-import { SearchCallback } from "./types"
+import { SearchCallback } from "../types"
 
 export default class Sorting {
     static addToArray<T>(arr: T[], value: T, callback: SearchCallback<T> = obj => +obj): number {
-        // if(!arr.length) {
-        //     arr.push(value)
-        //     return 0
-        // }
-
         let index = Search.findInsertPosition(arr, value, callback)
         arr.splice(index, 0, value)
 
-        console.log(index, value)
+        Logging.engineLog(index, value)
         
         return index
     }

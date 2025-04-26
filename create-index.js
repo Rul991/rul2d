@@ -18,9 +18,15 @@ const createIndex = async ({ filename, watchedDir }) => {
     for (const file of files) {
         const filePath = createPath(file)
         const className = createBasename(file)
+
         if((filePath.split('/').length - 1) <= 1) continue
 
-        const fileText = (await readFile(path.join(watchedDir, file))).toString()
+        const fileInWatchedDir = path.join(watchedDir, file)
+
+        const stats = await stat(fileInWatchedDir)
+        if(stats.isDirectory()) continue
+
+        const fileText = (await readFile(fileInWatchedDir)).toString()
 
         const isDefault = fileText.includes('default')
         

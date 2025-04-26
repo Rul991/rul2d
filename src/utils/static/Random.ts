@@ -1,5 +1,5 @@
 import MathUtils from "./MathUtils"
-import IMinMax from "../interfaces/IMinMax"
+import IMinMax from "../../interfaces/IMinMax"
 
 export default class Random {
     static number(max: number, afterDot: number = 0): number {

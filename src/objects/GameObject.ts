@@ -1,9 +1,10 @@
 import IManager from "../interfaces/IManager"
 import ISimplePoint from '../interfaces/ISimplePoint'
 import ISimpleRect from '../interfaces/ISimpleRect'
-import Search from '../utils/Search'
+import Logging from '../utils/static/Logging'
+import Search from '../utils/static/Search'
 import SimpleRect from '../utils/SimpleRect'
-import Sorting from "../utils/Sorting"
+import Sorting from "../utils/static/Sorting"
 import { Context } from "../utils/types"
 import Camera from './Camera'
 import DrawableObject from "./DrawableObject"
@@ -19,7 +20,7 @@ export default abstract class GameObject extends DrawableObject implements IMana
 
     addObject(object: DrawableObject): boolean {
         if(!object.canBeSubObject) {
-            console.warn('Cant be sub object', object)
+            Logging.warn('Cant be sub object', object)
             return false
         }
         Sorting.addToArray(this._objects, object, obj => obj.zIndex)

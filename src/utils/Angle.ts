@@ -1,7 +1,7 @@
 import IAngle from '../interfaces/IAngle';
 import IAngleable from '../interfaces/IAngleable';
 import CustomObject from '../objects/CustomObject';
-import MathUtils from './MathUtils';
+import MathUtils from './static/MathUtils';
 
 export default class Angle extends CustomObject implements IAngleable {
     static Pi = Math.PI

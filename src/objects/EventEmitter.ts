@@ -49,7 +49,7 @@ export default class EventEmitter<T extends Event = ValueEvent, K extends string
         })
     }
 
-    emitDefault(key: string): void {
+    emitDefault(key: K): void {
         const event = new Event(key) as T
         this.emit(event)
     }

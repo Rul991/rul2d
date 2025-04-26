@@ -15,4 +15,13 @@ export default class SimpleRect extends CustomObject implements ISimpleRect {
         this.width = width || 1
         this.height = height || this.width
     }
+
+    simplify() {
+        return {
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height
+        }
+    }
 }

@@ -1,8 +1,8 @@
 {
   "name": "rul2d",
-  "version": "2.1.3",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
+  "version": "2.1.4",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist/*",
@@ -10,8 +10,8 @@
   ],
   "scripts": {
     "build": "rollup -c && rmdir /S /Q dist\\types",
-    "test": "nodemon --ext ts -w src --exec \"npm run dev\" --ignore index.ts",
-    "prepublish": "npm run build",
+    "watch": "nodemon --ext ts -w src --exec \"npm run dev\" --ignore index.ts",
+    "prepublishOnly": "npm run build",
     "dev": "rollup -c --test"
   },
   "keywords": [
@@ -21,7 +21,8 @@
     "typescript",
     "html5",
     "canvas",
-    "rul2d"
+    "rul2d",
+    "rul"
   ],
   "author": "Rul",
   "license": "MIT",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/node": "^22.14.0",
     "rollup": "^4.39.0",

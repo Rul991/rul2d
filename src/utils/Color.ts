@@ -1,6 +1,6 @@
 import CustomObject from "../objects/CustomObject"
 import Bounds from "./Bounds"
-import Random from "./Random"
+import Random from "./static/Random"
 
 export default class Color extends CustomObject {
     static componentBounds = new Bounds(0, 255)
