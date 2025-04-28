@@ -9,4 +9,4 @@ src/ignore
 .npmrc
 images/
 audio/
-jsons/
+/jsons/

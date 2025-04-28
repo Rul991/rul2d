@@ -38,4 +38,8 @@ export default class Logging {
     static engineLog(...values: any[]): void {
         Logging.message(console.log, LoggingDebugLevel.EngineLog, ...values)
     }
+
+    static engineSpam(...values: any[]): void {
+        Logging.message(console.log, LoggingDebugLevel.EngineSpam, ...values)
+    }
 }

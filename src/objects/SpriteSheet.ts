@@ -7,6 +7,8 @@ import { Context } from '../utils/types'
 import CanvasImage from './CanvasImage'
 import Point from './Point'
 import Rectangle from './Rectangle'
+import JsonCanvasImage from '../interfaces/jsons/JsonCanvasImage'
+import JsonSpriteSheet from '../interfaces/jsons/JsonSpriteSheet'
 
 export default class SpriteSheet extends CanvasImage {
     protected _currentFrame: SimpleRect
@@ -28,6 +30,22 @@ export default class SpriteSheet extends CanvasImage {
     async loadImage(src: string): Promise<void> {
         await super.loadImage(src)
         this.setGrid(this._columns, this._rows)
+    }
+
+    protected async _loadJSONFromFile(result: JsonSpriteSheet): Promise<void> {
+        await super._loadJSONFromFile(result)
+
+        const {type, width, height} = result.size
+        
+        if(type == 'dimensions') {
+            this.setGridBySize(width, height)
+        }
+        else if(type == 'grid') {
+            this.setGrid(width, height)
+        }
+        else {
+            Logging.engineWarn(`There is not supported type: ${type}`, this)
+        }
     }
 
     setGrid(columns: number = 1, rows: number = 1): void {

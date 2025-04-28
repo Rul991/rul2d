@@ -18,30 +18,41 @@ export default abstract class GameObject extends DrawableObject implements IMana
         this._objects = []
     }
 
-    addObject(object: DrawableObject): boolean {
+    protected _addObjectToArray<T extends DrawableObject>(object: T, arr: T[]): boolean {
         if(!object.canBeSubObject) {
-            Logging.warn('Cant be sub object', object)
+            Logging.engineWarn('Cant be sub object', object)
             return false
         }
-        Sorting.addToArray(this._objects, object, obj => obj.zIndex)
-        // this._objects.push(object)
-        // this.updateZIndex()
+
+        Sorting.addToArray(arr, object, obj => obj.zIndex)
+        // arr.push(object)
+        // let sorted = Sorting.quick(arr, obj => obj.zIndex)
+        // arr.splice(0, arr.length, ...sorted)
+        
         object.root = this
         object.managers.add(this)
 
         return true
     }
 
-    removeObject(object: DrawableObject): boolean {
+    protected _removeObjectFromArray<T extends DrawableObject>(object: T, arr: T[]): boolean {
         let isDeleted: boolean = Boolean(object.root)
         if(!isDeleted) return false
 
         object.managers.delete(this)
 
-        let i = Search.binary(this._objects, object, obj => obj.zIndex)
+        let i = Search.binary(arr, object, obj => obj.zIndex)
         this._objects.splice(i, 1)
 
         return true
+    }
+
+    addObject(object: DrawableObject): boolean {
+        return this._addObjectToArray(object, this._objects)
+    }
+
+    removeObject(object: DrawableObject): boolean {
+        return this._removeObjectFromArray(object, this._objects)
     }
 
     forEach(callback = (obj: DrawableObject, index: number) => {}): void {

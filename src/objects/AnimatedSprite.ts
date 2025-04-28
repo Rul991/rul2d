@@ -1,3 +1,4 @@
+import JsonAnimatedSprite from '../interfaces/jsons/JsonAnimatedSprite'
 import SpriteAnimation from '../utils/animations/SpriteAnimation'
 import SpriteKeyFrame from '../utils/animations/SpriteKeyFrame'
 import SimpleRect from '../utils/SimpleRect'
@@ -28,8 +29,22 @@ export default class AnimatedSprite extends SpriteSheet {
         this.isPlaying = false
     }
 
-    protected _loadJSONFromFile<T extends Record<string, any> = Record<string, any>>(result: T): void {
+    protected async _loadJSONFromFile(result: JsonAnimatedSprite): Promise<void> {
+        await super._loadJSONFromFile(result)
         
+        const {animations} = result
+
+        Object.entries(animations).forEach(([key, keyframes]) => {
+            const animation = new SpriteAnimation
+            
+            keyframes.forEach(({x, y, duration})=> {
+                animation.add(
+                    new SpriteKeyFrame(x, y, duration)
+                )
+            })
+
+            this.setAnimation(key, animation)
+        })
     }
 
     play(key: string): void {
@@ -44,7 +59,7 @@ export default class AnimatedSprite extends SpriteSheet {
         this.isPlaying = false
     }
 
-    addAnimation(key: string, animation: SpriteAnimation): void {
+    setAnimation(key: string, animation: SpriteAnimation): void {
         this._animations.set(key, animation)
     }
 

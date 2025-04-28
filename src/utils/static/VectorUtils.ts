@@ -6,6 +6,13 @@ export default class VectorUtils {
         return Angle.from(Math.atan2(y1 - y, x1 - x))
     }
 
+    static getPerpendicular({x, y}: ISimplePoint): ISimplePoint {
+        return {
+            x: -y,
+            y: x
+        }
+    }
+
     static getDoubleDistance({x, y}: ISimplePoint, {x: x1, y: y1}: ISimplePoint): number {
         return (x - x1) ** 2 + (y - y1) ** 2
     }

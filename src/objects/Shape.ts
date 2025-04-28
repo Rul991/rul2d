@@ -16,6 +16,7 @@ import { Context, PointType } from "../utils/types"
 import VectorUtils from '../utils/static/VectorUtils'
 import Camera from './Camera'
 import Point from "./Point"
+import SAT from '../utils/static/SAT'
 
 export default class Shape extends Point implements IRectangle, IAngleable {
     static rotatePoints(corners: Point[], angle: Angle, center: Point): Point[] {
@@ -238,6 +239,17 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         this.fill(ctx)
     }
 
+    isShapesIntersects(shape: Shape): boolean {
+        if(!this.isBoxesIntersects(shape.getBox())) return false
+
+        for (const point of shape.getCorners()) {
+            if(this.isPointInShape(point))
+                return true
+        }
+
+        return SAT.checkIntersections(this, shape)
+    }
+
     isPointInBoundingBox(point: Point): boolean {
         let box = this.getBox()
 
@@ -258,31 +270,24 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         if(corners.length == 0) return false
         if(corners.length == 1) return (this.x == point.x) && (this.y == point.y)
         
-        let totalAngle: number = 0
+        const {x, y} = point
+        let inside = false
 
-        for (let i = 0; i < corners.length; i++) {
-            const a1 = corners[i]
-            const a2 = corners[(i + 1) % corners.length]
+        for (let i = 0, j = corners.length - 1; i < corners.length; j = i++) {
 
-            const v1 = new Point(a1.x - point.x, a1.y - point.y)
-            const v2 = new Point(a2.x - point.x, a2.y - point.y)
-
-            const dot = VectorUtils.dot(v1, v2)
-            const mag1 = VectorUtils.magnitude(v1)
-            const mag2 = VectorUtils.magnitude(v2)
-
-            const cosTheta = Shape.cosBounds.get(dot / (mag1 * mag2))
-            const cross = VectorUtils.cross(v1, v2)
-            let angle = Math.acos(cosTheta)
-
-            if(cross < 0) angle = -angle
-
-            totalAngle += angle
-        }
-
-        let a = Math.abs(totalAngle - (2 * Angle.Pi))
-
-        return a > 7
+            const {x: xi, y: yi} = corners[i]
+            const {x: xj, y: yj} = corners[j]
+        
+            const intersect =
+              ((yi > y) !== (yj > y)) &&
+              (x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
+        
+            if (intersect) {
+              inside = !inside
+            }
+          }
+        
+          return inside
     }
 
     drawTransformed(ctx: Context, cb: (x: number, y: number, width: number, height: number) => void) {

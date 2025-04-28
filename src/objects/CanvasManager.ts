@@ -80,7 +80,9 @@ export default class CanvasManager extends CustomObject {
         addEventListener('resize', e => this.resizeToClientRect())
     }
 
-    simplify(): {} {
-        return {}
+    simplify() {
+        return {
+            isContextNeedUpdate: this._isContextNeedUpdate
+        }
     }
 }

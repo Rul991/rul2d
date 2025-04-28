@@ -33,4 +33,11 @@ export default class CachedValue<T> extends CustomObject {
     update(): T {
         return this._updateCallback()
     }
+
+    simplify() {
+        return {
+            value: this._cachedValue,
+            isNeedUpdate: this._isNeedUpdate
+        }
+    }
 }

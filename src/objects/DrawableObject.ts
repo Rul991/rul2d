@@ -93,8 +93,8 @@ export default abstract class DrawableObject extends CustomObject implements IRo
 
     abstract updatePositionByOffset(point: ISimplePoint): void 
 
-    set offset(point: ISimplePoint) {
-        this.setOffset(point.x, point.y)
+    set offset({x, y}: ISimplePoint) {
+        this.setOffset(x, y)
     }
 
     get offset(): ISimplePoint {
@@ -117,7 +117,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     get opacity(): number {
         return this._opacity
     }
-
+    
     set lineWidth(value: number) {
         this._lineWidth = DrawableObject.positiveNumberBounds.get(value)
         Logging.engineLog(`update opacity: (${this._lineWidth})`, this)
@@ -142,7 +142,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         ctx.fillStyle = colorString
         ctx.strokeStyle = colorString
 
-        Logging.engineLog(`update color for context: (${ctx.fillStyle})`, this)
+        Logging.engineSpam(`update color for context: (${ctx.fillStyle})`, this)
     }
 
     updateContextParameters(ctx: Context, color: Color = this._color): void {
@@ -151,7 +151,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         ctx.lineWidth = this._lineWidth
         ctx.globalAlpha = this.inheritOpacity
 
-        Logging.engineLog(`update context parameters`, this)
+        Logging.engineSpam(`update context parameters`, this)
     }
 
     init(world: GameWorld): void {
@@ -163,7 +163,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     }
 
     update(delta: number): void {
-        Logging.engineLog(`updated(${delta})`, this)
+        Logging.engineSpam(`updated(${delta})`, this)
     }
 
     protected abstract _draw(ctx: Context): void
@@ -177,6 +177,6 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this._draw(ctx)
 
         ctx.restore()
-        Logging.engineLog(`drawed`, this)
+        Logging.engineSpam(`drawed`, this)
     }
 }

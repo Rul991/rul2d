@@ -141,23 +141,34 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
                 if(obj.isObjectInViewport(this.camera)) obj.isInViewport = true
                 else obj.isInViewport = false
             })
-
-        this._currentScene.draw(this._ctx)
     }
 
     private _update(): void {
         GameWorld.createGameLoop((delta, lastDelta) => {
+            if(!this._currentScene) return
+
             this.pointerManager.update()
             this.canvasManager.clear()
             this._camera.updatePosition()
+
+            this._updateCurrentScene(delta, lastDelta)
+
             this._camera.update(() => {
-                this._updateCurrentScene(delta, lastDelta)
+                this._currentScene!.draw(this._ctx)
             })
+            this._currentScene!.drawUI(this._ctx)
         })
     }
 
     start(): void {
         this.addControls()
         this._update()
+    }
+
+    simplify() {
+        return {
+            isUseCulling: this.isUseCulling,
+            camera: this._camera.simplify(),
+        }
     }
 }

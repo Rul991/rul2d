@@ -7,6 +7,7 @@ enum LoggingDebugLevel {
     EngineError,
     EngineWarn,
     EngineLog,
+    EngineSpam,
     Full
 }
 

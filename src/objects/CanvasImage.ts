@@ -1,3 +1,4 @@
+import JsonCanvasImage from '../interfaces/jsons/JsonCanvasImage'
 import Angle from '../utils/Angle'
 import AssetsManager from '../utils/AssetsManager'
 import SimpleRect from '../utils/SimpleRect'
@@ -25,6 +26,10 @@ export default class CanvasImage extends ShapeableObject {
         this._cuttedImageBox = null
 
         this.log()
+    }
+
+    protected async _loadJSONFromFile(result: JsonCanvasImage): Promise<void> {
+        await this.loadImage(result.src)
     }
 
     doWhenLoaded(cb: Callback): void {

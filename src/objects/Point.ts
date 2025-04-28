@@ -1,16 +1,17 @@
-import IPointerable from "../interfaces/IPointerable"
+import IPointable from "../interfaces/IPointable"
 import ISimpleDrawableObject from "../interfaces/ISimpleDrawableObject"
 import ISimplePoint from "../interfaces/ISimplePoint"
 import ISimpleRect from '../interfaces/ISimpleRect'
 import Angle from "../utils/Angle"
 import Color from "../utils/Color"
 import SimpleRect from '../utils/SimpleRect'
+import Logging from '../utils/static/Logging'
 import { Context, PointType } from "../utils/types"
 import Camera from './Camera'
 import DrawableObject from "./DrawableObject"
 import Rectangle from './Rectangle'
 
-export default class Point extends DrawableObject implements IPointerable {
+export default class Point extends DrawableObject implements IPointable {
     static get NaN(): Point {
         return new Point(NaN)
     }
@@ -34,7 +35,8 @@ export default class Point extends DrawableObject implements IPointerable {
     }
 
     get factRect(): ISimpleRect {
-        return new SimpleRect(this._x, this._y, 1)
+        let halfRadius = Point.drawRadius / 2
+        return new SimpleRect(this._x - halfRadius, this._y - halfRadius, Point.drawRadius * 2)
     }
 
     set x(value: number) {
@@ -66,6 +68,8 @@ export default class Point extends DrawableObject implements IPointerable {
             x + this.offset.x,
             y + this.offset.y
         )
+
+        Logging.engineSpam('new position by offset', this.point, this, this.offset)
     }
 
     setPosition(x?: number, y?: number): void {
@@ -81,7 +85,7 @@ export default class Point extends DrawableObject implements IPointerable {
         this.addPosition(x * delta, y * delta)
     }   
     
-    simplify(): ISimpleDrawableObject & ISimplePoint {
+    simplify() {
         return {
             ...super.simplify(),
             x: this._x,

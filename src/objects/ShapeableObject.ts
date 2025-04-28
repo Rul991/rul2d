@@ -118,6 +118,18 @@ export default class ShapeableObject extends DrawableObject implements IShapeCon
         return this.shape.factRect
     }
 
+    setOffset(x: number, y: number): void {
+        this.shape.setOffset(x, y)
+    }
+
+    set offset({x, y}: ISimplePoint) {
+        this.setOffset(x, y)
+    }
+    
+    get offset(): ISimplePoint {
+        return this.shape.offset
+    }
+
     protected _draw(ctx: Context): void {
         this.shape.draw(ctx)
     }

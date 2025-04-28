@@ -47,4 +47,12 @@ export default class PeriodicTimer extends Timer {
             this.reset()
         }
     }
+
+    simplify() {
+        return {
+            ...super.simplify(),
+            targetTime: this.targetTime,
+            currentTime: this.currentTime
+        }
+    }
 }

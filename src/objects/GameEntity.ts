@@ -1,4 +1,4 @@
-import IPointerable from "../interfaces/IPointerable"
+import IPointable from "../interfaces/IPointable"
 import ISimplePoint from "../interfaces/ISimplePoint"
 import ISimpleRect from '../interfaces/ISimpleRect'
 import CachedValue from '../utils/CachedValue'
@@ -11,7 +11,7 @@ import GameObject from "./GameObject"
 import Point from "./Point"
 import Rectangle from './Rectangle'
 
-export default class GameEntity extends GameObject implements IPointerable {
+export default class GameEntity extends GameObject implements IPointable {
     protected _position: Point
     protected _factRect: CachedValue<ISimpleRect>
 
@@ -25,8 +25,9 @@ export default class GameEntity extends GameObject implements IPointerable {
 
     addObject(object: DrawablePointerable): boolean {
         let isAdded = super.addObject(object)
-        if(isAdded) 
-            object.offset = this._position
+        if(isAdded) {
+            object.offset = object.point
+        }
 
         return isAdded
     }
@@ -95,12 +96,36 @@ export default class GameEntity extends GameObject implements IPointerable {
         let y: number = Infinity
         let bottom: number = -Infinity
 
+        this.forEach(obj => {
+            let newObj = obj as DrawablePointerable & {size?: Size}
+
+            if(newObj.point) {
+                let {x: px, y: py} = newObj.point
+
+                x = Math.min(px, x)
+                y = Math.min(py, y)
+
+                let width = 0
+                let height = 0
+
+                if(newObj.size) {
+                    let {width: w, height: h} = newObj.size
+
+                    width = w
+                    height = h
+                }
+
+                right = Math.max(px + width, right)
+                bottom = Math.max(py + height, bottom)  
+            }
+        })
+
         let width: number = right - x
         let height: number = bottom - y
 
         return new SimpleRect(
-            x,
-            y,
+            isFinite(x) ? x : 0,
+            isFinite(y) ? y : 0,
             isFinite(width) ? width : 1,
             isFinite(height) ? height : 1,
         )
@@ -113,14 +138,14 @@ export default class GameEntity extends GameObject implements IPointerable {
         return viewport.isBoxesIntersects(factRect)
     }
 
-    updatePositionByOffset({x, y}: ISimplePoint): void {
-        this._position.setPosition(
-            x + this._offset.x,
-            y + this._offset.y
-        )
+    updatePositionByOffset(point: ISimplePoint): void {
+        this._position.updatePositionByOffset(point)
+
+        this.updateObjectsPosition()
     }
 
     update(delta: number): void {
+        this._factRect.needUpdate(true)
         this._update(delta)
         this.updateObjectsPosition()
     }

@@ -1,0 +1,8 @@
+{
+    "src": "path/to/image",
+    "size": {
+        "type": "",  // grid or dimensions
+        "width": 12, // if type equal dimensions, its width, else if type equal grid, its columns
+        "height": 7  // if type equal dimensions, its height, else if type equal grid, its rows
+    }
+}

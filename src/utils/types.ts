@@ -1,4 +1,4 @@
-import IPointerable from "../interfaces/IPointerable"
+import IPointable from "../interfaces/IPointable"
 import IRoot from "../interfaces/IRoot"
 import ISimplePoint from "../interfaces/ISimplePoint"
 import IRectangle from "../interfaces/IRectangle"
@@ -14,6 +14,7 @@ export type SearchCallback<T> = (obj: T) => number | string
 export type EventCallback<T extends Event = Event> = (e: T) => void
 export type KeyboardEventCallback = EventCallback<KeyboardEvent>
 export type PointerCallback = (point: Point) => void
+export type Constructor<T = {}> = new (...args: any[]) => T
 
 // union
 
@@ -31,6 +32,6 @@ export type Dict<T> = Map<string, T>
 
 // intersections
 
-export type PointType = IPointerable & ISimplePoint
+export type PointType = IPointable & ISimplePoint
 export type RectType = IRectangle & ISimpleRect
 export type DrawablePointerable = DrawableObject & PointType

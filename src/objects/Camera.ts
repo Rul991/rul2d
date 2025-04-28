@@ -1,5 +1,5 @@
 import IAngleable from "../interfaces/IAngleable"
-import IPointerable from "../interfaces/IPointerable"
+import IPointable from "../interfaces/IPointable"
 import ISimpleCamera from "../interfaces/ISimpleCamera"
 import ISimplePoint from "../interfaces/ISimplePoint"
 import Angle from "../utils/Angle"
@@ -13,7 +13,7 @@ import DrawableObject from './DrawableObject'
 import Point from "./Point"
 import Rectangle from './Rectangle'
 
-export default class Camera extends CustomObject implements IPointerable, IAngleable {
+export default class Camera extends CustomObject implements IPointable, IAngleable {
     static addStandardWheelListener(camera: Camera): boolean {
         let { canvas } = camera
 

@@ -21,13 +21,11 @@ export default class Search {
     static findInsertPosition<T>(arr: T[], value: T, callback: SearchCallback<T> = obj => +obj): number {
         let left = 0
         let right = arr.length
-        let callbackValue
 
         while(left < right) {
             let mid = Math.floor((left + right) / 2)
-            callbackValue = callback(arr[mid])
 
-            if(callbackValue <= value) left = mid + 1
+            if(callback(arr[mid]) < callback(value)) left = mid + 1
             else right = mid
         }
 

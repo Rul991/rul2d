@@ -4,6 +4,11 @@ import { SearchCallback } from "../types"
 
 export default class Sorting {
     static addToArray<T>(arr: T[], value: T, callback: SearchCallback<T> = obj => +obj): number {
+        if(!arr.length) {
+            arr.push(value)
+            return 0
+        }
+
         let index = Search.findInsertPosition(arr, value, callback)
         arr.splice(index, 0, value)
 
@@ -53,9 +58,9 @@ export default class Sorting {
         if (arr.length <= 1) return arr
 
         const pivot = callback(arr[Math.floor(arr.length / 2)])
-        const left = []
-        const right = []
-        const equal = []
+        const  left: T[] = []
+        const right: T[] = []
+        const equal: T[] = []
     
         for (const element of arr) {
             const elementCallback = callback(element)

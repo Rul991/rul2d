@@ -1,0 +1,15 @@
+{
+    "src": "path/to/image",
+    "size": {
+        "type": "",  // grid or dimensions
+        "width": 12, // if type equal dimensions, its width, else if type equal grid, its columns
+        "height": 7  // if type equal dimensions, its height, else if type equal grid, its rows
+    },
+    "animations": {
+        "animationName": [
+            { "x": 0, "y": 5, "duration": 0.05}, // keyframe's x, y, duration
+            { "x": 1, "y": 5, "duration": 0.05},
+            { "x": 2, "y": 5, "duration": 0.05}
+        ]
+    }
+}

@@ -154,9 +154,6 @@ export default class BaseAudio extends CustomObject {
         Logging.engineLog('recreated source', this)
     }
 
-    // Какого то хрена функция не хочет воспроизводить сорсы больше 2 раз
-    // Ебаные приколы
-
     start(secs: number = 0): void {
         if(!this._audioSource.buffer) 
             return Logging.warn(AudioErrorMessage.NoBuffer)

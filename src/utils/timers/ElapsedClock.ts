@@ -33,4 +33,13 @@ export default class ElapsedClock extends Timer {
 
         return elapsedTime + this._accumulated_time
     }
+
+    simplify() {
+        return {
+            ...super.simplify(),
+            start: this._startTime,
+            accumulated: this._accumulated_time,
+            elapsed: this.getElapsedTime()
+        }
+    }
 }

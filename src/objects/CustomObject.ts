@@ -12,13 +12,16 @@ export default abstract class CustomObject {
     async loadJSONFromFile(src: string) {
         let assets = new AssetsManager()
 
-        let result = await assets.loadJSONFile(src)
-        this._loadJSONFromFile(result)
+        try {
+            let result = await assets.loadJSONFile(src)
+            await this._loadJSONFromFile(result)
+        }
+        catch(e) {
+            Logging.engineError('Cant load json from file', e, this)
+        }
     }
 
-    protected _loadJSONFromFile<T extends Record<string, any> = Record<string, any>>(result: T): void {
-
-    }
+    protected async _loadJSONFromFile(result: Record<string, any>): Promise<void> {}
 
     get id(): number {
         return this._id
@@ -45,6 +48,10 @@ export default abstract class CustomObject {
         result += '}'
 
         return result
+    }
+
+    toJSONString(): string {
+        return JSON.stringify(this.simplify())
     }
 
     valueOf(): number {

@@ -1,7 +1,7 @@
 import { PointType } from "../utils/types"
 import ISimplePoint from "./ISimplePoint"
 
-export default interface IPointerable {
+export default interface IPointable {
     set point(value: ISimplePoint)
     get point(): PointType
     set x(value: number)

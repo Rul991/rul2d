@@ -1,7 +1,7 @@
-import IPointerable from "./IPointerable";
+import IPointable from "./IPointable";
 import ISizeable from "./ISizeable";
 
-export default interface IRectangle extends ISizeable, IPointerable {
+export default interface IRectangle extends ISizeable, IPointable {
     get bottom(): number
     get right(): number
 }
