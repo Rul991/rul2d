@@ -1,4 +1,4 @@
-enum LoggingDebugLevel {
+enum LoggingLevel {
     None,
     Info,
     Error,
@@ -11,4 +11,4 @@ enum LoggingDebugLevel {
     Full
 }
 
-export default LoggingDebugLevel
+export default LoggingLevel

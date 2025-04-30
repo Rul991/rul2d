@@ -12,6 +12,7 @@ import CustomObject from "./CustomObject"
 import DrawableObject from './DrawableObject'
 import Point from "./Point"
 import Rectangle from './Rectangle'
+import LocalStorageManager from './LocalStorageManager'
 
 export default class Camera extends CustomObject implements IPointable, IAngleable {
     static addStandardWheelListener(camera: Camera): boolean {
@@ -41,6 +42,32 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
         Logging.engineLog('added standard wheel listener for', camera)
 
         return true
+    }
+
+    static loadCameraFromStorage(storage: LocalStorageManager<ISimpleCamera>, camera: Camera): void {
+        const x = storage.get('x', 0)!
+        const y = storage.get('y', 0)!
+        const zoom = storage.get('zoom', 1)!
+        
+        camera.zoom = zoom
+        camera.setPositionInstant(x, y)
+    }
+
+    static addStandardCameraSaver(storageName: string, camera: Camera): void {
+        const storage = new LocalStorageManager<ISimpleCamera>(storageName)
+
+        this.loadCameraFromStorage(storage, camera)
+
+        const {canvas} = camera
+
+        if(!canvas) return Logging.engineWarn('Camera hasnt canvas')
+
+        canvas.addEventListener('wheel', e => {
+            const {x, y} = camera.target
+            storage.set('x', x)
+            storage.set('y', y)
+            storage.set('zoom', camera.zoom)
+        })
     }
 
     protected _ctx: Context | null
@@ -177,6 +204,10 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
 
     get position(): Point {
         return this._position
+    }
+
+    get target(): Point {
+        return this._targetPosition
     }
 
     setPositionInstant(x?: number, y?: number): void {

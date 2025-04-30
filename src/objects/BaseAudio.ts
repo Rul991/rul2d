@@ -1,14 +1,18 @@
 import AudioErrorMessage from '../enums/error-messages/AudioErrorMessage'
 import ValueEvent from '../events/ValueEvent'
+import ISimplePoint from '../interfaces/ISimplePoint'
+import ISimpleRect from '../interfaces/ISimpleRect'
 import AssetsManager from '../utils/AssetsManager'
 import Bounds from '../utils/Bounds'
+import SimpleRect from '../utils/SimpleRect'
 import Logging from '../utils/static/Logging'
-import { Callback } from '../utils/types'
+import { Callback, Context } from '../utils/types'
+import Camera from './Camera'
 import CustomObject from './CustomObject'
 import DrawableObject from './DrawableObject'
 import EventEmitter from './EventEmitter'
 
-export default class BaseAudio extends CustomObject {
+export default class BaseAudio extends DrawableObject {
     static volumeBounds: Bounds = new Bounds(0, 10)
 
     protected _context: AudioContext
@@ -20,8 +24,6 @@ export default class BaseAudio extends CustomObject {
     protected _isInitialStarted: boolean
     protected _paused: boolean
     protected _loop: boolean
-    
-    public eventEmitter: EventEmitter
 
     constructor() {
         super()
@@ -143,7 +145,7 @@ export default class BaseAudio extends CustomObject {
 
     protected _recreateSource(): void {
         this._updateAllNodes(() => {
-                this._audioSource.stop()
+            this._audioSource.stop()
             this._audioSource.disconnect()
 
             let source = this._context.createBufferSource()
@@ -187,8 +189,21 @@ export default class BaseAudio extends CustomObject {
         Logging.engineLog('audio paused', this)
     }
 
+    get factRect(): ISimpleRect {
+        return new SimpleRect()
+    }
+
+    updatePositionByOffset(point: ISimplePoint): void {}
+
+    protected _draw(ctx: Context): void {}
+
+    isObjectInViewport(camera: Camera): boolean {
+        return true
+    }
+
     simplify() {
         return {
+            ...super.simplify(),
             volume: this.volume,
             loop: this.loop,
             src: this._src

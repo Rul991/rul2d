@@ -24,7 +24,7 @@
 - `AssetsManager` can cache audio and binary data
 - `AssetsManager` can clear cache
 - Added audio support with `BaseAudio`
-- Added logging class and logging level enum
+- Added `Logging` class and logging level enum
 - Some classes became logged
 - Added new enums for error messages
 - Added new classes:
@@ -48,3 +48,19 @@
 - Added collision checking support for `Shape`
 - Added new class: `SAT`
 - Updated `simplify` for some classes
+
+### 2.1.6
+
+- Added new classes: 
+  - `PositionedAudio`
+  - `StereoPositionedAudio`
+  - `RelativeShape`
+- Fixed bug with `GameEntity`'s factRect
+- Updated culling
+- Added new `Camera`'s static methods:
+  - `loadCameraFromStorage` - set camera's position and zoom from localStorage
+  - `addStandardCameraSaver` - save camera's position and zoom in localStorage
+- Changed `BaseAudio`'s parent to DrawableObject
+- Fixed `Shape`'s bug with empty corners' array
+- Added new enums:
+  - `DrawMode`

@@ -25,7 +25,7 @@ export default class Search {
         while(left < right) {
             let mid = Math.floor((left + right) / 2)
 
-            if(callback(arr[mid]) < callback(value)) left = mid + 1
+            if(callback(arr[mid]) <= callback(value)) left = mid + 1
             else right = mid
         }
 

@@ -22,7 +22,8 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     protected _currentRootId: number
     protected _offset: ISimplePoint
     protected _color: Color
-
+    protected _isInitialized: boolean
+    
     public isVisible: boolean
     public isInViewport: boolean
     public managers: Set<IManager>
@@ -38,9 +39,10 @@ export default abstract class DrawableObject extends CustomObject implements IRo
 
         this.isVisible = true
         this.isInViewport = true
+        this._isInitialized = false
 
         this._lineWidth = 1
-        this._color = Color.Green
+        this._color = Color.Blue
         this._currentRootId = 0
         this._opacity = 1
         this._zIndex = 1
@@ -154,7 +156,15 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         Logging.engineSpam(`update context parameters`, this)
     }
 
+    protected _init(world: GameWorld): void {
+        
+    }
+
     init(world: GameWorld): void {
+        if(this._isInitialized) return
+
+        this._isInitialized = true
+        this._init(world)
         Logging.engineLog(`initialized`, this)
     }
 

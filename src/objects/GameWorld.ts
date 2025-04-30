@@ -9,6 +9,7 @@ import {
 import Camera from './Camera';
 import CanvasManager from './CanvasManager';
 import CustomObject from './CustomObject';
+import GameObject from './GameObject'
 import GameScene from './GameScene';
 import KeyboardManager from './KeyboardManager';
 import KeyStateManager from './KeyStateManager'
@@ -100,7 +101,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         this._gameScenes.set(key, scene)
         scene.root = this
         scene.managers.add(this)
-        scene.init(this)
+        scene._init(this)
 
         if(!this._currentScene) this.setScene(key)
     }
@@ -137,10 +138,18 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         this._currentScene.update(delta)
 
         if(this.isUseCulling) 
-            this._currentScene.forEach(obj => {
-                if(obj.isObjectInViewport(this.camera)) obj.isInViewport = true
-                else obj.isInViewport = false
-            })
+            this._culling(this._currentScene)
+    }
+
+    private _culling(obj: GameObject): void {
+        obj.forEach(sub => {
+            if(sub instanceof GameObject) {
+                this._culling(sub)
+            }
+            
+            if(sub.isObjectInViewport(this.camera)) sub.isInViewport = true
+            else sub.isInViewport = false
+        })
     }
 
     private _update(): void {

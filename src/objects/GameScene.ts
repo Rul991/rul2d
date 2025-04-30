@@ -56,7 +56,7 @@ export default class GameScene extends GameObject {
         [...this._objects as GameEntity[], ...this._uiObjects].forEach(callback)
     }
 
-    init(world: GameWorld): void {
+    _init(world: GameWorld): void {
         this.forEach(obj => obj.init(world))
     }
 

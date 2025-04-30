@@ -22,15 +22,15 @@ class NewEntity extends GameEntity {
 
     init(world: GameWorld): void {
         
-        }
+    }
 
     protected _draw(ctx: Context): void {
         
-        }
+    }
 
     protected _update(delta: number): void {
         
-        }
+    }
 }
 
 class NewScene extends GameScene {
@@ -129,7 +129,9 @@ world.log()
 
 ## Links
 
-- **`Changelog`**: [*click*](CHANGELOG.md)
 - **`Documentation`**:
   - English: [*click*](docs/en.md)
   - Русская: [*click*](docs/ru.md)
+
+- **`Examples`**: [*click*](examples/)
+- **`Changelog`**: [*click*](CHANGELOG.md)

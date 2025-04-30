@@ -36,7 +36,7 @@ export default [
         declarationDir: 'dist/types',
       }),
       createIndexPlugin(),
-      minFunction()
+      minFunction({'keep_classnames': true, 'keep_fnames': true})
     ],
   },
 

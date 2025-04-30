@@ -97,27 +97,17 @@ export default class GameEntity extends GameObject implements IPointable {
         let bottom: number = -Infinity
 
         this.forEach(obj => {
-            let newObj = obj as DrawablePointerable & {size?: Size}
+            let factRect = obj.factRect
 
-            if(newObj.point) {
-                let {x: px, y: py} = newObj.point
+            let {x: fx, y: fy} = factRect
 
-                x = Math.min(px, x)
-                y = Math.min(py, y)
+                x = Math.min(fx, x)
+                y = Math.min(fy, y)
 
-                let width = 0
-                let height = 0
+                let {width, height} = factRect
 
-                if(newObj.size) {
-                    let {width: w, height: h} = newObj.size
-
-                    width = w
-                    height = h
-                }
-
-                right = Math.max(px + width, right)
-                bottom = Math.max(py + height, bottom)  
-            }
+                right = Math.max(fx + width, right)
+                bottom = Math.max(fy + height, bottom) 
         })
 
         let width: number = right - x

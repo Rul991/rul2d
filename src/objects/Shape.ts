@@ -17,9 +17,13 @@ import VectorUtils from '../utils/static/VectorUtils'
 import Camera from './Camera'
 import Point from "./Point"
 import SAT from '../utils/static/SAT'
+import Logging from '../utils/static/Logging'
+import DrawMode from '../enums/DrawMode'
 
 export default class Shape extends Point implements IRectangle, IAngleable {
     static rotatePoints(corners: Point[], angle: Angle, center: Point): Point[] {
+        if(+angle == 0) return corners
+        
         const radians = +angle
         const cos = Math.cos(radians)
         const sin = Math.sin(radians)
@@ -37,6 +41,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
 
     static cosBounds: Bounds = new Bounds(-1, 1)
 
+    protected _drawMode: DrawMode
     protected _isCachedValueExist: boolean = false
     protected _size: Size
     protected _cachedPath: CachedValue<Path2D>
@@ -58,6 +63,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         this._angle = new Angle()
         this._isCachedValueExist = true
         this._flipDirection = new Point(1)
+        this._drawMode = DrawMode.Fill
     }
 
     get bottom(): number {
@@ -67,6 +73,10 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     get right(): number {
         let {x, width} = this.getBox()
         return x + width
+    }
+
+    setDrawMode(mode: DrawMode): void {
+        this._drawMode = mode
     }
 
     flip(x: boolean, y: boolean) {
@@ -116,7 +126,14 @@ export default class Shape extends Point implements IRectangle, IAngleable {
 
     protected _updatePath(): Path2D {
         let path: Path2D = new Path2D()
-        let [firstCorner, ...corners] = this.getCorners()
+        let allCorners = this.getCorners()
+
+        if(!allCorners.length) {
+            Logging.engineWarn('no corners', this)
+            return path
+        }
+
+        let [firstCorner, ...corners] = allCorners
 
         path.moveTo(firstCorner.x, firstCorner.y)
 
@@ -236,7 +253,11 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     }
 
     protected _draw(ctx: Context): void {
-        this.fill(ctx)
+        if(this._drawMode == DrawMode.Fill)
+            this.fill(ctx)
+
+        else if(this._drawMode == DrawMode.Stroke)
+            this.stroke(ctx)
     }
 
     isShapesIntersects(shape: Shape): boolean {
