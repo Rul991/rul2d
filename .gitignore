@@ -10,3 +10,5 @@ src/ignore
 images/
 audio/
 /jsons/
+/txt/
+bugs.md

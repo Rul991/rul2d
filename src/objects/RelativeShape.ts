@@ -93,8 +93,7 @@ export default class RelativeShape extends Shape {
             )
         })
 
-        Logging.debug(this._relativePoints)
-
+        Logging.engineLog(this._relativePoints)
         Logging.engineLog('fitted relative shape', this)
 
         this.needUpdate()

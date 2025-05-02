@@ -57,7 +57,7 @@ export default class GameScene extends GameObject {
     }
 
     _init(world: GameWorld): void {
-        this.forEach(obj => obj.init(world))
+        this.forAll(obj => obj.init(world))
     }
 
     protected _draw(ctx: Context): void {

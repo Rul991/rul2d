@@ -60,7 +60,16 @@
 - Added new `Camera`'s static methods:
   - `loadCameraFromStorage` - set camera's position and zoom from localStorage
   - `addStandardCameraSaver` - save camera's position and zoom in localStorage
-- Changed `BaseAudio`'s parent to DrawableObject
+- Changed `BaseAudio`'s parent to `DrawableObject`
 - Fixed `Shape`'s bug with empty corners' array
 - Added new enums:
   - `DrawMode`
+
+### 2.1.7
+
+- Added new classes:
+  - `DrawableText` - draw text on canvas
+  - `RoundedRectangle` - draw rectangle with rounded corners on canvas
+- `CachedValue` can use one parameter for update which is passed via the `CachedValue.get`
+- `_drawMode_` replaced to `DrawableObject` from `Shape`
+- Fixed bug with uiObjects' `init` in `GameScene`

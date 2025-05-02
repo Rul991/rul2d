@@ -1,5 +1,4 @@
 import IPointable from "../interfaces/IPointable"
-import ISimpleDrawableObject from "../interfaces/ISimpleDrawableObject"
 import ISimplePoint from "../interfaces/ISimplePoint"
 import ISimpleRect from '../interfaces/ISimpleRect'
 import Angle from "../utils/Angle"
@@ -9,7 +8,6 @@ import Logging from '../utils/static/Logging'
 import { Context, PointType } from "../utils/types"
 import Camera from './Camera'
 import DrawableObject from "./DrawableObject"
-import Rectangle from './Rectangle'
 
 export default class Point extends DrawableObject implements IPointable {
     static get NaN(): Point {
@@ -75,6 +73,7 @@ export default class Point extends DrawableObject implements IPointable {
     setPosition(x?: number, y?: number): void {
         this._x = x ?? 0
         this._y = y ?? this._x
+        this.eventEmitter.emitDefault('update-position')
     }
 
     addPosition(x: number, y: number): void {

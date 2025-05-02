@@ -17,9 +17,10 @@ import Shape from './Shape'
 export default class ShapeableObject extends DrawableObject implements IShapeConfig, IRectangle, IAngleable {
     protected _shape: Shape = new Rectangle
     
-    constructor(x?: number, y?: number) {
+    constructor(x?: number, y?: number, width?: number, height?: number) {
         super()
         this.setPosition(x, y)
+        this.setSize(width, height)
     }
 
     get bottom(): number {

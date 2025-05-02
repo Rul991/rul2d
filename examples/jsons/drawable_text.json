@@ -1,0 +1,21 @@
+// text, font and font's properties optional
+{
+    "text": {
+        "type": "src", // src(for fetch text file) or text(for text)
+        "value": "path/to/file" // link or text
+    },
+
+    "font": {
+        "family": "Arial", // font-family
+        "size": 100, //px
+        "kerning": "auto", // font-kerning
+        "variant": "normal", // font-variant
+        "color": {"r": 0, "g": 0, "b": 0, "a": 255}, //fill style
+        "outlineColor": {"r": 255, "g": 255, "b": 255, "a": 255}, // stroke style
+        "letterSpacing": 0, //px
+        "stretch": "normal", // font-stretch
+        "tabSize": 4, //count of spaces
+        "horisontalAlign": "left", // or center or right
+        "verticalAlign": "top" // or middle or bottom
+    }
+}

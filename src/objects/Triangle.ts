@@ -2,8 +2,8 @@ import Point from './Point'
 import Shape from './Shape'
 
 export default class Triangle extends Shape {
-    constructor(x?: number, y?: number) {
-        super(x, y)
+    constructor(x?: number, y?: number, width?: number, height?: number) {
+        super(x, y, width, height)
     }
 
     protected _updateCorners(): Point[] {

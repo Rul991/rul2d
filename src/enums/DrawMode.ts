@@ -1,6 +1,7 @@
 enum ShapeDrawMode {
     Fill,
-    Stroke
+    Stroke,
+    All
 }
 
 export default ShapeDrawMode

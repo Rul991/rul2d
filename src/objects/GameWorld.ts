@@ -101,7 +101,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         this._gameScenes.set(key, scene)
         scene.root = this
         scene.managers.add(this)
-        scene._init(this)
+        scene.init(this)
 
         if(!this._currentScene) this.setScene(key)
     }
@@ -143,11 +143,13 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
 
     private _culling(obj: GameObject): void {
         obj.forEach(sub => {
-            if(sub instanceof GameObject) {
-                this._culling(sub)
+            if(sub.isObjectInViewport(this.camera)) {
+                sub.isInViewport = true
+
+                if(sub instanceof GameObject) {
+                    this._culling(sub)
+                }
             }
-            
-            if(sub.isObjectInViewport(this.camera)) sub.isInViewport = true
             else sub.isInViewport = false
         })
     }

@@ -12,7 +12,7 @@ import CachedValue from "../utils/CachedValue"
 import Color from '../utils/Color'
 import SimpleRect from '../utils/SimpleRect'
 import Size from "../utils/Size"
-import { Context, PointType } from "../utils/types"
+import { Callback, Context, PointType } from "../utils/types"
 import VectorUtils from '../utils/static/VectorUtils'
 import Camera from './Camera'
 import Point from "./Point"
@@ -41,7 +41,6 @@ export default class Shape extends Point implements IRectangle, IAngleable {
 
     static cosBounds: Bounds = new Bounds(-1, 1)
 
-    protected _drawMode: DrawMode
     protected _isCachedValueExist: boolean = false
     protected _size: Size
     protected _cachedPath: CachedValue<Path2D>
@@ -50,7 +49,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     protected _angle: Angle
     protected _flipDirection: Point
 
-    constructor(x?: number, y?: number) {
+    constructor(x?: number, y?: number, width?: number, height?: number) {
         super(x, y)
 
         this._size = new Size()
@@ -63,7 +62,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         this._angle = new Angle()
         this._isCachedValueExist = true
         this._flipDirection = new Point(1)
-        this._drawMode = DrawMode.Fill
+        this.setSize(width, height)
     }
 
     get bottom(): number {
@@ -73,10 +72,6 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     get right(): number {
         let {x, width} = this.getBox()
         return x + width
-    }
-
-    setDrawMode(mode: DrawMode): void {
-        this._drawMode = mode
     }
 
     flip(x: boolean, y: boolean) {
@@ -253,11 +248,10 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     }
 
     protected _draw(ctx: Context): void {
-        if(this._drawMode == DrawMode.Fill)
-            this.fill(ctx)
-
-        else if(this._drawMode == DrawMode.Stroke)
-            this.stroke(ctx)
+        this._executeCallbackByDrawMode(
+            () => this.fill(ctx),
+            () => this.stroke(ctx)
+        )
     }
 
     isShapesIntersects(shape: Shape): boolean {

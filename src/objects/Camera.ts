@@ -6,13 +6,14 @@ import Angle from "../utils/Angle"
 import Bounds from "../utils/Bounds"
 import Logging from '../utils/static/Logging'
 import MathUtils from '../utils/static/MathUtils'
-import { Callback, Canvas, Context, PointType, SmoothingQuality } from "../utils/types"
+import { Canvas, Context, PointType, SmoothingQuality } from "../utils/types"
 import VectorUtils from '../utils/static/VectorUtils'
 import CustomObject from "./CustomObject"
 import DrawableObject from './DrawableObject'
 import Point from "./Point"
 import Rectangle from './Rectangle'
 import LocalStorageManager from './LocalStorageManager'
+import CachedValue from '../utils/CachedValue'
 
 export default class Camera extends CustomObject implements IPointable, IAngleable {
     static addStandardWheelListener(camera: Camera): boolean {
@@ -73,6 +74,7 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
     protected _ctx: Context | null
     protected _zoom: number
     protected _zoomLimit: Bounds
+
     protected _position: Point
     protected _targetPosition: Point
     protected _angle: Angle
@@ -80,6 +82,8 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
     protected _smoothingEnabled: boolean
     protected _smoothingQuality: SmoothingQuality
     protected _lerpFactor: number
+
+    protected _cachedViewport: CachedValue<Rectangle>
 
     constructor(ctx?: Context) {
         super()
@@ -93,12 +97,14 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
         this._smoothingEnabled = false
         this._smoothingQuality = 'low'
         this._lerpFactor = 0.5
+        this._cachedViewport = new CachedValue(new Rectangle)
+        this._cachedViewport.setUpdateCallback(() => this._updateViewport())
 
         if(ctx) this.setContext(ctx)
     }
 
     setSmoothFactor(factor: number) {
-        this._lerpFactor = DrawableObject.opacityBounds.get(factor)
+        this._lerpFactor = DrawableObject.normalizedBounds.get(factor)
         Logging.engineLog('set smooth factor', this._lerpFactor, this)
     }
 
@@ -120,10 +126,12 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
 
     setAngle(angle: Angle): void {
         this._angle.setAngle(angle)
+        this._cachedViewport.needUpdate()
     }
 
     addAngle(angle: Angle): void {
         this._angle.addAngle(angle)
+        this._cachedViewport.needUpdate()
     }
 
     get canvas(): Canvas | null {
@@ -131,7 +139,11 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
         return this._ctx.canvas
     }
 
-    get viewport(): Rectangle {
+    setZoomLimit(min: number, max: number): void {
+        this._zoomLimit.set(min, max)
+    }
+
+    protected _updateViewport(): Rectangle {
         let rect = new Rectangle(-this.x, -this.y, 1)
         let angle: Angle = Angle.fromRadians(+this._angle)
         rect.setAngle(angle)    
@@ -145,9 +157,13 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
             height / this._zoom
         )
 
-        Logging.engineLog(`get viewport`, rect, this)
+        Logging.engineLog(`update viewport`, rect, this)
 
         return rect
+    }
+
+    get viewport(): Rectangle {
+        return this._cachedViewport.get()
     }
 
     set x(value: number) {
@@ -185,6 +201,8 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
     }
 
     updatePosition(): void {
+        const {x: tx, y: ty} = this._targetPosition
+        const {x: px, y: py} = this._position
         const t = this._lerpFactor
         let {x, y} = VectorUtils.minus(
             this._targetPosition,
@@ -234,6 +252,9 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
 
     setContext(ctx: Context): void {
         this._ctx = ctx
+        this._cachedViewport.needUpdate()
+        this._ctx.canvas.addEventListener('resize', e => this._cachedViewport.needUpdate())
+        // Я занимался тем, что делал кэширование для viewport
     }
 
     begin(): void {

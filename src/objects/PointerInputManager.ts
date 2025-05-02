@@ -86,8 +86,8 @@ export default class PointerInputManager extends CustomObject implements IManage
 
     addPointerable(obj: PointerableObject): void {
         obj.managers.add(this)
-        Sorting.addToArray(this._pointerables, obj, PointerInputManager._pointerableSortCallback)
-        // this.updateZIndex()
+        this._pointerables.push(obj)
+        this.updateZIndex()
     }
 
     removePointerable(obj: PointerableObject): void {

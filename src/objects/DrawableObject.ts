@@ -1,3 +1,4 @@
+import DrawMode from '../enums/DrawMode'
 import IManager from "../interfaces/IManager"
 import IRoot from "../interfaces/IRoot"
 import ISimpleDrawableObject from "../interfaces/ISimpleDrawableObject"
@@ -6,7 +7,7 @@ import ISimpleRect from '../interfaces/ISimpleRect'
 import Bounds from "../utils/Bounds"
 import Color from "../utils/Color"
 import Logging from '../utils/static/Logging'
-import { Context, CurrentRoot, Dict, PointType } from "../utils/types"
+import { Callback, Context, CurrentRoot } from "../utils/types"
 import Camera from './Camera'
 import CustomObject from "./CustomObject"
 import EventEmitter from "./EventEmitter"
@@ -14,7 +15,7 @@ import GameWorld from './GameWorld'
 
 export default abstract class DrawableObject extends CustomObject implements IRoot {
     static positiveNumberBounds: Bounds = new Bounds(Number.EPSILON, Number.MAX_SAFE_INTEGER)
-    static opacityBounds: Bounds = new Bounds(0, 1)
+    static normalizedBounds: Bounds = new Bounds(0, 1)
 
     protected _lineWidth: number
     protected _opacity: number
@@ -23,6 +24,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     protected _offset: ISimplePoint
     protected _color: Color
     protected _isInitialized: boolean
+    protected _drawMode: DrawMode
     
     public isVisible: boolean
     public isInViewport: boolean
@@ -47,6 +49,11 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this._opacity = 1
         this._zIndex = 1
         this._offset = {x: 0, y: 0}
+        this._drawMode = DrawMode.Fill
+    }
+
+    setDrawMode(mode: DrawMode): void {
+        this._drawMode = mode
     }
 
     abstract get factRect(): ISimpleRect
@@ -81,6 +88,11 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         Logging.engineLog(`update visibility: ${value}`, this)
     }
 
+    toggleVisibility(): boolean {
+        this.setVisibility(!this.isVisible)
+        return this.isVisible
+    }
+
     setColor(color: Color): void {
         this._color = color
         Logging.engineLog(`update color: ${color}`, this)
@@ -112,7 +124,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     }
 
     set opacity(value: number) {
-        this._opacity = DrawableObject.opacityBounds.get(value)
+        this._opacity = DrawableObject.normalizedBounds.get(value)
         Logging.engineLog(`update opacity: (${this._opacity})`, this)
     }
 
@@ -166,9 +178,10 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this._isInitialized = true
         this._init(world)
         Logging.engineLog(`initialized`, this)
+        Logging.debug('sosal?', this)
     }
 
-    needDraw(): boolean {
+    isNeedDraw(): boolean {
         return this.isInViewport && this.isVisible
     }
 
@@ -179,8 +192,28 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     protected abstract _draw(ctx: Context): void
     abstract isObjectInViewport(camera: Camera): boolean
 
+    protected _executeCallbackByDrawMode(fillCallback: Callback, strokeCallback: Callback): void {
+        switch (this._drawMode) {
+            case DrawMode.Fill:
+                fillCallback()
+                break
+
+            case DrawMode.Stroke:
+                strokeCallback()
+                break
+
+            case DrawMode.All:
+                fillCallback()
+                strokeCallback()
+                break
+        
+            default:
+                break
+        }
+    }
+
     draw(ctx: Context): void {
-        if(!this.needDraw()) return
+        if(!this.isNeedDraw()) return
         ctx.save()
 
         this.updateContextParameters(ctx)

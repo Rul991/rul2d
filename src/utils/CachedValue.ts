@@ -1,9 +1,9 @@
 import CustomObject from "../objects/CustomObject"
 
-export default class CachedValue<T> extends CustomObject {
+export default class CachedValue<T, V = undefined> extends CustomObject {
     private _cachedValue: T
     private _isNeedUpdate: boolean
-    private _updateCallback: () => T
+    private _updateCallback: (value?: V) => T
     
     constructor(defaultValue: T) {
         super()
@@ -21,17 +21,17 @@ export default class CachedValue<T> extends CustomObject {
         this._updateCallback = callback
     }
 
-    get(): T {
+    get(value?: V): T {
         if(this._isNeedUpdate) {
             this._isNeedUpdate = false
-            this._cachedValue = this.update()
+            this._cachedValue = this.update(value)
         }
 
         return this._cachedValue
     }
 
-    update(): T {
-        return this._updateCallback()
+    update(value?: V): T {
+        return this._updateCallback(value)
     }
 
     simplify() {

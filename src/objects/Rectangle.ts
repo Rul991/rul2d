@@ -47,31 +47,15 @@ export default class Rectangle extends Shape implements IRectangle {
     }
 
     protected _updateCorners(): Point[] {
-        let cos = Math.cos(+this._angle)
-        let sin = Math.sin(+this._angle)
-        let center = this.center
+        let {width, height} = this.size
+        let {x, y, center} = this
 
-        let {width, height} = this.size.simplify()
-
-        return [
-            new Point(
-                (-width / 2) * cos - (height / 2) * sin + center.x,
-                (-width / 2) * sin + (height / 2) * cos + center.y
-            ),
-
-            new Point(
-                (width / 2) * cos - (height / 2) * sin + center.x,
-                (width / 2) * sin + (height / 2) * cos + center.y
-            ),
-            new Point(
-                (width / 2) * cos - (-height / 2) * sin + center.x,
-                (width / 2) * sin + (-height / 2) * cos + center.y
-            ),
-            new Point(
-                (-width / 2) * cos - (-height / 2) * sin + center.x,
-                (-width / 2) * sin + (-height / 2) * cos + center.y
-            )
-        ]
+        return Shape.rotatePoints([
+            new Point(x, y),
+            new Point(x + width, y),
+            new Point(x + width, y + height),
+            new Point(x, y + height),
+        ], this.angle, center)
     }
 
     static from(position: ISimplePoint, size: ISimpleSize): Rectangle {

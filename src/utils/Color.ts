@@ -46,6 +46,10 @@ export default class Color extends CustomObject {
         return color.setRGBA(r, g, b, a)
     }
 
+    static fromSimple({r, g, b, a}: {r: number, g: number, b: number, a: number}): Color {
+        return Color.from(r, g, b, a)
+    }
+
     static random(a: number = 255): Color {
         return Color.from(
             Random.number(255),
@@ -53,6 +57,10 @@ export default class Color extends CustomObject {
             Random.number(255),
             Color.componentBounds.get(a) || Random.number(255)
         )
+    }
+
+    static get Transparent(): Color {
+        return Color.from(0, 0, 0, 0)
     }
 
     static get Black(): Color {

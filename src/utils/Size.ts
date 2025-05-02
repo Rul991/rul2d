@@ -3,6 +3,7 @@ import ISimpleSize from "../interfaces/ISimpleSize";
 import ISizeable from "../interfaces/ISizeable";
 import CustomObject from "../objects/CustomObject"
 import Point from "../objects/Point";
+import Logging from './static/Logging'
 import { PointType } from "./types";
 
 export default class Size extends CustomObject implements ISizeable {
@@ -24,7 +25,7 @@ export default class Size extends CustomObject implements ISizeable {
     }
 
     set center({x, y}: ISimplePoint) {
-        console.warn('you cant set center for Size')
+        Logging.engineWarn('you cant set center for Size')
     }
     
     get center(): PointType {
