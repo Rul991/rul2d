@@ -1,11 +1,10 @@
-import dts from 'rollup-plugin-dts';
-
-import nodeResolve from '@rollup/plugin-node-resolve';
-import typescript from '@rollup/plugin-typescript';
-import createIndexPlugin from './create-index.js';
-import { argv } from 'process';
-import commonjs from '@rollup/plugin-commonjs';
-import terser from '@rollup/plugin-terser';
+import dts from 'rollup-plugin-dts'
+import nodeResolve from '@rollup/plugin-node-resolve'
+import typescript from '@rollup/plugin-typescript'
+import { argv } from 'process'
+import commonjs from '@rollup/plugin-commonjs'
+import terser from '@rollup/plugin-terser'
+import createIndex from 'rollup-auto-index'
 
 let name = 'index'
 let minFunction = terser
@@ -35,7 +34,14 @@ export default [
         declaration: true,
         declarationDir: 'dist/types',
       }),
-      createIndexPlugin(),
+      createIndex({
+        filename: 'src/index.ts',
+        watchedDir: 'src',
+        excludeFiles: [
+          'test.ts',
+        ],
+        allowedExtensions: ['ts']
+      }),
       minFunction({'keep_classnames': true, 'keep_fnames': true})
     ],
   },
