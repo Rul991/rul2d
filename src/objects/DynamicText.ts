@@ -1,6 +1,7 @@
 import DrawMode from '../enums/DrawMode'
 import IFont from '../interfaces/IFont'
 import ISimpleColor from '../interfaces/ISimpleColor'
+import ISimplePoint from '../interfaces/ISimplePoint'
 import JsonDrawableText from '../interfaces/jsons/JsonDrawableText'
 import AssetsManager from '../utils/AssetsManager'
 import CachedValue from '../utils/CachedValue'
@@ -8,10 +9,13 @@ import Color from '../utils/Color'
 import Size from '../utils/Size'
 import Logging from '../utils/static/Logging'
 import { Context, Dict, TextHorisontalAlign, TextVerticalAlign } from '../utils/types'
+import CanvasImage from './CanvasImage'
+import CanvasManager from './CanvasManager'
+import Point from './Point'
 import Rectangle from './Rectangle'
 import ShapeableObject from './ShapeableObject'
 
-export default class DrawableText extends ShapeableObject {
+export default class DynamicText extends ShapeableObject {
     private static _transformColorFromSimpleColor(font: Partial<IFont>, key: 'color' | 'outlineColor'): void {
         if(font[key]) {
             if(!(font[key] instanceof Color)) {
@@ -73,8 +77,8 @@ export default class DrawableText extends ShapeableObject {
         }
             
         if(font) {
-            DrawableText._transformColorFromSimpleColor(font, 'color')
-            DrawableText._transformColorFromSimpleColor(font, 'outlineColor')
+            DynamicText._transformColorFromSimpleColor(font, 'color')
+            DynamicText._transformColorFromSimpleColor(font, 'outlineColor')
             this.font = font
         }
         
@@ -87,6 +91,38 @@ export default class DrawableText extends ShapeableObject {
 
     protected _updateTabSize(): void {
         this.replaceableSymbols.set('\t', ' '.repeat(this._font.tabSize))
+    }
+
+    protected _drawText(ctx: Context, point: ISimplePoint = new Point): void {
+        this._updateFont(ctx)
+        
+        let fittedText = this._fittedText.get(ctx)
+        let totalHeight = 0
+        const textHeights = fittedText.map(value => DynamicText.getTextHeight(ctx, value))
+
+        if(this._font.verticalAlign != 'top') {
+            totalHeight = fittedText.reduce((sum, _, i) => {
+                return sum + textHeights[i]
+            }, 0)
+        }
+
+        let {width, height} = this._getTextOffsetByAlign(totalHeight)
+        let y = point.y + height
+
+        fittedText.forEach((line, i) => {
+            let args: [string, number, number] = [line, point.x + width, y]
+
+            this.executeCallbackByDrawMode(
+                () => {
+                    ctx.fillText(...args)
+                },
+                () => {
+                    ctx.strokeText(...args)
+                }
+            )
+
+            y += textHeights[i]
+        })
     }
 
     protected _updateFittedText(ctx?: Context): string[] {
@@ -105,7 +141,7 @@ export default class DrawableText extends ShapeableObject {
             let lastIndex = result.length - 1
 
             let {width} = ctx.measureText(result[lastIndex] + symb)
-            let height = DrawableText.getTextHeight(ctx, text)
+            let height = DynamicText.getTextHeight(ctx, text)
 
             if(width <= rectWidth && symb != '\n')
                 result[lastIndex] += symb
@@ -127,10 +163,15 @@ export default class DrawableText extends ShapeableObject {
         return result
     }
 
+    protected _needUpdateText(value: boolean | null = true) {
+        if(!this._fittedText) return
+
+        this._fittedText.needUpdate(value)
+    }
+
     setSize(width?: number, height?: number): void {
         super.setSize(width, height)
-        if(this._fittedText)
-            this._fittedText.needUpdate()
+        this._needUpdateText()
     }
 
     set font(value: Partial<IFont>) {
@@ -162,7 +203,7 @@ export default class DrawableText extends ShapeableObject {
         if(this._maxSymbols != -1)
             this._text = this._text.substring(0, this._maxSymbols)
 
-        this._fittedText.needUpdate()
+        this._needUpdateText()
     }
 
     get text(): string {
@@ -200,7 +241,7 @@ export default class DrawableText extends ShapeableObject {
                 break
         }
 
-        let diffHeight = this.size.height - totalHeight
+        let diffHeight = Math.max(this.size.height - totalHeight, 0)
 
         switch (this._font.verticalAlign) {
             case 'middle':
@@ -219,38 +260,9 @@ export default class DrawableText extends ShapeableObject {
     }
 
     protected _draw(ctx: Context): void {
-        this._updateFont(ctx)
-        let fittedText = this._fittedText.get(ctx)
-        
-        const textHeights = fittedText.map(value => DrawableText.getTextHeight(ctx, value))
-        
-        let totalHeight = 0
-
-        if(this._font.horisontalAlign != 'left') {
-            totalHeight = fittedText.reduce((sum, _, i) => {
-                return sum + textHeights[i]
-            }, 0)
-        }
-
-        let {width, height} = this._getTextOffsetByAlign(totalHeight)
-
         this.shape.clip(ctx, () => {
-            this.shape.drawTransformed(ctx, (x, newY) => {
-                let y = newY + height
-    
-                fittedText.forEach((line, i) => {
-                    let args: [string, number, number] = [line, x + width, y]
-    
-                    this._executeCallbackByDrawMode(
-                        () => {
-                            ctx.fillText(...args)
-                        },
-                        () => {
-                            ctx.strokeText(...args)
-                        }
-                    )
-                    y += textHeights[i]
-                })
+            this.shape.drawTransformed(ctx, (x, y) => {
+                this._drawText(ctx, {x, y})
             })
         })
     }

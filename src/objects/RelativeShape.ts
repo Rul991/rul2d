@@ -1,6 +1,8 @@
 import IMinMax from '../interfaces/IMinMax'
 import ISimplePoint from '../interfaces/ISimplePoint'
+import ISimpleRect from '../interfaces/ISimpleRect'
 import JsonRelativeShape from '../interfaces/jsons/JsonRelativeShape'
+import SimpleRect from '../utils/SimpleRect'
 import Logging from '../utils/static/Logging'
 import Search from '../utils/static/Search'
 import { Context } from '../utils/types'

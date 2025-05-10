@@ -1,9 +1,36 @@
-import ISimplePoint from "../interfaces/ISimplePoint"
-import ISimpleSize from "../interfaces/ISimpleSize"
-import { Canvas, Context } from "../utils/types"
-import CustomObject from "./CustomObject"
+import ISimplePoint from '../interfaces/ISimplePoint'
+import ISimpleSize from '../interfaces/ISimpleSize'
+import ITempCanvasOptions from '../interfaces/ITempCanvasOptions'
+import Logging from '../utils/static/Logging'
+import { Canvas, Context } from '../utils/types'
+import CustomObject from './CustomObject'
 
 export default class CanvasManager extends CustomObject {
+    static createImageURLFromTempCanvas({size, callback = ctx => {}}: ITempCanvasOptions): string {
+        const root = document.body
+        let result = ''
+
+        const canvasManager = new CanvasManager()
+        const canvas = canvasManager.create({root, size})
+
+        canvas.style.position = 'fixed'
+        canvas.style.top = '-9999%'
+
+        const ctx = canvasManager.getContext()
+        if(!ctx) {
+            Logging.engineWarn('no temp canvas\'s context')
+            result = ''
+        }
+        else {
+            callback(ctx)
+            result = canvas.toDataURL('image/png', 1)
+        }
+        
+        root.removeChild(canvas)
+
+        return result
+    }
+
     private _canvas: Canvas | null
     private _ctx: Context | null
     private _isContextNeedUpdate: boolean

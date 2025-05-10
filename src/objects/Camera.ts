@@ -201,8 +201,7 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
     }
 
     updatePosition(): void {
-        const {x: tx, y: ty} = this._targetPosition
-        const {x: px, y: py} = this._position
+        this._cachedViewport.needUpdate()
         const t = this._lerpFactor
         let {x, y} = VectorUtils.minus(
             this._targetPosition,

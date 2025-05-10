@@ -1,10 +1,13 @@
 import ICornerRadii from '../interfaces/ICornerRadii'
+import ISimpleRect from '../interfaces/ISimpleRect'
 import Angle from '../utils/Angle'
 import CachedValue from '../utils/CachedValue'
+import SimpleRect from '../utils/SimpleRect'
 import MathUtils from '../utils/static/MathUtils'
 import { PointType } from '../utils/types'
 import DrawableObject from './DrawableObject'
 import Point from './Point'
+import Rectangle from './Rectangle'
 import Shape from './Shape'
 
 export default class RoundedRectangle extends Shape {
@@ -28,6 +31,7 @@ export default class RoundedRectangle extends Shape {
     protected _rawRadii: ICornerRadii
     protected _radii: CachedValue<ICornerRadii>
     protected _arcSegmentsCount: number
+    protected _boxRectangle: Rectangle
 
     constructor(x?: number, y?: number, width?: number, height?: number) {
         super(x, y, width, height)
@@ -39,6 +43,7 @@ export default class RoundedRectangle extends Shape {
             rightBottom: 0
         }
 
+        this._boxRectangle = new Rectangle()
         this._arcSegmentsCount = 8
 
         this._radii = new CachedValue(this._rawRadii)
@@ -67,18 +72,26 @@ export default class RoundedRectangle extends Shape {
             this._radii.needUpdate()
     }
 
-    get maxRadius(): PointType {
-        return this.size.center
+    get maxRadius(): number {
+        const {x, y} = this.size.center
+        return Math.min(x, y)
     }
 
     protected _normalizeRadii(): ICornerRadii {
-        let {x, y} = this.maxRadius
         return this._rawRadii = {
-            leftTop: Math.min(this._rawRadii.leftTop, x, y),
-            leftBottom: Math.min(this._rawRadii.leftBottom, x, y),
-            rightTop: Math.min(this._rawRadii.rightTop, x, y),
-            rightBottom: Math.min(this._rawRadii.rightBottom, x, y)
+            leftTop: Math.min(this._rawRadii.leftTop, this.maxRadius),
+            leftBottom: Math.min(this._rawRadii.leftBottom, this.maxRadius),
+            rightTop: Math.min(this._rawRadii.rightTop, this.maxRadius),
+            rightBottom: Math.min(this._rawRadii.rightBottom, this.maxRadius)
         }
+    }
+
+    protected _updateBox(): ISimpleRect {
+        this._boxRectangle.point = this
+        this._boxRectangle.size = this.size
+        this._boxRectangle.angle = this.angle
+
+        return this._boxRectangle.getBox()
     }
 
     protected _updateCorners(): Point[] {

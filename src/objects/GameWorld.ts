@@ -1,5 +1,6 @@
-import IGameWorldBuilder from '../interfaces/IGameWorldBuilder'
+import IGameWorldOptions from '../interfaces/IGameWorldOptions'
 import IManager from '../interfaces/IManager';
+import INetClient from '../interfaces/INetClient'
 import IRoot from '../interfaces/IRoot';
 import {
   Canvas,
@@ -44,10 +45,11 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     public upKeyboardManager: KeyboardManager
     public keyStateManager: KeyStateManager
     public pointerManager: PointerInputManager
+    public netClient?: INetClient
 
     public isUseCulling: boolean
 
-    constructor({root = document.body, camera = new Camera, size = null, useCulling = true}: IGameWorldBuilder = {}) {
+    constructor({netClient, root = document.body, camera = new Camera, size = null, useCulling = true}: IGameWorldOptions = {}) {
         super()
 
         this.downKeyboardManager = new KeyboardManager()
@@ -70,6 +72,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         this._currentScene = null
 
         this.isUseCulling = useCulling
+        this.netClient = netClient
     }
 
     get zIndex(): number {
@@ -171,7 +174,11 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         })
     }
 
-    start(): void {
+    start(ip?: string): void {
+        if(this.netClient && ip) {
+            this.netClient.open(ip)
+        }
+
         this.addControls()
         this._update()
     }

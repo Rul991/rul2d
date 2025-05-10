@@ -47,6 +47,10 @@ export default abstract class GameObject extends DrawableObject implements IMana
         return true
     }
 
+    addObjects(...objects: DrawableObject[]): void {
+        objects.forEach(obj => this.addObject(obj))
+    }
+
     addObject(object: DrawableObject): boolean {
         return this._addObjectToArray(object, this._objects)
     }

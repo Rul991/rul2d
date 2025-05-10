@@ -73,3 +73,12 @@
 - `CachedValue` can use one parameter for update which is passed via the `CachedValue.get`
 - `_drawMode_` replaced to `DrawableObject` from `Shape`
 - Fixed bug with uiObjects' `init` in `GameScene`
+
+### 2.1.8
+
+- Renamed `DrawableText` to `DynamicText`
+- Added new class: `StaticText`
+  - Similar to `DynamicText`, but uses texture rendering for drawing
+- Fixed bug with camera viewport updates
+- Corrected text alignment issue
+- Added `INetClient` interface for network functionality

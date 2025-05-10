@@ -20,6 +20,13 @@ export default class Color extends CustomObject {
     }
 
     setRGBA(r: number, g: number, b: number, a: number = 255): this {
+        if(a == 0) {
+            r = 0
+            g = 0
+            b = 0
+            a = 0
+        }
+
         this._r = Color.componentBounds.get(r)
         this._g = Color.componentBounds.get(g)
         this._b = Color.componentBounds.get(b)

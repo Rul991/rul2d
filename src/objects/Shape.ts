@@ -248,7 +248,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     }
 
     protected _draw(ctx: Context): void {
-        this._executeCallbackByDrawMode(
+        this.executeCallbackByDrawMode(
             () => this.fill(ctx),
             () => this.stroke(ctx)
         )

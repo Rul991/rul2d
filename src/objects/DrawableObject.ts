@@ -178,7 +178,6 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this._isInitialized = true
         this._init(world)
         Logging.engineLog(`initialized`, this)
-        Logging.debug('sosal?', this)
     }
 
     isNeedDraw(): boolean {
@@ -192,7 +191,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     protected abstract _draw(ctx: Context): void
     abstract isObjectInViewport(camera: Camera): boolean
 
-    protected _executeCallbackByDrawMode(fillCallback: Callback, strokeCallback: Callback): void {
+    executeCallbackByDrawMode(fillCallback: Callback, strokeCallback: Callback): void {
         switch (this._drawMode) {
             case DrawMode.Fill:
                 fillCallback()

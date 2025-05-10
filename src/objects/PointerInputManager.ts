@@ -132,7 +132,7 @@ export default class PointerInputManager extends CustomObject implements IManage
         this._pointerables = Sorting.merge(this._pointerables, PointerInputManager._pointerableSortCallback)
     }
 
-    update(): void {      
+    oldUpdate(): void {      
         for (const pointerable of this._pointerables) {
             pointerable.isPressed = false
         }
@@ -172,6 +172,14 @@ export default class PointerInputManager extends CustomObject implements IManage
                 for (const pointerable of this._pointerables) {
                     pointerable.nonAnyInteractiveCallback(this._cursorPosition)
                 }
+            }
+        }
+    }
+
+    update(): void {
+        for (const point of this._pointersLocation) {
+            for (const pointerable of this._pointerables) {
+                
             }
         }
     }

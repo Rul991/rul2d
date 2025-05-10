@@ -4,14 +4,19 @@ import typescript from '@rollup/plugin-typescript'
 import { argv } from 'process'
 import commonjs from '@rollup/plugin-commonjs'
 import terser from '@rollup/plugin-terser'
-import createIndex from 'rollup-auto-index'
+import createIndexPlugin from 'rollup-auto-index'
 
 let name = 'index'
 let minFunction = terser
+let createIndex = options => {}
 
 if(argv.length > 3 && argv[3] == '--test') {
   name = 'test'
   minFunction = (options) => ({})
+}
+
+else {
+  createIndex = createIndexPlugin
 }
 
 export default [
@@ -39,6 +44,7 @@ export default [
         watchedDir: 'src',
         excludeFiles: [
           'test.ts',
+          'index.ts'
         ],
         allowedExtensions: ['ts']
       }),
