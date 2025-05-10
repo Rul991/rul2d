@@ -82,3 +82,8 @@
 - Fixed bug with camera viewport updates
 - Corrected text alignment issue
 - Added `INetClient` interface for network functionality
+
+### 2.2.0
+
+- Added new methods for `GameObject`: `_preload` and `_create`
+- `GameWorld` can process new `GameObject`'s methods

@@ -1,4 +1,4 @@
-import CustomObject from '../../objects/CustomObject'
+import CustomObject from '../../objects/core/CustomObject'
 import { Callback } from '../types'
 import Timer from './Timer'
 

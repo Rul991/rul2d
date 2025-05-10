@@ -1,4 +1,4 @@
-import Shape from '../objects/Shape'
+import Shape from '../objects/shapes/Shape'
 
 export default interface IShapeConfig {
     setShape(shape: Shape): void

@@ -1,6 +1,6 @@
 import IMinMax from '../../interfaces/IMinMax'
-import ISimplePoint from '../../interfaces/ISimplePoint'
-import Shape from '../../objects/Shape'
+import ISimplePoint from '../../interfaces/simple/ISimplePoint'
+import Shape from '../../objects/shapes/Shape'
 import VectorUtils from './VectorUtils'
 
 export default class SAT {

@@ -1,5 +1,5 @@
-import ISimplePoint from '../../interfaces/ISimplePoint'
-import CustomObject from '../../objects/CustomObject'
+import ISimplePoint from '../../interfaces/simple/ISimplePoint'
+import CustomObject from '../../objects/core/CustomObject'
 
 export default class SpriteKeyFrame extends CustomObject implements ISimplePoint {
     public x: number

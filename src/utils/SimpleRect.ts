@@ -1,5 +1,5 @@
-import ISimpleRect from '../interfaces/ISimpleRect'
-import CustomObject from '../objects/CustomObject'
+import ISimpleRect from '../interfaces/simple/ISimpleRect'
+import CustomObject from '../objects/core/CustomObject'
 
 export default class SimpleRect extends CustomObject implements ISimpleRect {
     public x: number

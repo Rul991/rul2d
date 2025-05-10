@@ -1,4 +1,4 @@
-import ISimplePoint from "../../interfaces/ISimplePoint"
+import ISimplePoint from "../../interfaces/simple/ISimplePoint"
 import Angle from "../Angle"
 
 export default class VectorUtils {

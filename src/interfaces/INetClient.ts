@@ -1,7 +1,7 @@
 import ValueEvent from '../events/ValueEvent'
-import CustomObject from '../objects/CustomObject'
+import CustomObject from '../objects/core/CustomObject'
 import { EventCallback } from '../utils/types'
-import IEventOptions from './IEventOptions'
+import IEventOptions from './options/IEventOptions'
 
 export default interface INetClient {
     open(ip: string): void

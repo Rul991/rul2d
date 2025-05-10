@@ -1,4 +1,4 @@
-import CustomObject from '../../objects/CustomObject'
+import CustomObject from '../../objects/core/CustomObject'
 
 export default abstract class Timer extends CustomObject {
     public paused: boolean

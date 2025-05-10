@@ -1,4 +1,4 @@
-import ISimplePoint from '../ISimplePoint'
+import ISimplePoint from '../simple/ISimplePoint'
 
 type JsonRelativeShape = ISimplePoint[]
 

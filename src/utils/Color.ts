@@ -1,5 +1,5 @@
-import CustomObject from "../objects/CustomObject"
-import Bounds from "./Bounds"
+import CustomObject from "../objects/core/CustomObject"
+import Bounds from "./bounds/Bounds"
 import Random from "./static/Random"
 
 export default class Color extends CustomObject {

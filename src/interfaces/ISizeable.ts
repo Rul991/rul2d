@@ -1,6 +1,6 @@
 import { PointType } from "../utils/types"
-import ISimplePoint from "./ISimplePoint"
-import ISimpleSize from "./ISimpleSize"
+import ISimplePoint from "./simple/ISimplePoint"
+import ISimpleSize from "./simple/ISimpleSize"
 
 export default interface ISizeable {
     set center(value: ISimplePoint)

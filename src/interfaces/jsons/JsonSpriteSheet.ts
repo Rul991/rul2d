@@ -1,4 +1,4 @@
-import ISimpleSize from '../ISimpleSize'
+import ISimpleSize from '../simple/ISimpleSize'
 import JsonCanvasImage from './JsonCanvasImage'
 
 export default interface JsonSpriteSheet extends JsonCanvasImage {

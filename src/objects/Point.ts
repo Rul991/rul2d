@@ -1,13 +1,13 @@
 import IPointable from "../interfaces/IPointable"
-import ISimplePoint from "../interfaces/ISimplePoint"
-import ISimpleRect from '../interfaces/ISimpleRect'
+import ISimplePoint from "../interfaces/simple/ISimplePoint"
+import ISimpleRect from '../interfaces/simple/ISimpleRect'
 import Angle from "../utils/Angle"
 import Color from "../utils/Color"
 import SimpleRect from '../utils/SimpleRect'
 import Logging from '../utils/static/Logging'
 import { Context, PointType } from "../utils/types"
-import Camera from './Camera'
-import DrawableObject from "./DrawableObject"
+import Camera from './camera/Camera'
+import DrawableObject from "./core/DrawableObject"
 
 export default class Point extends DrawableObject implements IPointable {
     static get NaN(): Point {

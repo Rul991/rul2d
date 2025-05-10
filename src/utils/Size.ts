@@ -1,7 +1,7 @@
-import ISimplePoint from "../interfaces/ISimplePoint";
-import ISimpleSize from "../interfaces/ISimpleSize";
+import ISimplePoint from "../interfaces/simple/ISimplePoint";
+import ISimpleSize from "../interfaces/simple/ISimpleSize";
 import ISizeable from "../interfaces/ISizeable";
-import CustomObject from "../objects/CustomObject"
+import CustomObject from "../objects/core/CustomObject"
 import Point from "../objects/Point";
 import Logging from './static/Logging'
 import { PointType } from "./types";

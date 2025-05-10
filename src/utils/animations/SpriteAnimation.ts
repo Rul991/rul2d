@@ -1,4 +1,4 @@
-import CustomObject from '../../objects/CustomObject'
+import CustomObject from '../../objects/core/CustomObject'
 import Logging from '../static/Logging'
 import SpriteKeyFrame from './SpriteKeyFrame'
 

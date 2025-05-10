@@ -1,16 +1,7 @@
 import IRectangle from '../interfaces/IRectangle'
 import IShapeConfig from '../interfaces/IShapeConfig'
-import ISimplePoint from '../interfaces/ISimplePoint'
-import ISimpleRect from '../interfaces/ISimpleRect'
-import ISimpleSize from '../interfaces/ISimpleSize'
-import ISizeable from '../interfaces/ISizeable'
 import Color from '../utils/Color'
-import { Callback, Context, PointerCallback, PointType } from '../utils/types'
-import Camera from './Camera'
-import DrawableObject from './DrawableObject'
-import Point from './Point'
-import Rectangle from './Rectangle'
-import Shape from './Shape'
+import { Context, PointerCallback } from '../utils/types'
 import ShapeableObject from './ShapeableObject'
 
 export default class PointerableObject extends ShapeableObject implements IShapeConfig, IRectangle {

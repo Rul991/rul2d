@@ -1,11 +1,11 @@
 import IPointable from "../interfaces/IPointable"
 import IRoot from "../interfaces/IRoot"
-import ISimplePoint from "../interfaces/ISimplePoint"
+import ISimplePoint from "../interfaces/simple/ISimplePoint"
 import IRectangle from "../interfaces/IRectangle"
-import ISimpleRect from "../interfaces/ISimpleRect"
+import ISimpleRect from "../interfaces/simple/ISimpleRect"
 import Point from '../objects/Point'
-import DrawableObject from '../objects/DrawableObject'
-import Shape from '../objects/Shape'
+import DrawableObject from '../objects/core/DrawableObject'
+import Shape from '../objects/shapes/Shape'
 import ShapeableObject from '../objects/ShapeableObject'
 
 // callbacks

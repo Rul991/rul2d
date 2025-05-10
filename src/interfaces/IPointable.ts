@@ -1,5 +1,5 @@
 import { PointType } from "../utils/types"
-import ISimplePoint from "./ISimplePoint"
+import ISimplePoint from "./simple/ISimplePoint"
 
 export default interface IPointable {
     set point(value: ISimplePoint)

@@ -1,4 +1,4 @@
-import CustomObject from "../objects/CustomObject"
+import CustomObject from "../objects/core/CustomObject"
 
 export default class CachedValue<T, V = undefined> extends CustomObject {
     private _cachedValue: T

@@ -1,6 +1,6 @@
 import { Dict, EventCallback } from "../utils/types"
-import IEventOptions from "../interfaces/IEventOptions"
-import CustomObject from "./CustomObject"
+import IEventOptions from "../interfaces/options/IEventOptions"
+import CustomObject from "./core/CustomObject"
 import ValueEvent from '../events/ValueEvent'
 
 export default class EventEmitter<T extends Event = ValueEvent, K extends string = string> extends CustomObject {
