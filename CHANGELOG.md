@@ -74,7 +74,7 @@
 - `_drawMode_` replaced to `DrawableObject` from `Shape`
 - Fixed bug with uiObjects' `init` in `GameScene`
 
-### 2.1.8
+### 2.1.8-2.1.9
 
 - Renamed `DrawableText` to `DynamicText`
 - Added new class: `StaticText`

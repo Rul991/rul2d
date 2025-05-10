@@ -1,11 +1,12 @@
 {
   "name": "rul2d",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/*",
+    "dist/index.js",
+    "dist/index.d.ts",
     "CHANGELOG.md"
   ],
   "scripts": {
