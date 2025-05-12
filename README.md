@@ -20,16 +20,26 @@ class NewEntity extends GameEntity {
         super(x, y)
     }
 
-    init(world: GameWorld): void {
-        
+    protected _init(world: GameWorld): void {
+        super._init(world)
+    }
+
+    protected async _preload(world: GameWorld): Promise<void> {
+        await super._preload(world)
+    }
+
+    protected _create(world: GameWorld): DrawableObject[] {
+        return [
+            ...super._create(world)
+        ]
     }
 
     protected _draw(ctx: Context): void {
-        
+        super._draw(ctx)
     }
 
     protected _update(delta: number): void {
-        
+        super._update(delta)
     }
 }
 
@@ -45,59 +55,50 @@ class NewScene extends GameScene {
 
 const world = new GameWorld()
 world.addScene('new', new NewScene())
-world.setScene('new')
 world.start()
 ```
 
 **Example:**
 
 ```typescript
-import { Camera, Color, GameEntity, GameScene, GameWorld, Point, Rectangle, Size, Context, VectorUtils } from 'rul2d'
+import { Camera, Color, Context, DrawMode, GameEntity, GameScene, GameWorld, Point, Rectangle, Size, VectorUtils } from 'rul2d'
 
 class TestEntity extends GameEntity {
-    public rectangle: Rectangle
-    public direction: Point
-    public speed: number
-    public camera: Camera
-
-    public size: Size
+    private rectangle: Rectangle
+    private direction: Point
+    private speed: number
+    private camera: Camera
+    private size: Size
 
     constructor (x?: number, y?: number) {
         super(x, y)
 
         this.direction = new Point(1)
         this.speed = 200
-        this.size = new Size
-        this.camera = new Camera
-
+        this.size = new Size()
+        this.camera = new Camera()
         this.rectangle = new Rectangle()
-
-        this.create()
     }
 
-    init({camera}: GameWorld): void {
+    protected _init({camera}: GameWorld): void {
         this.camera = camera
     }
 
-    create(): void {
-        this.rectangle = new Rectangle(1000, 500, 100)
-        this.rectangle.setColor(Color.White)
-        this.addObject(this.rectangle)
-    }
+    protected _create(world: GameWorld): DrawableObject[] {
+        this.rectangle.setPosition(1000, 500)
+        this.rectangle.setSize(100)
+        this.rectangle.setColor(Color.Black)
+        this.rectangle.setDrawMode(DrawMode.Fill)
 
-    protected _draw(ctx: Context): void {
-        super._draw(ctx)
-
-        this.rectangle.stroke(ctx, Color.Black)
-        this.camera.viewport.drawOutline(ctx, Color.Red)
+        return [
+            this.rectangle
+        ]
     }
 
     protected _update(delta: number): void {
         let {x, y, bottom, right} = this.camera.viewport
         if(this.rectangle.x <= x || this.rectangle.right >= right) this.direction.x *= -1
         if(this.rectangle.y <= y || this.rectangle.bottom >= bottom) this.direction.y *= -1
-
-        console.log(x, y, bottom, right)
 
         this.move(
             VectorUtils.multiplyOnNumber(this.direction, this.speed), 

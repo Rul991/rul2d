@@ -16,6 +16,10 @@ export default class GameScene extends GameObject {
         this._uiObjects = []
     }
 
+    protected get _allObjects(): GameEntity[] {
+        return [...this._objects as GameEntity[], ...this._uiObjects]
+    }
+
     get canBeSubObject(): boolean {
         return false
     }
@@ -53,11 +57,17 @@ export default class GameScene extends GameObject {
     }
 
     forAll(callback: (obj: GameEntity, index: number) => void): void {
-        [...this._objects as GameEntity[], ...this._uiObjects].forEach(callback)
+        this._allObjects.forEach(callback)
     }
 
-    _init(world: GameWorld): void {
+    protected _init(world: GameWorld): void {
         this.forAll(obj => obj.init(world))
+    }
+
+    protected async _preload(world: GameWorld): Promise<void> {
+        for await (const obj of this._allObjects) {
+            await obj.preload(world)
+        }
     }
 
     protected _draw(ctx: Context): void {

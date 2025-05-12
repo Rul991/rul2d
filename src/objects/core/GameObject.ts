@@ -71,23 +71,20 @@ export default abstract class GameObject extends DrawableObject implements IMana
 
     }
 
+    async preload(world: GameWorld): Promise<void> {
+        await this._preload(world)
+    }
+
     protected _create(world: GameWorld): DrawableObject[] {
         return []
     }
 
-    async init(world: GameWorld): Promise<void> {
+    init(world: GameWorld): void {
         if(this._isInitialized) return
-
-        world.eventEmitter.emitDefault('start-preload')
-        Logging.engineLog('start preload', this)
-        await this._preload(world)
-        world.eventEmitter.emitDefault('end-preload')
-        Logging.engineLog('end preload', this)
 
         this.addObjects(...this._create(world))
         Logging.engineLog('create', this)
         super.init(world)
-        Logging.engineLog('start preload', this)
     }
 
     protected _draw(ctx: Context): void {

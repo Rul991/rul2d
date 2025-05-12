@@ -5,7 +5,7 @@ import SimpleRect from '../../utils/SimpleRect'
 import { Callback, Context } from '../../utils/types'
 import Rectangle from '../shapes/Rectangle'
 import Shape from '../shapes/Shape'
-import ShapeableObject from '../ShapeableObject'
+import ShapeableObject from '../shapeable/ShapeableObject'
 
 export default class CanvasImage extends ShapeableObject {
     protected _cuttedImageBox: Rectangle | null
@@ -24,8 +24,6 @@ export default class CanvasImage extends ShapeableObject {
         })
 
         this._cuttedImageBox = null
-
-        this.log()
     }
 
     protected async _loadJSONFromFile(result: JsonCanvasImage): Promise<void> {
@@ -65,6 +63,16 @@ export default class CanvasImage extends ShapeableObject {
 
     setImage(image: HTMLImageElement): void {
         this._image = image
+    }
+
+    setSizeByImage(): void {
+        this.doWhenLoaded(() => {
+            const {naturalHeight, naturalWidth} = this._image
+
+            this.setSize(
+                naturalWidth, naturalHeight
+            )
+        })
     }
 
     async loadImage(src: string): Promise<void> {

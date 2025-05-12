@@ -13,7 +13,7 @@ import CanvasImage from '../images/CanvasImage'
 import CanvasManager from '../managers/CanvasManager'
 import Point from '../Point'
 import Rectangle from '../shapes/Rectangle'
-import ShapeableObject from '../ShapeableObject'
+import ShapeableObject from '../shapeable/ShapeableObject'
 
 export default class DynamicText extends ShapeableObject {
     private static _transformColorFromSimpleColor(font: Partial<IFont>, key: 'color' | 'outlineColor'): void {

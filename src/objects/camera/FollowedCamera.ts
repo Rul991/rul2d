@@ -6,7 +6,7 @@ import Camera from './Camera'
 import DrawableObject from '../core/DrawableObject'
 import Point from '../Point'
 import Shape from '../shapes/Shape'
-import ShapeableObject from '../ShapeableObject'
+import ShapeableObject from '../shapeable/ShapeableObject'
 
 export default class FollowedCamera extends Camera {
     private _followedObject: FollowedCameraObject
@@ -20,9 +20,9 @@ export default class FollowedCamera extends Camera {
         this._followedObject = obj
     }
 
-    updatePosition(): void {
-        if(!this._followedObject) return
-        if(!this._ctx) return
+    updatePosition(): boolean {
+        if(!this._followedObject) return false
+        if(!this._ctx) return false
 
         let size = new Size()
         let position = this._followedObject.point
@@ -53,6 +53,8 @@ export default class FollowedCamera extends Camera {
         const newY = this.y + (-target.y - this.y) * this._lerpFactor;
 
         this._position.setPosition(newX, newY)
+
+        return true
     }
 
     update(callback: (ctx: Context) => void): void {

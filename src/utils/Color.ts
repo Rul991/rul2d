@@ -1,5 +1,6 @@
 import CustomObject from "../objects/core/CustomObject"
 import Bounds from "./bounds/Bounds"
+import MathUtils from './static/MathUtils'
 import Random from "./static/Random"
 
 export default class Color extends CustomObject {
@@ -44,8 +45,20 @@ export default class Color extends CustomObject {
             r: this._r,
             g: this._g,
             b: this._b,
-            a: this._a
+            a: this._a * 255
         }
+    }
+
+    static interpolate(first: Color, second: Color, factor: number): Color {
+        const {r, g, b, a} = first.simplify()
+        const {r: r1, g: g1, b: b1, a: a1} = second.simplify()
+
+        return Color.from(
+            MathUtils.lerp(r, r1, factor),
+            MathUtils.lerp(g, g1, factor),
+            MathUtils.lerp(b, b1, factor),
+            MathUtils.lerp(a, a1, factor)
+        )
     }
 
     static from(r: number, g: number, b: number, a: number = 255): Color {

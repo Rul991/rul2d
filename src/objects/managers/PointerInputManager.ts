@@ -1,6 +1,6 @@
 import IManager from '../../interfaces/IManager'
 import { Canvas, SearchCallback } from '../../utils/types'
-import PointerableObject from '../PointerableObject'
+import PointerableObject from '../shapeable/PointerableObject'
 import Point from '../Point'
 import CustomObject from '../core/CustomObject'
 import Sorting from '../../utils/static/Sorting'

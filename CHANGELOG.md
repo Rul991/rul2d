@@ -1,4 +1,4 @@
-## Rul2d's Changelog
+## Rul2d Changelog
 
 ### v2.1.0
 
@@ -87,3 +87,13 @@
 
 - Added new methods for `GameObject`: `_preload` and `_create`
 - `GameWorld` can process new `GameObject`'s methods
+- Fixed bug with `viewport` in `FollowedCamera`
+- Added new methods for `KeyStateManager`: 
+  - `trackKeyState`
+  - `trackVector`
+  - `trackAxis`
+- Added new methods for `CanvasImage`: 
+  - `setSizeByImage`
+- Added new classes:
+  - `LinearGradient`
+  - `HotKey`

@@ -6,13 +6,15 @@ import ISimpleRect from "../interfaces/simple/ISimpleRect"
 import Point from '../objects/Point'
 import DrawableObject from '../objects/core/DrawableObject'
 import Shape from '../objects/shapes/Shape'
-import ShapeableObject from '../objects/ShapeableObject'
+import ShapeableObject from '../objects/shapeable/ShapeableObject'
+import Color from './Color'
 
 // callbacks
+
 export type Callback = () => void
 export type SearchCallback<T> = (obj: T) => number | string
 export type EventCallback<T extends Event = Event> = (e: T) => void
-export type PointerCallback = (point: Point) => void
+export type PointCallback = (point: Point) => void
 export type Constructor<T = {}> = new (...args: any[]) => T
 export type KeyboardEventCallback = EventCallback<KeyboardEvent>
 
@@ -32,6 +34,7 @@ export type TextVerticalAlign = 'top' | 'middle' | 'bottom'
 export type Context = CanvasRenderingContext2D
 export type Canvas = HTMLCanvasElement
 export type Dict<T> = Map<string, T>
+export type ColorStop = [number, Color]
 
 // intersections
 

@@ -42,7 +42,6 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     private _camera: Camera
     private _gameScenes: Dict<GameScene>
     private _currentScene: GameScene | null
-    private _nonPreloadedScenes: number
 
     public eventEmitter: EventEmitter<Event>
     public downKeyboardManager: KeyboardManager
@@ -55,12 +54,11 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
 
     constructor({netClient, root = document.body, camera = new Camera, size = null, useCulling = true}: IGameWorldOptions = {}) {
         super()
-
         this.downKeyboardManager = new KeyboardManager()
         this.upKeyboardManager = new KeyboardManager()
         
         this.keyStateManager = new KeyStateManager()
-        this.keyStateManager.setManager(this.downKeyboardManager, this.upKeyboardManager)
+        this.keyStateManager.setKeyboardManagers(this.downKeyboardManager, this.upKeyboardManager)
         
         this._canvasManager = new CanvasManager()
         this._canvas = this._canvasManager.create({root, size})
@@ -74,27 +72,11 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         
         this._gameScenes = new Map
         this._currentScene = null
-        this._nonPreloadedScenes = 0
         
         this.isUseCulling = useCulling
         this.netClient = netClient
         
         this.eventEmitter = new EventEmitter()
-        this._initEventEmitter()
-    }
-
-    private _initEventEmitter(): void {
-        this.eventEmitter.on('start-preload', e => {
-            this._nonPreloadedScenes++
-        })
-
-        this.eventEmitter.on('end-preload', e => {
-            this._nonPreloadedScenes--
-
-            if(!this._nonPreloadedScenes) {
-                this.eventEmitter.emitDefault('start')
-            }
-        })
     }
 
     get zIndex(): number {
@@ -151,7 +133,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         return this._currentScene
     }
 
-    addControls(): void {
+    protected _addControls(): void {
         this.downKeyboardManager.addControls('keydown')
         this.upKeyboardManager.addControls('keyup')
         this.pointerManager.addControls(this._canvas)
@@ -185,7 +167,6 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
 
             this.pointerManager.update()
             this.canvasManager.clear()
-            this._camera.updatePosition()
 
             this._updateCurrentScene(delta, lastDelta)
 
@@ -196,16 +177,24 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         })
     }
 
-    start(ip?: string): void {
-        this.eventEmitter.once('start', e => {
-            if(this.netClient && ip) {
-                this.netClient.open(ip)
-            }
+    async start(ip?: string): Promise<void> {
+        Logging.engineLog('scenes start loading')
 
-            this.addControls()
-            this._update()
-            Logging.engineLog('world start')
-        })
+        const label = 'scenes loaded by'
+        
+        console.time(label)
+        for await (const [_, scene] of this._gameScenes) {
+            scene.preload(this)
+        }
+        console.timeEnd(label)
+
+        if(this.netClient && ip) {
+            this.netClient.open(ip)
+        }
+
+        this._addControls()
+        this._update()
+        Logging.info('world start')
     }
 
     simplify() {

@@ -6,29 +6,43 @@ import { Canvas, Context } from '../../utils/types'
 import CustomObject from '../core/CustomObject'
 
 export default class CanvasManager extends CustomObject {
-    static createImageURLFromTempCanvas({size, callback = ctx => {}}: ITempCanvasOptions): string {
-        const root = document.body
+    static tempCanvasManager: CanvasManager | null = null
+
+    static createImageURLFromTempCanvas({size, quality = 0.9, mimeImageType: imageType = 'image/jpeg', callback = ctx => {}}: ITempCanvasOptions): string {
+        if(!CanvasManager.tempCanvasManager) 
+            CanvasManager.tempCanvasManager = CanvasManager.createTempCanvasManager(document.body, size)
+        
+        else 
+            CanvasManager.tempCanvasManager.resize(size)
+
+        CanvasManager.tempCanvasManager.clear()
+        
+        const canvas = CanvasManager.tempCanvasManager.canvas!
+        const ctx = CanvasManager.tempCanvasManager.getContext()
+
         let result = ''
-
-        const canvasManager = new CanvasManager()
-        const canvas = canvasManager.create({root, size})
-
-        canvas.style.position = 'fixed'
-        canvas.style.top = '-9999%'
-
-        const ctx = canvasManager.getContext()
+        
         if(!ctx) {
             Logging.engineWarn('no temp canvas\'s context')
             result = ''
         }
         else {
             callback(ctx)
-            result = canvas.toDataURL('image/png', 1)
+            result = canvas.toDataURL(imageType, quality)
         }
-        
-        root.removeChild(canvas)
 
         return result
+    }
+
+    static createTempCanvasManager(root: HTMLElement, size: ISimpleSize): CanvasManager {
+        const canvasManager = new CanvasManager()
+        const canvas = canvasManager.create({root, size})
+        canvasManager.getContext()
+
+        canvas.style.position = 'fixed'
+        canvas.style.top = '-9999%'
+
+        return canvasManager
     }
 
     private _canvas: Canvas | null
@@ -74,8 +88,8 @@ export default class CanvasManager extends CustomObject {
     resize({width, height}: ISimpleSize): void {
         if(!this.isCanvasExist) return
 
-        this._canvas!.width = width
-        this._canvas!.height = height
+        if(this._canvas!.width != width) this._canvas!.width = width
+        if(this._canvas!.height != height) this._canvas!.height = height
     }
 
     resizeToClientRect(): void {

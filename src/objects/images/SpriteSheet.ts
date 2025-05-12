@@ -62,8 +62,8 @@ export default class SpriteSheet extends CanvasImage {
     setGridBySize(width: number, height: number): void {
         this.doWhenLoaded(() => {
             const {naturalWidth, naturalHeight} = this._image
-            Logging.debug(naturalWidth, naturalHeight)
-            Logging.debug(width, height)
+            Logging.engineLog(naturalWidth, naturalHeight)
+            Logging.engineLog(width, height)
 
             this._currentFrame.width = width
             this._currentFrame.height = height

@@ -96,7 +96,7 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
         this._angle = new Angle()
         this._smoothingEnabled = false
         this._smoothingQuality = 'low'
-        this._lerpFactor = 0.5
+        this._lerpFactor = 1
         this._cachedViewport = new CachedValue(new Rectangle)
         this._cachedViewport.setUpdateCallback(() => this._updateViewport())
 
@@ -200,23 +200,30 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
         return this._position.point
     }
 
-    updatePosition(): void {
-        this._cachedViewport.needUpdate()
+    updatePosition(): boolean {
+        let result = true
         const t = this._lerpFactor
+
         let {x, y} = VectorUtils.minus(
             this._targetPosition,
             this._position
         )
 
+        if(x == y && x == 0)
+            result = false
+
         if(t == 1) {
             this._position.point = this._targetPosition
         }
+        
         else {
             this._position.setPosition(
                 MathUtils.lerp(this.x, x, t),
                 MathUtils.lerp(this.y, y, t),
             )
         }
+
+        return result
     }
 
     get position(): Point {
@@ -253,7 +260,6 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
         this._ctx = ctx
         this._cachedViewport.needUpdate()
         this._ctx.canvas.addEventListener('resize', e => this._cachedViewport.needUpdate())
-        // Я занимался тем, что делал кэширование для viewport
     }
 
     begin(): void {
@@ -293,6 +299,8 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
 
     update(callback: (ctx: Context) => void): void {
         if(!this._ctx) return
+
+        this._cachedViewport.needUpdate(this.updatePosition() || null)
 
         this.begin()
         this.translate()
