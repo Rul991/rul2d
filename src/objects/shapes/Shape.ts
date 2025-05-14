@@ -5,20 +5,18 @@ import ISimplePoint from "../../interfaces/simple/ISimplePoint"
 import ISimpleRect from "../../interfaces/simple/ISimpleRect"
 import ISimpleShape from "../../interfaces/simple/ISimpleShape"
 import ISimpleSize from "../../interfaces/simple/ISimpleSize"
-import ISizeable from "../../interfaces/ISizeable"
 import Angle from "../../utils/Angle"
 import Bounds from '../../utils/bounds/Bounds'
 import CachedValue from "../../utils/CachedValue"
 import Color from '../../utils/Color'
 import SimpleRect from '../../utils/SimpleRect'
 import Size from "../../utils/Size"
-import { Callback, Context, PointType } from "../../utils/types"
+import { Context } from "../../utils/types"
 import VectorUtils from '../../utils/static/VectorUtils'
 import Camera from '../camera/Camera'
 import Point from "../Point"
 import SAT from '../../utils/static/SAT'
 import Logging from '../../utils/static/Logging'
-import DrawMode from '../../enums/DrawMode'
 
 export default class Shape extends Point implements IRectangle, IAngleable {
     static rotatePoints(corners: Point[], angle: Angle, center: Point): Point[] {

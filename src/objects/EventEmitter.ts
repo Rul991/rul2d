@@ -1,7 +1,7 @@
 import { Dict, EventCallback } from "../utils/types"
 import IEventOptions from "../interfaces/options/IEventOptions"
 import CustomObject from "./core/CustomObject"
-import ValueEvent from '../events/ValueEvent'
+import ValueEvent from '../utils/events/ValueEvent'
 
 export default class EventEmitter<T extends Event = ValueEvent, K extends string = string> extends CustomObject {
     protected _events: Dict<Set<EventCallback<T>>>

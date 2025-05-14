@@ -1,18 +1,13 @@
 import DrawMode from '../../enums/DrawMode'
 import IFont from '../../interfaces/IFont'
-import ISimpleColor from '../../interfaces/simple/ISimpleColor'
 import ISimplePoint from '../../interfaces/simple/ISimplePoint'
 import JsonDrawableText from '../../interfaces/jsons/JsonDrawableText'
 import AssetsManager from '../../utils/AssetsManager'
 import CachedValue from '../../utils/CachedValue'
 import Color from '../../utils/Color'
 import Size from '../../utils/Size'
-import Logging from '../../utils/static/Logging'
 import { Context, Dict, TextHorisontalAlign, TextVerticalAlign } from '../../utils/types'
-import CanvasImage from '../images/CanvasImage'
-import CanvasManager from '../managers/CanvasManager'
 import Point from '../Point'
-import Rectangle from '../shapes/Rectangle'
 import ShapeableObject from '../shapeable/ShapeableObject'
 
 export default class DynamicText extends ShapeableObject {

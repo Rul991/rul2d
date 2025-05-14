@@ -185,6 +185,7 @@ export default class Camera extends CustomObject implements IPointable, IAngleab
     }
 
     set zoom(value: number) {
+        this._cachedViewport.needUpdate()
         this._zoom = this._zoomLimit.get(value)
     }
 

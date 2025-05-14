@@ -1,5 +1,4 @@
 import Sorting from '../../utils/static/Sorting'
-import Logging from '../../utils/static/Logging'
 import { Context } from '../../utils/types'
 import DrawableObject from './DrawableObject'
 import GameEntity from './GameEntity'
@@ -56,22 +55,30 @@ export default class GameScene extends GameObject {
         this._uiObjects.forEach(callback)
     }
 
-    forAll(callback: (obj: GameEntity, index: number) => void): void {
-        this._allObjects.forEach(callback)
+    protected _init(world: GameWorld): void {
+        this.forAll(obj => {
+            obj.init(world)
+        })
     }
 
-    protected _init(world: GameWorld): void {
-        this.forAll(obj => obj.init(world))
+    init(world: GameWorld): void {
+        super.init(world)
+
+        this.forUI(obj => {
+            obj.setPointerManager(world.uiPointerManager)
+        })
+
+        this.forEach(obj => {
+            if(obj instanceof GameEntity) {
+                obj.setPointerManager(world.pointerManager)
+            }
+        })
     }
 
     protected async _preload(world: GameWorld): Promise<void> {
         for await (const obj of this._allObjects) {
             await obj.preload(world)
         }
-    }
-
-    protected _draw(ctx: Context): void {
-        super._draw(ctx)
     }
 
     updateObjects(delta: number): void {

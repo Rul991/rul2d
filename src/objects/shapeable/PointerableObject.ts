@@ -5,36 +5,44 @@ import { Context, PointCallback } from '../../utils/types'
 import ShapeableObject from './ShapeableObject'
 
 export default class PointerableObject extends ShapeableObject implements IShapeConfig, IRectangle {
-    private _nonDownCallbackFactory(cb: PointCallback): PointCallback {
+    protected _nonDownCallbackFactory(cb: PointCallback): PointCallback {
         return p => {
-            if(this.isPressed) this._upCallback(p)
+            if(this._isPressed && !this.isPressedInFrame) {
+                this._isPressed = false
+                this._upCallback(p)
+            }
             cb(p)
-            this.isPressed = false
         }
     }
 
-    private _hoverCallback: PointCallback
-    private _pressedCallback: PointCallback
-    private _downCallback: PointCallback
-    private _upCallback: PointCallback
-    private _nonAnyInteractiveCallback: PointCallback
+    protected _hoverCallback: PointCallback
+    protected _pressedCallback: PointCallback
+    protected _downCallback: PointCallback
+    protected _upCallback: PointCallback
+    protected _nonInteractiveCallback: PointCallback
+    protected _isPressed: boolean
 
-    public isPressed: boolean
+    public isPressedInFrame: boolean
     
-    constructor(x?: number, y?: number) {
-        super(x, y)
+    constructor(x?: number, y?: number, width?: number, height?: number) {
+        super(x, y, width, height)
 
-        this.isPressed = false
+        this.isPressedInFrame = false
+        this._isPressed = false
 
         this._downCallback = p => {}
         this._upCallback = p => {}
         this._hoverCallback = p => {}
         this._pressedCallback = p => {}
-        this._nonAnyInteractiveCallback = p => {}
+        this._nonInteractiveCallback = p => {}
 
         this.doWhenPressed(p => {})
         this.doWhenHover(p => {})
-        this.doIfNotAnyInteracted(p => {})
+        this.doWhenNotInteracted(p => {})
+    }
+
+    get isPressed(): boolean {
+        return this._isPressed
     }
 
     get hoverCallback(): PointCallback {
@@ -45,8 +53,8 @@ export default class PointerableObject extends ShapeableObject implements IShape
         return this._pressedCallback
     }
 
-    get nonAnyInteractiveCallback(): PointCallback {
-        return this._nonAnyInteractiveCallback
+    get nonInteractiveCallback(): PointCallback {
+        return this._nonInteractiveCallback
     }
 
     doWhenDown(cb: PointCallback): void {
@@ -59,9 +67,11 @@ export default class PointerableObject extends ShapeableObject implements IShape
 
     doWhenPressed(cb: PointCallback): void {
         this._pressedCallback = p => {
-            if(!this.isPressed) this._downCallback(p)
+            if(!this._isPressed && this.isPressedInFrame) {
+                this._isPressed = true
+                this._downCallback(p)
+            }
             cb(p)
-            this.isPressed = true
         }
     }
 
@@ -69,12 +79,12 @@ export default class PointerableObject extends ShapeableObject implements IShape
         this._hoverCallback = this._nonDownCallbackFactory(cb)
     }
 
-    doIfNotAnyInteracted(cb: PointCallback): void {
-        this._nonAnyInteractiveCallback = this._nonDownCallbackFactory(cb)
+    doWhenNotInteracted(cb: PointCallback): void {
+        this._nonInteractiveCallback = this._nonDownCallbackFactory(cb)
     }
 
     drawOutline(ctx: Context, color?: Color): void {
-        if(this.isPressed) this.shape.drawOutline(ctx, Color.Red)
+        if(this._isPressed) this.shape.drawOutline(ctx, Color.Red)
         else this.shape.drawOutline(ctx, color)
     }
 }

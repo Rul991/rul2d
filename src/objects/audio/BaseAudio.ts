@@ -1,5 +1,5 @@
 import AudioErrorMessage from '../../enums/error-messages/AudioErrorMessage'
-import ValueEvent from '../../events/ValueEvent'
+import ValueEvent from '../../utils/events/ValueEvent'
 import ISimplePoint from '../../interfaces/simple/ISimplePoint'
 import ISimpleRect from '../../interfaces/simple/ISimpleRect'
 import AssetsManager from '../../utils/AssetsManager'

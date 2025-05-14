@@ -9,6 +9,9 @@ import { Context } from "../../utils/types"
 import Camera from '../camera/Camera'
 import DrawableObject from "./DrawableObject"
 import GameWorld from './GameWorld'
+import UIObject from './UIObject'
+import PointerInputManager from '../managers/PointerInputManager'
+import PointerableObject from '../shapeable/PointerableObject'
 
 export default abstract class GameObject extends DrawableObject implements IManager {
     protected _objects: DrawableObject[]    
@@ -48,6 +51,21 @@ export default abstract class GameObject extends DrawableObject implements IMana
         return true
     }
 
+    setPointerManager(manager: PointerInputManager): void {
+        this.forAll(obj => {
+            if(obj instanceof PointerableObject) {
+                manager.addPointerable(obj)
+            }
+        })
+    }
+
+    forUI(callback: (obj: UIObject, index: number) => void): void {}
+
+    forAll(callback: (obj: DrawableObject, index: number) => void): void {
+        this.forEach(callback)
+        this.forUI(callback)
+    }
+
     addObjects(...objects: DrawableObject[]): void {
         objects.forEach(obj => this.addObject(obj))
     }
@@ -67,9 +85,7 @@ export default abstract class GameObject extends DrawableObject implements IMana
         }
     }
 
-    protected async _preload(world: GameWorld): Promise<void> {
-
-    }
+    protected async _preload(world: GameWorld): Promise<void> {}
 
     async preload(world: GameWorld): Promise<void> {
         await this._preload(world)

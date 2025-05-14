@@ -6,11 +6,8 @@ import Logging from '../../utils/static/Logging'
 import Search from '../../utils/static/Search'
 import Sorting from '../../utils/static/Sorting'
 import { ColorStop, Context } from '../../utils/types'
-import Camera from '../camera/Camera'
 import DrawableObject from '../core/DrawableObject'
 import CanvasManager from '../managers/CanvasManager'
-import Point from '../Point'
-import Rectangle from '../shapes/Rectangle'
 import Shape from '../shapes/Shape'
 import ShapeableObject from './ShapeableObject'
 
@@ -37,6 +34,7 @@ export default class LinearGradient extends ShapeableObject {
     }
 
     set step(value: number) {
+        this._cachedImageUrl.needUpdate()
         this._step = DrawableObject.positiveNumberBounds.get(value)
     }
 

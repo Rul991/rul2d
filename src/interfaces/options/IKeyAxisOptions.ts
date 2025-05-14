@@ -1,4 +1,4 @@
-import HotKey from '../../utils/HotKey'
+import HotKey from '../../utils/keys/HotKey'
 import { PointCallback } from '../../utils/types'
 
 export default interface IKeyAxisOptions {

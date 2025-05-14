@@ -1,13 +1,8 @@
 import IAngle from '../../interfaces/IAngle'
 import IRectangle from '../../interfaces/IRectangle'
-import ISimpleDrawableObject from "../../interfaces/simple/ISimpleDrawableObject"
 import ISimplePoint from "../../interfaces/simple/ISimplePoint"
 import ISimpleRect from "../../interfaces/simple/ISimpleRect"
-import ISimpleShape from '../../interfaces/simple/ISimpleShape'
 import ISimpleSize from "../../interfaces/simple/ISimpleSize"
-import MathUtils from "../../utils/static/MathUtils"
-import Sorting from "../../utils/static/Sorting"
-import { Context } from "../../utils/types"
 import Point from "../Point"
 import Shape from "./Shape"
 

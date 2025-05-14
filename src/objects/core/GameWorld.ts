@@ -39,6 +39,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     private _canvasManager: CanvasManager
     private _canvas: Canvas
     private _ctx: Context
+
     private _camera: Camera
     private _gameScenes: Dict<GameScene>
     private _currentScene: GameScene | null
@@ -48,6 +49,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     public upKeyboardManager: KeyboardManager
     public keyStateManager: KeyStateManager
     public pointerManager: PointerInputManager
+    public uiPointerManager: PointerInputManager
     public netClient?: INetClient
 
     public isUseCulling: boolean
@@ -69,6 +71,9 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         
         this.pointerManager = new PointerInputManager()
         this.pointerManager.setCamera(this._camera)
+
+        this.uiPointerManager = new PointerInputManager()
+        this.uiPointerManager.setCamera(new Camera(this._ctx))
         
         this._gameScenes = new Map
         this._currentScene = null
@@ -136,7 +141,9 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     protected _addControls(): void {
         this.downKeyboardManager.addControls('keydown')
         this.upKeyboardManager.addControls('keyup')
+
         this.pointerManager.addControls(this._canvas)
+        this.uiPointerManager.addControls(this._canvas)
     }
 
     private _updateCurrentScene(delta: number, lastDelta: number): void {
@@ -165,6 +172,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         GameWorld.createGameLoop((delta, lastDelta) => {
             if(!this._currentScene) return
 
+            this.uiPointerManager.update()
             this.pointerManager.update()
             this.canvasManager.clear()
 
@@ -177,7 +185,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         })
     }
 
-    async start(ip?: string): Promise<void> {
+    private async _preload(): Promise<void> {
         Logging.engineLog('scenes start loading')
 
         const label = 'scenes loaded by'
@@ -187,6 +195,10 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
             scene.preload(this)
         }
         console.timeEnd(label)
+    }
+
+    async start(ip?: string): Promise<void> {
+        await this._preload()
 
         if(this.netClient && ip) {
             this.netClient.open(ip)

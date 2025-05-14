@@ -3,4 +3,5 @@ export default interface IKeyOptions {
     shiftKey?: boolean
     ctrlKey?: boolean
     metaKey?: boolean
+    ignoreModifiers?: boolean
 }

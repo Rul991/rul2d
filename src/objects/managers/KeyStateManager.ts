@@ -1,8 +1,8 @@
 import IKeyAxisOptions from '../../interfaces/options/IKeyAxisOptions'
 import IKeyOptions from '../../interfaces/options/IKeyOptions'
 import IKeyVectorOptions from '../../interfaces/options/IKeyVectorOptions'
-import HotKey from '../../utils/HotKey'
-import KeyCodes from '../../utils/KeyCodes'
+import HotKey from '../../utils/keys/HotKey'
+import KeyCodes from '../../utils/keys/KeyCodes'
 import { KeyboardEventCallback } from '../../utils/types'
 import CustomObject from '../core/CustomObject'
 import Point from '../Point'
@@ -12,8 +12,7 @@ export default class KeyStateManager extends CustomObject {
     public downKeyboardManager: KeyboardManager | null
     public upKeyboardManager: KeyboardManager | null
 
-    private _key: KeyCodes | null
-    private _options: IKeyOptions
+    private _hotKey: HotKey | null
 
     private _upCallback: KeyboardEventCallback
     private _downCallback: KeyboardEventCallback
@@ -23,8 +22,7 @@ export default class KeyStateManager extends CustomObject {
 
         this.downKeyboardManager = null
         this.upKeyboardManager = null
-        this._key = null
-        this._options = KeyboardManager.defaultOptions
+        this._hotKey = null
 
         this._downCallback = e => { }
         this._upCallback = e => { }
@@ -109,8 +107,7 @@ export default class KeyStateManager extends CustomObject {
     }
 
     setKey(key: KeyCodes, options?: IKeyOptions): void {
-        this._key = key
-        this._options = options ?? KeyboardManager.defaultOptions
+        this._hotKey = new HotKey(key, options)
     }
 
     setKeyboardManagers(down: KeyboardManager, up: KeyboardManager): void {
@@ -129,18 +126,18 @@ export default class KeyStateManager extends CustomObject {
         downCallback = this._downCallback,
         upCallback = this._upCallback): void {
             if (!(this.downKeyboardManager || this.upKeyboardManager)) return
-            if (!this._key) return
+            if (!this._hotKey) return
 
-            this.downKeyboardManager!.removeKey(this._key, downCallback, this._options)
-            this.upKeyboardManager!.removeKey(this._key, upCallback, this._options)
+            this.downKeyboardManager!.removeKey(this._hotKey, downCallback)
+            this.upKeyboardManager!.removeKey(this._hotKey, upCallback)
     }
 
     private _registerCallbacks(): void {
         if (!(this.downKeyboardManager || this.upKeyboardManager)) return
-        if (!this._key) return
+        if (!this._hotKey) return
 
-        this.downKeyboardManager!.addKey(this._key, this._downCallback, this._options)
-        this.upKeyboardManager!.addKey(this._key, this._upCallback, this._options)
+        this.downKeyboardManager!.addKey(this._hotKey, this._downCallback)
+        this.upKeyboardManager!.addKey(this._hotKey, this._upCallback)
     }
 
 }

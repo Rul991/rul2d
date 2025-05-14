@@ -1,7 +1,6 @@
-import StorageEvent from '../../events/StorageEvent'
-import IEventOptions from '../../interfaces/options/IEventOptions'
+import StorageEvent from '../../utils/events/StorageEvent'
 import Logging from '../../utils/static/Logging'
-import { EventCallback, LocalStorageEmitKeys } from '../../utils/types'
+import { LocalStorageEmitKeys } from '../../utils/types'
 import EventEmitter from '../EventEmitter'
 
 export default class LocalStorageManager<T extends Record<string, any>> extends EventEmitter<StorageEvent<T>, LocalStorageEmitKeys> {

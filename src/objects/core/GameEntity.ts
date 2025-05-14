@@ -3,13 +3,10 @@ import ISimplePoint from "../../interfaces/simple/ISimplePoint"
 import ISimpleRect from '../../interfaces/simple/ISimpleRect'
 import CachedValue from '../../utils/CachedValue'
 import SimpleRect from '../../utils/SimpleRect'
-import Size from '../../utils/Size'
 import { DrawablePointerable, PointType } from "../../utils/types"
 import Camera from '../camera/Camera'
-import DrawableObject from './DrawableObject'
 import GameObject from "./GameObject"
 import Point from "../Point"
-import Rectangle from '../shapes/Rectangle'
 
 export default class GameEntity extends GameObject implements IPointable {
     protected _position: Point

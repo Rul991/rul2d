@@ -1,5 +1,5 @@
-import IKeyOptions from '../interfaces/options/IKeyOptions'
-import CustomObject from '../objects/core/CustomObject'
+import IKeyOptions from '../../interfaces/options/IKeyOptions'
+import CustomObject from '../../objects/core/CustomObject'
 import KeyCodes from './KeyCodes'
 
 export default class HotKey extends CustomObject {

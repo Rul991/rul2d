@@ -97,3 +97,11 @@
 - Added new classes:
   - `LinearGradient`
   - `HotKey`
+
+### 2.2.1
+
+- `GameWorld` now automatically adds `PointerableObject`.
+- `KeyboardManager` can now process keys with ignored modifiers.
+- Fixed a bug with updating the `Camera.viewport` via `Camera.zoom` setting.
+- `KeyboardManager` and `KeyStateManager` now use `HotKey` instead of `key` and `options`.
+- `PointerInputManager` now works as expected.

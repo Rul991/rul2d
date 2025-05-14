@@ -6,7 +6,6 @@ import SimpleRect from '../../utils/SimpleRect'
 import VectorUtils from '../../utils/static/VectorUtils'
 import DrawableObject from '../core/DrawableObject'
 import Point from '../Point'
-import Rectangle from './Rectangle'
 import Shape from './Shape'
 
 export default class Circle extends Shape {

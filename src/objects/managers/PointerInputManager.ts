@@ -132,54 +132,37 @@ export default class PointerInputManager extends CustomObject implements IManage
         this._pointerables = Sorting.merge(this._pointerables, PointerInputManager._pointerableSortCallback)
     }
 
-    oldUpdate(): void {      
-        for (const pointerable of this._pointerables) {
-            pointerable.isPressed = false
-        }
-
-        if (this._isPressed && this._pointersLocation.length > 0) {
-            for (const point of this._pointersLocation) {
-                let interactionHandled = false
-
-                for (const pointerable of this._pointerables) {
-                    if (pointerable.isPointInShape(point)) {
-                        pointerable.isPressed = true
-                        pointerable.pressedCallback(point)
-                        interactionHandled = true
-                        break
-                    }
-                }
-
-                if (!interactionHandled) {
-                    for (const pointerable of this._pointerables) {
-                        pointerable.nonAnyInteractiveCallback(point)
-                    }
-                }
-            }
-        } 
-
-        else {
-            let hoverHandled = false
-            for (const pointerable of this._pointerables) {
-                if (pointerable.isPointInShape(this._cursorPosition)) {
-                    pointerable.hoverCallback(this._cursorPosition)
-                    hoverHandled = true
-                    break
-                }
-            }
-
-            if (!hoverHandled) {
-                for (const pointerable of this._pointerables) {
-                    pointerable.nonAnyInteractiveCallback(this._cursorPosition)
-                }
-            }
-        }
+    get isPressed(): boolean {
+        return this._isPressed
     }
 
     update(): void {
-        for (const point of this._pointersLocation) {
+        if(!this._pointerables.length) return
+
+        for (const pointerable of this._pointerables) {
+            pointerable.isPressedInFrame = false
+        }
+
+        for (const point of [...this._pointersLocation, this._cursorPosition]) {
+            let isPointPressed = point === this._cursorPosition
+            let isPointNonInteractive = isPointPressed
+
             for (const pointerable of this._pointerables) {
-                
+                let inShape = pointerable.isPointInShape(point)
+                if(!isPointPressed && inShape) {
+                    pointerable.isPressedInFrame = true
+                    pointerable.pressedCallback(point)
+
+                    isPointNonInteractive = false
+                    isPointPressed = inShape || isPointPressed
+                }
+
+                else if(!pointerable.isPressedInFrame) {
+                    if(inShape)
+                        pointerable.hoverCallback(point)
+                    else if(isPointNonInteractive)
+                        pointerable.nonInteractiveCallback(point)
+                }
             }
         }
     }

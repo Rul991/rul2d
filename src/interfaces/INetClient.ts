@@ -1,4 +1,4 @@
-import ValueEvent from '../events/ValueEvent'
+import ValueEvent from '../utils/events/ValueEvent'
 import CustomObject from '../objects/core/CustomObject'
 import { EventCallback } from '../utils/types'
 import IEventOptions from './options/IEventOptions'
