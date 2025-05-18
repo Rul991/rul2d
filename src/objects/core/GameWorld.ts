@@ -17,6 +17,7 @@ import GameScene from './GameScene';
 import KeyboardManager from '../managers/KeyboardManager';
 import KeyStateManager from '../managers/KeyStateManager'
 import PointerInputManager from '../managers/PointerInputManager'
+import ICustomWorldFunctionality from '../../interfaces/ICustomWorldFunctionality'
 
 export default class GameWorld extends CustomObject implements IManager, IRoot {
     static createGameLoop(callback: (delta: number, lastDelta: number, prevTime: number) => void): number {
@@ -43,6 +44,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     private _camera: Camera
     private _gameScenes: Dict<GameScene>
     private _currentScene: GameScene | null
+    private _customFunctionality: Set<ICustomWorldFunctionality>
 
     public eventEmitter: EventEmitter<Event>
     public downKeyboardManager: KeyboardManager
@@ -77,6 +79,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
         
         this._gameScenes = new Map
         this._currentScene = null
+        this._customFunctionality = new Set()
         
         this.isUseCulling = useCulling
         this.netClient = netClient
@@ -109,11 +112,28 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
     
     updateZIndex(): void {}
 
+    addCustomFunctionality(func: ICustomWorldFunctionality): void {
+        this._customFunctionality.add(func)
+        func.doWhenAddInWorld(this)
+    }
+
+    removeCustomFunctionality(func: ICustomWorldFunctionality): boolean {
+        func.doWhenRemoveFromWorld(this)
+        return this._customFunctionality.delete(func)
+    }
+
+    forFunctionalities(callback: (func: ICustomWorldFunctionality) => void): void {
+        this._customFunctionality.forEach(func => callback(func))
+    }
+
     addScene(key: string, scene: GameScene): void {
         this._gameScenes.set(key, scene)
         scene.root = this
         scene.managers.add(this)
         scene.init(this)
+        this._customFunctionality.forEach(func => {
+            func.doWhenAddNewScene(scene)
+        })
 
         if(!this._currentScene) this.setScene(key)
     }
@@ -124,14 +144,25 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
 
         if(!isDeleted) return 
 
+        this._customFunctionality.forEach(func => {
+            func.doWhenDeleteScene(scene!)
+        })
+
         scene!.root = null
         scene!.managers.delete(this)
         
-        if(this._currentScene == scene) this._currentScene = null
+        if(this._currentScene == scene) 
+            this._currentScene = null
+    }
+
+    forEach(callback: (scene: GameScene) => void) {
+        this._gameScenes.forEach(scene => callback(scene))
     }
 
     setScene(key: string): void {
+        let oldScene = this._currentScene
         this._currentScene = this._gameScenes.get(key) ?? null
+        this._customFunctionality.forEach(func => func.doWhenChangeScene(oldScene, this._currentScene))
     }
 
     getScene(): GameScene | null {
@@ -175,6 +206,7 @@ export default class GameWorld extends CustomObject implements IManager, IRoot {
             this.uiPointerManager.update()
             this.pointerManager.update()
             this.canvasManager.clear()
+            this._customFunctionality.forEach(func => func.update(delta, this))
 
             this._updateCurrentScene(delta, lastDelta)
 

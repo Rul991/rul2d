@@ -3,11 +3,9 @@ import Bounds from '../../utils/bounds/Bounds'
 import Logging from '../../utils/static/Logging'
 import MathUtils from '../../utils/static/MathUtils'
 import SimpleRect from '../../utils/SimpleRect'
-import { Context } from '../../utils/types'
 import CanvasImage from './CanvasImage'
 import Point from '../Point'
 import Rectangle from '../shapes/Rectangle'
-import JsonCanvasImage from '../../interfaces/jsons/JsonCanvasImage'
 import JsonSpriteSheet from '../../interfaces/jsons/JsonSpriteSheet'
 
 export default class SpriteSheet extends CanvasImage {

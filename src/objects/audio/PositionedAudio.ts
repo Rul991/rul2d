@@ -3,10 +3,9 @@ import ISimplePoint from '../../interfaces/simple/ISimplePoint'
 import ISimpleRect from '../../interfaces/simple/ISimpleRect'
 import Logging from '../../utils/static/Logging'
 import VectorUtils from '../../utils/static/VectorUtils'
-import { Context, DrawablePointerable, PointType } from '../../utils/types'
+import { Context, PointType } from '../../utils/types'
 import BaseAudio from './BaseAudio'
 import Circle from '../shapes/Circle'
-import Point from '../Point'
 
 export default class PositionedAudio extends BaseAudio implements IPointable {
     public circle: Circle

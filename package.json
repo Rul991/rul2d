@@ -1,6 +1,6 @@
 {
   "name": "rul2d",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,8 @@
     "build": "rollup -c && rmdir /S /Q dist\\types",
     "watch": "nodemon",
     "prepublishOnly": "npm run build",
-    "dev": "rollup -c --test"
+    "dev": "rollup -c --test",
+    "docs": "typedoc"
   },
   "keywords": [
     "game",
@@ -37,7 +38,8 @@
     "rollup": "^4.39.0",
     "rollup-auto-index": "^1.2.0",
     "rollup-plugin-dts": "^6.2.1",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "typedoc": "^0.28.4"
   },
   "type": "module",
   "repository": {

@@ -1,0 +1,11 @@
+{
+    "out": "./docs/typedoc",
+    "entryPoints": ["src/index.ts"],
+    "exclude": ["src/test.ts"],
+    "excludePrivate": true,
+    "excludeProtected": false,
+    "theme": "default",
+    "readme": "README.md",
+    "tsconfig": "./tsconfig.json",
+    "defaultCategory": "src"
+}

@@ -6,15 +6,15 @@ import CustomObject from '../core/CustomObject'
 import Sorting from '../../utils/static/Sorting'
 import Search from '../../utils/static/Search'
 import Camera from '../camera/Camera'
+import PointerPoint from '../../utils/PointerPoint'
 
 export default class PointerInputManager extends CustomObject implements IManager {
     private static _pointerableSortCallback: SearchCallback<PointerableObject> = obj => -obj.zIndex
 
-    private _pointersLocation: Point[]
+    private _pointersLocation: PointerPoint[]
     private _cursorPosition: Point
     private _pointerables: PointerableObject[]
     private _camera: Camera | null
-
     private _isPressed: boolean
 
     constructor() {
@@ -32,15 +32,31 @@ export default class PointerInputManager extends CustomObject implements IManage
     }
 
     private _getPointerIndex(e: PointerEvent): number {
-        return e.pointerId - 1
+        let i = 0
+
+        let { pointerId } = e
+        for (let j = 0; j < this._pointersLocation.length; j++) {
+            const point = this._pointersLocation[j];
+            if(pointerId == point.pointerId) {
+                i = j
+                break
+            }
+        }
+
+        return i
     }
 
-    private _createPoint(e: WheelEvent | PointerEvent): Point {
-        let point = new Point(e.offsetX, e.offsetY)
+    private _createPoint(e: PointerEvent | (WheelEvent & {pointerId?: number})): PointerPoint {
+        let point = new PointerPoint(
+            e.offsetX, 
+            e.offsetY, 
+            e.pointerId ?? 0
+        )
         return this._updatePointWithCamera(point)
     }
 
     private _editPoint(index: number, e: PointerEvent): void {
+        if(!this._pointersLocation[index]) return
         this._pointersLocation[index].point = this._createPoint(e)
     }
 
@@ -51,14 +67,17 @@ export default class PointerInputManager extends CustomObject implements IManage
 
     private _moveEventCallback(e: PointerEvent): void {
         let i = this._getPointerIndex(e)
-        if(i >= this._pointersLocation.length) return
+        if(i == -1) return
+
         this._editPoint(i, e)
     }
 
     private _upEventCallback(e: PointerEvent): void {
         let i = this._getPointerIndex(e)
+        if(i == -1) return
+
         this._pointersLocation.splice(i, 1)
-        this._isPressed = this._pointerables.length > 0
+        this._isPressed = this._pointersLocation.length > 0
     }
 
     private _allControlsEventCallback(e: WheelEvent | PointerEvent): void {
@@ -73,14 +92,15 @@ export default class PointerInputManager extends CustomObject implements IManage
         return this._cursorPosition
     }
 
-    private _updatePointWithCamera(point: Point): Point {
+    private _updatePointWithCamera(point: PointerPoint): PointerPoint {
         if(!this._camera) return point
 
         const {x, y} = point
         const getUpdatedCoordinate = (cursorPosition: number, cameraPosition: number) => cursorPosition / this._camera!.zoom - cameraPosition
-        return new Point(
+        return new PointerPoint(
             getUpdatedCoordinate(x, this._camera.x),
             getUpdatedCoordinate(y, this._camera.y),
+            point.pointerId
         )
     }
 

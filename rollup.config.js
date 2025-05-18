@@ -21,8 +21,6 @@ else {
 
 export default [
   {
-    // for dev: src/test.ts
-    // for release: src/index.ts
     input: `src/${name}.ts`,
     output: [
       {

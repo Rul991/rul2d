@@ -47,6 +47,8 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     protected _angle: Angle
     protected _flipDirection: Point
 
+    public outlineColor: Color
+
     constructor(x?: number, y?: number, width?: number, height?: number) {
         super(x, y)
 
@@ -60,6 +62,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         this._angle = new Angle()
         this._isCachedValueExist = true
         this._flipDirection = new Point(1)
+        this.outlineColor = Color.Red
         this.setSize(width, height)
     }
 
@@ -224,7 +227,7 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     }
 
     stroke(ctx: Context, color?: Color): void {
-        this.updateContextParameters(ctx, color)
+        this.updateContextParameters(ctx, color ?? this.outlineColor)
         this.drawOutline(ctx, color)
     }
 

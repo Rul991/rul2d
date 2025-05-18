@@ -1,4 +1,3 @@
-import AudioErrorMessage from '../../enums/error-messages/AudioErrorMessage'
 import ValueEvent from '../../utils/events/ValueEvent'
 import ISimplePoint from '../../interfaces/simple/ISimplePoint'
 import ISimpleRect from '../../interfaces/simple/ISimpleRect'
@@ -8,7 +7,6 @@ import SimpleRect from '../../utils/SimpleRect'
 import Logging from '../../utils/static/Logging'
 import { Callback, Context } from '../../utils/types'
 import Camera from '../camera/Camera'
-import CustomObject from '../core/CustomObject'
 import DrawableObject from '../core/DrawableObject'
 import EventEmitter from '../EventEmitter'
 
@@ -158,7 +156,7 @@ export default class BaseAudio extends DrawableObject {
 
     start(secs: number = 0): void {
         if(!this._audioSource.buffer) 
-            return Logging.warn(AudioErrorMessage.NoBuffer)
+            return Logging.warn('no buffer', this)
 
         if(!this._isInitialStarted) {
             this._connectAllNodes()
@@ -181,7 +179,7 @@ export default class BaseAudio extends DrawableObject {
 
     stop(): void {
         if(!this._audioSource.buffer) 
-            return Logging.warn(AudioErrorMessage.NoBuffer)
+            return Logging.warn('no buffer', this)
 
         this._audioSource.stop()
         this._paused = true

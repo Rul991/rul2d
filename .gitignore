@@ -1,14 +1,15 @@
-package-lock.json
-node_modules
-dist/*
-src/test.ts
-what i want on rul2d v2.md
-index.css
-index.html
-src/ignore
-.npmrc
+/package-lock.json
+/node_modules
+/dist/*
+/src/test.ts
+/what i want on rul2d v2.md
+/index.css
+/index.html
+/src/ignore
+/.npmrc
 /images/
 /audio/
 /jsons/
 /txt/
-tasks.md
+/tasks.md
+/docs/typedoc

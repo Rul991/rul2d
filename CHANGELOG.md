@@ -49,7 +49,7 @@
 - Added new class: `SAT`
 - Updated `simplify` for some classes
 
-### 2.1.6
+### v2.1.6
 
 - Added new classes: 
   - `PositionedAudio`
@@ -65,7 +65,7 @@
 - Added new enums:
   - `DrawMode`
 
-### 2.1.7
+### v2.1.7
 
 - Added new classes:
   - `DrawableText` - draw text on canvas
@@ -74,7 +74,7 @@
 - `_drawMode_` replaced to `DrawableObject` from `Shape`
 - Fixed bug with uiObjects' `init` in `GameScene`
 
-### 2.1.8-2.1.9
+### v2.1.8-2.1.9
 
 - Renamed `DrawableText` to `DynamicText`
 - Added new class: `StaticText`
@@ -83,7 +83,7 @@
 - Corrected text alignment issue
 - Added `INetClient` interface for network functionality
 
-### 2.2.0
+### v2.2.0
 
 - Added new methods for `GameObject`: `_preload` and `_create`
 - `GameWorld` can process new `GameObject`'s methods
@@ -98,10 +98,19 @@
   - `LinearGradient`
   - `HotKey`
 
-### 2.2.1
+### v2.2.1
 
 - `GameWorld` now automatically adds `PointerableObject`.
 - `KeyboardManager` can now process keys with ignored modifiers.
 - Fixed a bug with updating the `Camera.viewport` via `Camera.zoom` setting.
 - `KeyboardManager` and `KeyStateManager` now use `HotKey` instead of `key` and `options`.
 - `PointerInputManager` now works as expected.
+
+### v2.2.2
+
+- `ShapeDrawMode` renamed to `DrawMode`
+- Added new classes:
+  - `DrawablePath`
+- `Shape` has `outlineColor` now
+- Fixed support of touches
+- Add support custom functionalities in `GameWorld`

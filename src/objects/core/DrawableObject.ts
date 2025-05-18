@@ -44,7 +44,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this._isInitialized = false
 
         this._lineWidth = 1
-        this._color = Color.Blue
+        this._color = Color.White
         this._currentRootId = 0
         this._opacity = 1
         this._zIndex = 1

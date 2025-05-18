@@ -1,11 +1,9 @@
 import JsonAnimatedSprite from '../../interfaces/jsons/JsonAnimatedSprite'
 import SpriteAnimation from '../../utils/animations/SpriteAnimation'
 import SpriteKeyFrame from '../../utils/animations/SpriteKeyFrame'
-import SimpleRect from '../../utils/SimpleRect'
 import Logging from '../../utils/static/Logging'
 import PeriodicTimer from '../../utils/timers/PeriodicTimer'
 import { Context, Dict } from '../../utils/types'
-import Point from '../Point'
 import SpriteSheet from './SpriteSheet'
 
 export default class AnimatedSprite extends SpriteSheet {
