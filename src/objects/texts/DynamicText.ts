@@ -9,6 +9,8 @@ import Size from '../../utils/Size'
 import { Context, Dict, TextHorisontalAlign, TextVerticalAlign } from '../../utils/types'
 import Point from '../Point'
 import ShapeableObject from '../shapeable/ShapeableObject'
+import ITextRendering from '../../interfaces/ITextRendering'
+import DefaultTextRendering from './rendering/DefaultTextRendering'
 
 export default class DynamicText extends ShapeableObject {
     private static _transformColorFromSimpleColor(font: Partial<IFont>, key: 'color' | 'outlineColor'): void {
@@ -29,6 +31,7 @@ export default class DynamicText extends ShapeableObject {
     protected _font: IFont
     protected _maxSymbols: number
     protected _ctx?: Context
+    protected _customRenderingText: ITextRendering
 
     public replaceableSymbols: Dict<string>
 
@@ -36,6 +39,7 @@ export default class DynamicText extends ShapeableObject {
         super(x, y, width, height)
 
         this._text = ''
+        this._customRenderingText = new DefaultTextRendering()
         this._fittedText = new CachedValue([])
         this._maxSymbols = -1
         this.replaceableSymbols = new Map()
@@ -109,15 +113,19 @@ export default class DynamicText extends ShapeableObject {
 
             this.executeCallbackByDrawMode(
                 () => {
-                    ctx.fillText(...args)
+                    this._customRenderingText.fillDrawText(ctx, args)
                 },
                 () => {
-                    ctx.strokeText(...args)
+                    this._customRenderingText.strokeDrawText(ctx, args)
                 }
             )
 
             y += textHeights[i]
         })
+    }
+
+    setCustomTextRendering(rendering: ITextRendering): void {
+        this._customRenderingText = rendering
     }
 
     protected _updateFittedText(ctx?: Context): string[] {
@@ -155,7 +163,7 @@ export default class DynamicText extends ShapeableObject {
             }
         }
 
-        return result
+        return this._customRenderingText.updateText(ctx, {x: 0, y: 0}, result)
     }
 
     protected _needUpdateText(value: boolean | null = true) {

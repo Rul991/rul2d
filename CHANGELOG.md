@@ -114,3 +114,7 @@
 - `Shape` has `outlineColor` now
 - Fixed support of touches
 - Add support custom functionalities in `GameWorld`
+
+### v2.2.3
+
+- `DynamicText` get custom text rendering
