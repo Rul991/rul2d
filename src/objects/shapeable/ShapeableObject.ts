@@ -130,8 +130,18 @@ export default class ShapeableObject extends DrawableObject implements IShapeCon
         return this.shape.offset
     }
 
-    protected _draw(ctx: Context): void {
+    protected _fill(ctx: Context): void {
         this.shape.draw(ctx)
+    }
+
+    protected _stroke(ctx: Context): void {
+        this.shape.drawOutline(ctx)
+    }
+
+    protected _draw(ctx: Context): void {
+        this.shape.clip(ctx, () => {
+            this._drawDefault(ctx)
+        })
     }
 
     update(delta: number): void {

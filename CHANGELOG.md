@@ -118,3 +118,14 @@
 ### v2.2.3
 
 - `DynamicText` get custom text rendering
+
+### 2.2.4
+
+- `DrawableObject` get `_fill` and `_stroke`
+- All objects get `_fill` and `_stroke`
+- New objects has `zIndex` like his id for default
+- `UIObject`, `GameEntity`, `GameScene` now abstract
+- `UIObject` get abstract `setSize`
+- `EventEmitter` stopped using events
+- `ValueEvent` deleted
+- Start make `FormattedTextRendering`

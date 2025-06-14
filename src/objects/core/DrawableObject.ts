@@ -26,6 +26,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
     protected _isInitialized: boolean
     protected _drawMode: DrawMode
     
+    public outlineColor: Color
     public isVisible: boolean
     public isInViewport: boolean
     public managers: Set<IManager>
@@ -44,10 +45,11 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         this._isInitialized = false
 
         this._lineWidth = 1
-        this._color = Color.White
+        this._color = Color.Black
+        this.outlineColor = Color.Red
         this._currentRootId = 0
         this._opacity = 1
-        this._zIndex = 1
+        this._zIndex = this.id
         this._offset = {x: 0, y: 0}
         this._drawMode = DrawMode.Fill
     }
@@ -150,17 +152,15 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         }
     }
 
-    updateColor(ctx: Context, color: Color = this._color): void {
-        let colorString: string = color.toString()
-
-        ctx.fillStyle = colorString
-        ctx.strokeStyle = colorString
+    updateColor(ctx: Context): void {
+        ctx.fillStyle = this.color.toString()
+        ctx.strokeStyle = this.outlineColor.toString()
 
         Logging.engineSpam(`update color for context: (${ctx.fillStyle})`, this)
     }
 
-    updateContextParameters(ctx: Context, color: Color = this._color): void {
-        this.updateColor(ctx, color)
+    updateContextParameters(ctx: Context): void {
+        this.updateColor(ctx)
 
         ctx.lineWidth = this._lineWidth
         ctx.globalAlpha = this.inheritOpacity
@@ -168,9 +168,7 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         Logging.engineSpam(`update context parameters`, this)
     }
 
-    protected _init(world: GameWorld): void {
-        
-    }
+    protected _init(world: GameWorld): void {}
 
     init(world: GameWorld): void {
         if(this._isInitialized) return
@@ -188,7 +186,21 @@ export default abstract class DrawableObject extends CustomObject implements IRo
         Logging.engineSpam(`updated(${delta})`, this)
     }
 
-    protected abstract _draw(ctx: Context): void
+    protected _fill(ctx: Context): void {}
+
+    protected _stroke(ctx: Context): void {}
+
+    protected _drawDefault(ctx: Context): void {
+        this.executeCallbackByDrawMode(
+            () => this._fill(ctx),
+            () => this._stroke(ctx),
+        )
+    }
+
+    protected _draw(ctx: Context): void {
+        this._drawDefault(ctx)
+    }
+
     abstract isObjectInViewport(camera: Camera): boolean
 
     executeCallbackByDrawMode(fillCallback: Callback, strokeCallback: Callback): void {

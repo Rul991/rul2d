@@ -8,26 +8,31 @@ import DrawableObject from '../objects/core/DrawableObject'
 import Shape from '../objects/shapes/Shape'
 import ShapeableObject from '../objects/shapeable/ShapeableObject'
 import Color from './Color'
+import SimpleRect from './SimpleRect'
 
 // callbacks
 
 export type Callback = () => void
 export type SearchCallback<T> = (obj: T) => number | string
-export type EventCallback<T extends Event = Event> = (e: T) => void
+export type EventCallback<T = any> = (value?: T) => void
 export type PointCallback = (point: Point) => void
 export type Constructor<T = {}> = new (...args: any[]) => T
 export type KeyboardEventCallback = EventCallback<KeyboardEvent>
+export type FormattedTextCallback = (ctx: Context, text: string, rect: SimpleRect, renderType: RenderType) => void
 
 // unions
 
 export type CurrentRoot = null | IRoot
 export type FollowedCameraObject = DrawablePointerable | Shape | ShapeableObject | null 
 
+// string names
+
 export type SmoothingQuality = 'low' | 'medium' | 'high'
 export type LocalStorageEmitKeys = 'init' | 'load' | 'set'
 export type CacheDictTypes = 'image' | 'text' | 'json'
 export type TextHorisontalAlign = 'left' | 'center' | 'right'
 export type TextVerticalAlign = 'top' | 'middle' | 'bottom'
+export type RenderType = 'stroke' | 'fill'
 
 // short names
 

@@ -1,5 +1,5 @@
 import GameEntity from './GameEntity'
 
-export default class UIObject extends GameEntity {
-    
+export default abstract class UIObject extends GameEntity {
+    abstract setSize(width?: number, height?: number): void
 }

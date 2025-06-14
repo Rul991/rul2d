@@ -26,7 +26,8 @@ export default [
       {
         file: 'dist/index.js',
         format: 'umd',
-        name: 'rul2d'
+        name: 'rul2d',
+        sourcemap: true
       }
     ],
     plugins: [

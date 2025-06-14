@@ -11,7 +11,7 @@ export default class DefaultTextRendering implements ITextRendering {
         ctx.fillText(...args)
     }
 
-    updateText(ctx: Context, point: ISimplePoint, text: string[]): string[] {
-        return text
+    updateText(ctx: Context, point: ISimplePoint, preUpdatedText: string[]): string[] {
+        return preUpdatedText
     }
 }

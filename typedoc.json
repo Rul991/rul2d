@@ -2,7 +2,7 @@
     "out": "./docs/typedoc",
     "entryPoints": ["src/index.ts"],
     "exclude": ["src/test.ts"],
-    "excludePrivate": true,
+    "excludePrivate": false,
     "excludeProtected": false,
     "theme": "default",
     "readme": "README.md",

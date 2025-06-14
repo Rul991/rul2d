@@ -6,6 +6,7 @@ import VectorUtils from '../../utils/static/VectorUtils'
 import { Context, PointType } from '../../utils/types'
 import BaseAudio from './BaseAudio'
 import Circle from '../shapes/Circle'
+import DrawMode from '../../enums/DrawMode'
 
 export default class PositionedAudio extends BaseAudio implements IPointable {
     public circle: Circle
@@ -17,6 +18,7 @@ export default class PositionedAudio extends BaseAudio implements IPointable {
         super()
 
         this.circle = new Circle(x, y, radius)
+        this.circle.setDrawMode(DrawMode.Stroke)
         this._maxVolume = 1
         this.setVisibility(false)
     }
@@ -70,8 +72,8 @@ export default class PositionedAudio extends BaseAudio implements IPointable {
     }
 
     protected _draw(ctx: Context): void {
-        this.circle.drawOutline(ctx)
-        this.circle.center.drawPoint(ctx)
+        this.circle.draw(ctx)
+        this.circle.center.draw(ctx)
     }
 
     protected set factVolume(value: number) {

@@ -81,14 +81,14 @@ export default class CanvasImage extends ShapeableObject {
         let image = await assets.loadImageFile(src)
 
         this.setImage(image)
-        image.addEventListener('load', e => this.eventEmitter.emitDefault('image-load'))
+        image.addEventListener('load', e => this.eventEmitter.emit('image-load'))
     }
 
     isLoaded(): boolean {
         return this._isLoaded
     }
 
-    protected _draw(ctx: Context): void {
+    protected _fill(ctx: Context): void {
         if(!this.isLoaded()) return
 
         let imageBox: Rectangle

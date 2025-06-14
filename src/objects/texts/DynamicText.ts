@@ -1,4 +1,3 @@
-import DrawMode from '../../enums/DrawMode'
 import IFont from '../../interfaces/IFont'
 import ISimplePoint from '../../interfaces/simple/ISimplePoint'
 import JsonDrawableText from '../../interfaces/jsons/JsonDrawableText'
@@ -59,8 +58,6 @@ export default class DynamicText extends ShapeableObject {
         }
 
         this._updateTabSize()
-
-        this._drawMode = DrawMode.All
 
         this._fittedText.setUpdateCallback(ctx => this._updateFittedText(ctx))
     }
@@ -262,11 +259,9 @@ export default class DynamicText extends ShapeableObject {
         return size
     }
 
-    protected _draw(ctx: Context): void {
-        this.shape.clip(ctx, () => {
-            this.shape.drawTransformed(ctx, (x, y) => {
-                this._drawText(ctx, {x, y})
-            })
+    protected _fill(ctx: Context): void {
+        this.shape.drawTransformed(ctx, (x, y) => {
+            this._drawText(ctx, {x, y})
         })
     }
 }

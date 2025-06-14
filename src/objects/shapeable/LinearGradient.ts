@@ -148,16 +148,14 @@ export default class LinearGradient extends ShapeableObject {
         return result
     }
 
-    protected _draw(ctx: Context): void {
-        this.shape.clip(ctx, () => {
-            this.shape.drawTransformed(ctx, (x, y, width, height) => {
-                if(this.isStatic) {
-                    this._cachedImageUrl.get()
-                    ctx.drawImage(this._image, x, y, width, height)
-                }
-                else 
-                    this._drawGradient(ctx, x, y)
-            })
+    protected _fill(ctx: Context): void {
+        this.shape.drawTransformed(ctx, (x, y, width, height) => {
+            if(this.isStatic) {
+                this._cachedImageUrl.get()
+                ctx.drawImage(this._image, x, y, width, height)
+            }
+            else 
+                this._drawGradient(ctx, x, y)
         })
     }
 }

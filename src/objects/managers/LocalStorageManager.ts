@@ -23,14 +23,14 @@ export default class LocalStorageManager<T extends Record<string, any>> extends 
         let value = localStorage.getItem(this._name)
 
         if(!value) {
-            Logging.warn(`LocalStorage "${this._name}" doesn't exist`)
+            Logging.warn(`LocalStorage "${this._name}" doesn't exist. Created new one`)
             localStorage.setItem(this._name, '{}')
-            this.emitDefault('init')
+            this.emit('init')
             return
         }
 
         this._value = JSON.parse(value)
-        this.emitDefault('load')
+        this.emit('load')
     }
 
     set<K extends keyof T>(key: K, value: T[K]): void {
@@ -40,7 +40,7 @@ export default class LocalStorageManager<T extends Record<string, any>> extends 
         let event = new StorageEvent<T>('set')
         event.key = key
         event.value = value
-        this.emit(event)
+        this.emit('set', event)
 
         localStorage.setItem(this._name, JSON.stringify(this._value))
     }
@@ -60,9 +60,5 @@ export default class LocalStorageManager<T extends Record<string, any>> extends 
     getAll(): Partial<T> {
         this._load()
         return this._value
-    }
-
-    emitDefault(key: string): void {
-        this.emit(new StorageEvent<T>(key))
     }
 }

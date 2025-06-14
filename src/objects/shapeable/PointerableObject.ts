@@ -1,7 +1,6 @@
 import IRectangle from '../../interfaces/IRectangle'
 import IShapeConfig from '../../interfaces/IShapeConfig'
-import Color from '../../utils/Color'
-import { Context, PointCallback } from '../../utils/types'
+import { PointCallback } from '../../utils/types'
 import ShapeableObject from './ShapeableObject'
 
 export default class PointerableObject extends ShapeableObject implements IShapeConfig, IRectangle {
@@ -81,10 +80,5 @@ export default class PointerableObject extends ShapeableObject implements IShape
 
     doWhenNotInteracted(cb: PointCallback): void {
         this._nonInteractiveCallback = this._nonDownCallbackFactory(cb)
-    }
-
-    drawOutline(ctx: Context, color?: Color): void {
-        if(this._isPressed) this.shape.drawOutline(ctx, Color.Red)
-        else this.shape.drawOutline(ctx, color)
     }
 }

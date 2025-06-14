@@ -73,7 +73,7 @@ export default class Point extends DrawableObject implements IPointable {
     setPosition(x?: number, y?: number): void {
         this._x = x ?? 0
         this._y = y ?? this._x
-        this.eventEmitter.emitDefault('update-position')
+        this.eventEmitter.emit('update-position')
     }
 
     addPosition(x: number, y: number): void {
@@ -93,24 +93,32 @@ export default class Point extends DrawableObject implements IPointable {
     }
 
     drawPoint(ctx: Context): void {
-        const drawArc = (radius: number) => {
-            ctx.beginPath()
-            ctx.arc(this._x, this._y, radius, 0, Angle.Pi2)
-            ctx.fill()
-            ctx.closePath()
-        }
-        this.updateColor(ctx)
-        drawArc(Point.drawRadius)
-
-        this.updateColor(ctx, Color.White)
-        drawArc(2)
-
-        this.updateColor(ctx)
-        drawArc(1)
+        this._fill(ctx)
     }
 
-    protected _draw(ctx: Context): void {
-        this.drawPoint(ctx)
+    drawOutline(ctx: Context): void {
+        this._stroke(ctx)
+    }
+
+    private _drawArc(ctx: Context, radius: number): void {
+        ctx.beginPath()
+        this.updateColor(ctx)
+        ctx.arc(this._x, this._y, radius, 0, Angle.Pi2)
+        ctx.closePath()
+    }
+
+    protected _fill(ctx: Context): void {
+        this._drawArc(ctx, Point.drawRadius)
+        ctx.fill()
+        this._drawArc(ctx, 2)
+        ctx.fill()
+        this._drawArc(ctx, 1)
+        ctx.fill()
+    }
+
+    protected _stroke(ctx: Context): void {
+        this._drawArc(ctx, Point.drawRadius)
+        ctx.stroke()
     }
 
     isObjectInViewport(camera: Camera): boolean {

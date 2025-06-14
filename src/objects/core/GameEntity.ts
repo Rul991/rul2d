@@ -8,7 +8,7 @@ import Camera from '../camera/Camera'
 import GameObject from "./GameObject"
 import Point from "../Point"
 
-export default class GameEntity extends GameObject implements IPointable {
+export default abstract class GameEntity extends GameObject implements IPointable {
     protected _position: Point
     protected _factRect: CachedValue<ISimpleRect>
 

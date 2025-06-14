@@ -6,7 +6,7 @@ import GameObject from "./GameObject"
 import GameWorld from './GameWorld'
 import UIObject from './UIObject'
 
-export default class GameScene extends GameObject {
+export default abstract class GameScene extends GameObject {
     protected _uiObjects: UIObject[]
 
     constructor() {

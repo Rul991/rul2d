@@ -47,8 +47,6 @@ export default class Shape extends Point implements IRectangle, IAngleable {
     protected _angle: Angle
     protected _flipDirection: Point
 
-    public outlineColor: Color
-
     constructor(x?: number, y?: number, width?: number, height?: number) {
         super(x, y)
 
@@ -62,7 +60,6 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         this._angle = new Angle()
         this._isCachedValueExist = true
         this._flipDirection = new Point(1)
-        this.outlineColor = Color.Red
         this.setSize(width, height)
     }
 
@@ -226,13 +223,11 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         }
     }
 
-    stroke(ctx: Context, color?: Color): void {
-        this.updateContextParameters(ctx, color ?? this.outlineColor)
-        this.drawOutline(ctx, color)
+    protected _stroke(ctx: Context): void {
+        ctx.stroke(this.getPath())
     }
 
-    fill(ctx: Context, color?: Color): void {
-        this.updateContextParameters(ctx, color)
+    protected _fill(ctx: Context): void {
         ctx.fill(this.getPath())
     }
 
@@ -241,18 +236,6 @@ export default class Shape extends Point implements IRectangle, IAngleable {
         ctx.clip(this.getPath())
         callback(this.getPath())
         ctx.restore()
-    }
-
-    drawOutline(ctx: Context, color?: Color): void {
-        this.updateColor(ctx, color)
-        ctx.stroke(this.getPath())
-    }
-
-    protected _draw(ctx: Context): void {
-        this.executeCallbackByDrawMode(
-            () => this.fill(ctx),
-            () => this.stroke(ctx)
-        )
     }
 
     isShapesIntersects(shape: Shape): boolean {

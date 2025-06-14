@@ -1,4 +1,3 @@
-import ValueEvent from '../../utils/events/ValueEvent'
 import ISimplePoint from '../../interfaces/simple/ISimplePoint'
 import ISimpleRect from '../../interfaces/simple/ISimpleRect'
 import AssetsManager from '../../utils/AssetsManager'
@@ -37,11 +36,11 @@ export default class BaseAudio extends DrawableObject {
         this._loop = false
         this._src = ''
 
-        this.eventEmitter = new EventEmitter<ValueEvent>()
+        this.eventEmitter = new EventEmitter<any>()
 
         this._audioSource.addEventListener('ended', e => {
             Logging.engineLog('audio ended', this)
-            this.eventEmitter.emitDefault('end')
+            this.eventEmitter.emit('end')
             if(!this._loop) 
                 this.stop()
         })
@@ -128,7 +127,7 @@ export default class BaseAudio extends DrawableObject {
 
     setAudioBuffer(buffer: AudioBuffer): void {
         this._audioSource.buffer = buffer
-        this.eventEmitter.emitDefault('load')
+        this.eventEmitter.emit('load')
         Logging.engineLog('set audio buffer', this)
     }
 
@@ -173,7 +172,7 @@ export default class BaseAudio extends DrawableObject {
         this._isInitialStarted = true
         
         this._paused = false
-        this.eventEmitter.emitDefault('play')
+        this.eventEmitter.emit('play')
         Logging.engineLog('audio played', this)
     }
 
@@ -183,7 +182,7 @@ export default class BaseAudio extends DrawableObject {
 
         this._audioSource.stop()
         this._paused = true
-        this.eventEmitter.emitDefault('pause')
+        this.eventEmitter.emit('pause')
         Logging.engineLog('audio paused', this)
     }
 
