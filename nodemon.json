@@ -1,7 +1,0 @@
-{
-    "delay": 50,
-    "ext": "ts",
-    "exec": "npm run dev",
-    "ignore": ["index.ts"],
-    "watch": ["src"]
-}

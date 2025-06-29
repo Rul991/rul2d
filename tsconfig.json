@@ -10,9 +10,10 @@
         "lib": ["ES2017", "DOM"],
         "noEmitOnError": true,
         "declaration": true,
-        "declarationDir": ".vscode/dist/types",
-        "noEmit": false
+        "declarationDir": "./dist/types",
+        "noEmit": false,
+        "preserveConstEnums": true
     },
     "include": ["src/**/*"],
-    "exclude": ["node_modules", ".vscode/dist"]
+    "exclude": ["node_modules", "./dist"]
 }
